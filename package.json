@@ -1,4 +1,4 @@
-{ "name" : "statsd"
+{ "name" : "node-statsd"
 , "description" : "node client for Etsy'd StatsD server"
 , "version" : "0.0.1"
 , "author" : "Steve Ivy"
@@ -11,7 +11,7 @@
 , "directories" : { "lib" : "./lib/" }
 , "main" : "./lib/apac"
 , "engines" : { "node" : ">=0.1.97" }
-, "dependencies" : { "mersenne" : "*" },
+, "dependencies" : { "mersenne" : "*" }
 , "licenses" :
   [ { "type" : "MIT"
     , "url" : "http://github.com/sivy/node-stats/raw/master/LICENSE"
