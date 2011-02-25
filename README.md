@@ -4,7 +4,9 @@ A node.js client for [Etsy](http://etsy.com)'s [StatsD](https://github.com/etsy/
 
 This client will let you fire stats at your StatsD server from a node.js application.
 
-    > require('./statsd').StatsD
+    % npm install node-statsd
+
+    > require('statsd').StatsD
     > c = new StatsD('example.org',1234)
     { host: 'rayners.org', port: 8125 }
     > c.increment('node_test.int')
