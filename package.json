@@ -9,7 +9,7 @@
 , "bugs" : { "web" : "https://github.com/sivy/node-statsd/issues" }
 , "os" : [ "linux", "darwin", "freebsd" ]
 , "directories" : { "lib" : "./lib/" }
-, "main" : "./lib/apac"
+, "main" : "./lib/statsd"
 , "engines" : { "node" : ">=0.1.97" }
 , "dependencies" : { "mersenne" : "*" }
 , "licenses" :
