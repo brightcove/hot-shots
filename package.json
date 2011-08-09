@@ -1,6 +1,6 @@
 { "name" : "node-statsd"
 , "description" : "node client for Etsy'd StatsD server"
-, "version" : "0.0.1"
+, "version" : "0.0.2"
 , "author" : "Steve Ivy"
 , "repository" :
   { "type" : "git"
