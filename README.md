@@ -6,7 +6,7 @@ This client will let you fire stats at your StatsD server from a node.js applica
 
     % npm install node-statsd
     % node
-    > require('statsd').StatsD
+    > var StatsD = require('node-statsd').StatsD
     > c = new StatsD('example.org',8125)
     { host: 'example.org', port: 8125 }
     > c.increment('node_test.int')
