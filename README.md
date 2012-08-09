@@ -13,11 +13,18 @@ This client will let you fire stats at your StatsD server from a node.js applica
     > c.decrement('node_test.int')
     > c.timing('node_test.some_service.task.time', 500) // time in millis
 
-# License
+## License
 
 node-statsd is licensed under the MIT license.
 
-# Error handling policy
+## Status
+
+**node-statsd** *should* run on modern nodes, and will soon be tested on 0.8 and 0.6.
+
+[![Build Status](https://secure.travis-ci.org/sivy/node-statsd.png?branch=master)](http://travis-ci.org/sivy/node-statsd)
+
+
+## Error handling policy
 
 * exceptions "bubble up" into the app that uses this library
 * we don't log or print to console any errors ourself, it's the toplevel app that decides how to log/write to console.
