@@ -1,20 +1,25 @@
 { "name" : "node-statsd"
 , "description" : "node client for Etsy'd StatsD server"
-, "version" : "0.0.3"
+, "version" : "0.0.4"
 , "author" : "Steve Ivy"
+, "contributors": [ "Russ Bradberry <rbradberry@gmail.com>" ]
 , "repository" :
   { "type" : "git"
   , "url" : "git://github.com/sivy/node-statsd.git"
   }
 , "bugs" : { "url" : "https://github.com/sivy/node-statsd/issues" }
-, "os" : [ "linux", "darwin", "freebsd" ]
 , "directories" : { "lib" : "./lib/" }
-, "main" : "./lib/statsd"
 , "engines" : { "node" : ">=0.1.97" }
-, "dependencies" : { "mersenne" : "*" }
+, "scripts": {
+      "test": "./node_modules/mocha/bin/mocha ./test -R spec"
+    }
+, "dependencies" : {}
+, "devDependencies": {
+    "mocha":"*"
+}
 , "licenses" :
   [ { "type" : "MIT"
     , "url" : "http://github.com/sivy/node-stats/raw/master/LICENSE"
-    }   
+    }
   ]
 }
