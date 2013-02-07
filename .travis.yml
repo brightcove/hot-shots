@@ -5,7 +5,7 @@ node_js:
   - 0.8
   - 0.9
 
- matrix:
+matrix:
   allow_failures:
     - node_js: 0.9
 
