@@ -19,7 +19,7 @@ function udpTest(test, callback){
     callback(server);
   });
 
-  server.bind(0);
+  server.bind(0, '127.0.0.1');
 }
 
 /**
