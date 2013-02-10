@@ -115,7 +115,10 @@ describe('StatsD', function(){
         var address = server.address(),
             statsd = new StatsD(address.address, address.port);
 
-        statsd.timing(['a', 'b'], 42);
+        statsd.timing(['a', 'b'], 42, null, function(){
+          called += 1;
+          assert.ok(called === 1); //ensure it only gets called once
+        });
       });
     });
   });
@@ -152,7 +155,7 @@ describe('StatsD', function(){
     });
 
     it('should properly send a and b with the same value', function(finished){
-      var called = false,
+      var called = 0,
           messageNumber = 0;
 
       udpTest(function(message, server){
@@ -168,7 +171,10 @@ describe('StatsD', function(){
         var address = server.address(),
             statsd = new StatsD(address.address, address.port);
 
-        statsd.gauge(['a', 'b'], 42);
+        statsd.gauge(['a', 'b'], 42, null, function(){
+          called += 1;
+          assert.ok(called === 1); //ensure it only gets called once
+        });
       });
     });
   });
@@ -205,7 +211,7 @@ describe('StatsD', function(){
     });
 
     it('should properly send a and b with the same value', function(finished){
-      var called = false,
+      var called = 0,
           messageNumber = 0;
 
       udpTest(function(message, server){
@@ -221,7 +227,10 @@ describe('StatsD', function(){
         var address = server.address(),
             statsd = new StatsD(address.address, address.port);
 
-        statsd.increment(['a', 'b']);
+        statsd.increment(['a', 'b'], null, function(){
+          called += 1;
+          assert.ok(called === 1); //ensure it only gets called once
+        });
       });
     });
   });
@@ -259,7 +268,7 @@ describe('StatsD', function(){
 
 
     it('should properly send a and b with the same value', function(finished){
-      var called = false,
+      var called = 0,
           messageNumber = 0;
 
       udpTest(function(message, server){
@@ -275,7 +284,10 @@ describe('StatsD', function(){
         var address = server.address(),
             statsd = new StatsD(address.address, address.port);
 
-        statsd.decrement(['a', 'b']);
+        statsd.decrement(['a', 'b'], null, function(){
+          called += 1;
+          assert.ok(called === 1); //ensure it only gets called once
+        });
       });
     });
   });
@@ -312,7 +324,7 @@ describe('StatsD', function(){
     });
 
     it('should properly send a and b with the same value', function(finished){
-      var called = false,
+      var called = 0,
           messageNumber = 0;
 
       udpTest(function(message, server){
@@ -328,7 +340,10 @@ describe('StatsD', function(){
         var address = server.address(),
             statsd = new StatsD(address.address, address.port);
 
-        statsd.unique(['a', 'b'], 42);
+        statsd.unique(['a', 'b'], 42, null, function(){
+          called += 1;
+          assert.ok(called === 1); //ensure it only gets called once
+        });
       });
     });
   });
