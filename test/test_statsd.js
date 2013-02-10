@@ -11,8 +11,7 @@ var dgram = require('dgram'),
 function udpTest(test, callback){
   var server = dgram.createSocket("udp4");
   server.on('message', function(message){
-    test(message.toString());
-    server.close();
+    test(message.toString(), server);
   });
 
   server.on('listening', function(){
@@ -70,9 +69,9 @@ describe('StatsD', function(){
 
   describe('#timing', function(finished){
     it('should send proper time format without prefix, suffix, sampling and callback', function(finished){
-      udpTest(function(message){
+      udpTest(function(message, server){
         assert.equal(message, 'test:42|ms');
-
+        server.close();
         finished();
       }, function(server){
         var address = server.address(),
@@ -84,9 +83,10 @@ describe('StatsD', function(){
 
     it('should send proper time format with prefix, suffix, sampling and callback', function(finished){
       var called = false;
-      udpTest(function(message){
+      udpTest(function(message, server){
         assert.equal(message, 'foo.test.bar:42|ms|@0.5');
         assert.equal(called, true);
+        server.close();
         finished();
       }, function(server){
         var address = server.address(),
@@ -97,13 +97,34 @@ describe('StatsD', function(){
         });
       });
     });
+
+    it('should properly send a and b with the same value', function(finished){
+      var called = false,
+          messageNumber = 0;
+
+      udpTest(function(message, server){
+        if(messageNumber === 0){
+          assert.equal(message, 'a:42|ms');
+          messageNumber += 1;
+        } else {
+          assert.equal(message, 'b:42|ms');
+          server.close();
+          finished();
+        }
+      }, function(server){
+        var address = server.address(),
+            statsd = new StatsD(address.address, address.port);
+
+        statsd.timing(['a', 'b'], 42);
+      });
+    });
   });
 
   describe('#gauge', function(finished){
     it('should send proper gauge format without prefix, suffix, sampling and callback', function(finished){
-      udpTest(function(message){
+      udpTest(function(message, server){
         assert.equal(message, 'test:42|g');
-
+        server.close();
         finished();
       }, function(server){
         var address = server.address(),
@@ -115,9 +136,10 @@ describe('StatsD', function(){
 
     it('should send proper gauge format with prefix, suffix, sampling and callback', function(finished){
       var called = false;
-      udpTest(function(message){
+      udpTest(function(message, server){
         assert.equal(message, 'foo.test.bar:42|g|@0.5');
         assert.equal(called, true);
+        server.close();
         finished();
       }, function(server){
         var address = server.address(),
@@ -128,13 +150,34 @@ describe('StatsD', function(){
         });
       });
     });
+
+    it('should properly send a and b with the same value', function(finished){
+      var called = false,
+          messageNumber = 0;
+
+      udpTest(function(message, server){
+        if(messageNumber === 0){
+          assert.equal(message, 'a:42|g');
+          messageNumber += 1;
+        } else {
+          assert.equal(message, 'b:42|g');
+          server.close();
+          finished();
+        }
+      }, function(server){
+        var address = server.address(),
+            statsd = new StatsD(address.address, address.port);
+
+        statsd.gauge(['a', 'b'], 42);
+      });
+    });
   });
 
   describe('#increment', function(finished){
     it('should send count by 1 when no params are specified', function(finished){
-      udpTest(function(message){
+      udpTest(function(message, server){
         assert.equal(message, 'test:1|c');
-
+        server.close();
         finished();
       }, function(server){
         var address = server.address(),
@@ -146,9 +189,10 @@ describe('StatsD', function(){
 
     it('should send proper count format with prefix, suffix, sampling and callback', function(finished){
       var called = false;
-      udpTest(function(message){
+      udpTest(function(message, server){
         assert.equal(message, 'foo.test.bar:42|c|@0.5');
         assert.equal(called, true);
+        server.close();
         finished();
       }, function(server){
         var address = server.address(),
@@ -159,13 +203,34 @@ describe('StatsD', function(){
         });
       });
     });
+
+    it('should properly send a and b with the same value', function(finished){
+      var called = false,
+          messageNumber = 0;
+
+      udpTest(function(message, server){
+        if(messageNumber === 0){
+          assert.equal(message, 'a:1|c');
+          messageNumber += 1;
+        } else {
+          assert.equal(message, 'b:1|c');
+          server.close();
+          finished();
+        }
+      }, function(server){
+        var address = server.address(),
+            statsd = new StatsD(address.address, address.port);
+
+        statsd.increment(['a', 'b']);
+      });
+    });
   });
 
   describe('#decrement', function(finished){
     it('should send count by -1 when no params are specified', function(finished){
-      udpTest(function(message){
+      udpTest(function(message, server){
         assert.equal(message, 'test:-1|c');
-
+        server.close();
         finished();
       }, function(server){
         var address = server.address(),
@@ -177,9 +242,10 @@ describe('StatsD', function(){
 
     it('should send proper count format with prefix, suffix, sampling and callback', function(finished){
       var called = false;
-      udpTest(function(message){
+      udpTest(function(message, server){
         assert.equal(message, 'foo.test.bar:-42|c|@0.5');
         assert.equal(called, true);
+        server.close();
         finished();
       }, function(server){
         var address = server.address(),
@@ -190,13 +256,35 @@ describe('StatsD', function(){
         });
       });
     });
+
+
+    it('should properly send a and b with the same value', function(finished){
+      var called = false,
+          messageNumber = 0;
+
+      udpTest(function(message, server){
+        if(messageNumber === 0){
+          assert.equal(message, 'a:-1|c');
+          messageNumber += 1;
+        } else {
+          assert.equal(message, 'b:-1|c');
+          server.close();
+          finished();
+        }
+      }, function(server){
+        var address = server.address(),
+            statsd = new StatsD(address.address, address.port);
+
+        statsd.decrement(['a', 'b']);
+      });
+    });
   });
 
   describe('#set', function(finished){
     it('should send proper set format without prefix, suffix, sampling and callback', function(finished){
-      udpTest(function(message){
+      udpTest(function(message, server){
         assert.equal(message, 'test:42|s');
-
+        server.close();
         finished();
       }, function(server){
         var address = server.address(),
@@ -208,9 +296,10 @@ describe('StatsD', function(){
 
     it('should send proper set format with prefix, suffix, sampling and callback', function(finished){
       var called = false;
-      udpTest(function(message){
+      udpTest(function(message, server){
         assert.equal(message, 'foo.test.bar:42|s|@0.5');
         assert.equal(called, true);
+        server.close();
         finished();
       }, function(server){
         var address = server.address(),
@@ -219,6 +308,27 @@ describe('StatsD', function(){
         statsd.unique('test', 42, 0.5, function(){
           called = true;
         });
+      });
+    });
+
+    it('should properly send a and b with the same value', function(finished){
+      var called = false,
+          messageNumber = 0;
+
+      udpTest(function(message, server){
+        if(messageNumber === 0){
+          assert.equal(message, 'a:42|s');
+          messageNumber += 1;
+        } else {
+          assert.equal(message, 'b:42|s');
+          server.close();
+          finished();
+        }
+      }, function(server){
+        var address = server.address(),
+            statsd = new StatsD(address.address, address.port);
+
+        statsd.unique(['a', 'b'], 42);
       });
     });
   });
