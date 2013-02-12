@@ -115,9 +115,11 @@ describe('StatsD', function(){
         var address = server.address(),
             statsd = new StatsD(address.address, address.port);
 
-        statsd.timing(['a', 'b'], 42, null, function(){
+        statsd.timing(['a', 'b'], 42, null, function(error, bytes){
           called += 1;
           assert.ok(called === 1); //ensure it only gets called once
+          assert.equal(error, null);
+          assert.equal(bytes, 14);
         });
       });
     });
@@ -171,9 +173,11 @@ describe('StatsD', function(){
         var address = server.address(),
             statsd = new StatsD(address.address, address.port);
 
-        statsd.gauge(['a', 'b'], 42, null, function(){
+        statsd.gauge(['a', 'b'], 42, null, function(error, bytes){
           called += 1;
           assert.ok(called === 1); //ensure it only gets called once
+          assert.equal(error, null);
+          assert.equal(bytes, 12);
         });
       });
     });
@@ -227,9 +231,11 @@ describe('StatsD', function(){
         var address = server.address(),
             statsd = new StatsD(address.address, address.port);
 
-        statsd.increment(['a', 'b'], null, function(){
+        statsd.increment(['a', 'b'], null, function(error, bytes){
           called += 1;
           assert.ok(called === 1); //ensure it only gets called once
+          assert.equal(error, null);
+          assert.equal(bytes, 10);
         });
       });
     });
@@ -284,9 +290,11 @@ describe('StatsD', function(){
         var address = server.address(),
             statsd = new StatsD(address.address, address.port);
 
-        statsd.decrement(['a', 'b'], null, function(){
+        statsd.decrement(['a', 'b'], null, function(error, bytes){
           called += 1;
           assert.ok(called === 1); //ensure it only gets called once
+          assert.equal(error, null);
+          assert.equal(bytes, 12);
         });
       });
     });
@@ -340,9 +348,11 @@ describe('StatsD', function(){
         var address = server.address(),
             statsd = new StatsD(address.address, address.port);
 
-        statsd.unique(['a', 'b'], 42, null, function(){
+        statsd.unique(['a', 'b'], 42, null, function(error, bytes){
           called += 1;
           assert.ok(called === 1); //ensure it only gets called once
+          assert.equal(error, null);
+          assert.equal(bytes, 12);
         });
       });
     });
