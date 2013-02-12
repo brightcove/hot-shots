@@ -75,7 +75,7 @@ If an array is specified as the `name` parameter each item in that array will be
 In the event that there is a socket error, `node-statsd` will allow this error to bubble up.  If you would like to catch the errors, just attach a listener to the socket property on the instance.
 
 ```javascript
-client.socket.on('error', function (error) {
+client.socket.on('error', function(error) {
   return console.error("Error in socket: ", error);
 });
 ```
