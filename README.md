@@ -4,35 +4,86 @@ A node.js client for [Etsy](http://etsy.com)'s [StatsD](https://github.com/etsy/
 
 This client will let you fire stats at your StatsD server from a node.js application.
 
-    % npm install node-statsd
-    % node
-    > var StatsD = require('node-statsd').StatsD
-    > c = new StatsD('example.org',8125)
-    { host: 'example.org', port: 8125 }
-    > c.increment('node_test.int')
-    > c.decrement('node_test.int')
-    > c.timing('node_test.some_service.task.time', 500) // time in millis
+node-statsd Runs and is tested on Node 0.6+ on all *nix platforms and 0.8+ on all platforms including Windows.
+
+[![Build Status](https://secure.travis-ci.org/sivy/node-statsd.png?branch=master)](http://travis-ci.org/sivy/node-statsd)
+
+
+## Installation
+
+```
+$ npm install node-statsd
+```
+
+## Usage
+
+All initialization parameters are optional.
+
+Parameters:
+* `host`:   The host to send stats to `default: localhost`
+* `port`:   The port to send stats to `default: 8125`
+* `prefix`: What to prefix each stat name with `default: ''`
+* `suffix`: What to suffix each stat name with `default: ''`
+* `globalize`: Expost this StatsD instance globally? `default: false`
+
+All StatsD methods have the same API:
+* `name`:       Stat name `required`
+* `value`:      Stat value `required except in increment/decrement where it defaults to 1/-1 respectively`
+* `sampleRate`: Sends only a sample of data to StatsD `default: 1`
+* `callback`:   The callback to execute once the metric has been sent
+
+If an array is specified as the `name` parameter each item in that array will be sent along with the specified value.
+
+```javascript
+  var StatsD = require('node-statsd').StatsD,
+  client = new StatsD();
+
+  // Timing: sends a timing command with the specified milliseconds
+  client.timing('response_time', 42);
+
+  // Increment: Increments a stat by a value (default is 1)
+  client.increment('my_counter');
+
+  // Decrement: Decrements a stat by a value (default is -1)
+  client.decrement('my_counter');
+
+  // Gauge: Guages a stat by a specified amount
+  client.guage('my_guage', 123.45);
+
+  // Set: Counts unique occurrences of a stat (alias of unique)
+  client.set('my_unique', 'foobar');
+  client.unique('my_unique', 'foobarbaz');
+
+  // Incrementing multiple items
+  client.increment(['these', 'are', 'different', 'stats']);
+
+  // Sampling, this will sample 25% of the time the StatsD Daemon will compensate for sampling
+  client.increment('my_counter', 1, 0.25);
+
+  // Using the callback
+  client.set(['foo', 'bar'], 42, null, function(error, bytes){
+    //this only gets called once after all messages have been sent
+    if(error){
+      console.error('Oh noes! There was an error.', error);
+    } else {
+      console.log('Successfully sent', bytes, 'bytes');
+    }
+  });
+```
+
+## Errors
+
+In the event that there is a socket error, `node-statsd` will allow this error to bubble up.  If you would like to catch the errors, just attach a listener to the socket property on the instance.
+
+```javascript
+client.socket.on('error', function (error) {
+  return console.log ("Error in socket: " + error);
+});
+```
+
+If you want to catch errors in sending a message then use the callback provided.
 
 ## License
 
 node-statsd is licensed under the MIT license.
 
-## Status
-
-**node-statsd** *should* run on modern nodes, and will soon be tested on 0.8 and 0.6.
-
-[![Build Status](https://secure.travis-ci.org/sivy/node-statsd.png?branch=master)](http://travis-ci.org/sivy/node-statsd)
-
-
-## Error handling policy
-
-* exceptions "bubble up" into the app that uses this library
-* we don't log or print to console any errors ourself, it's the toplevel app that decides how to log/write to console.
-* we document which exceptions can be raised, and where. (TODO, https://github.com/sivy/node-statsd/issues/17)
-
-in your main app, you can leverage the fact that you have access to c.socket and do something like:
-(this is the best way I've found so far)
-
-    c.socket.on('error', function (exception) {
-       return console.log ("error event in socket.send(): " + exception);
-    });
