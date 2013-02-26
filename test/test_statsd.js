@@ -49,6 +49,51 @@ describe('StatsD', function(){
       assert.equal(statsd.suffix, 'suffix');
     });
 
+    it('should set the proper values with options hash format', function(){
+      var statsd = new StatsD({host: 'host', port: 1234, prefix: 'prefix', suffix: 'suffix'});
+      assert.equal(statsd.host, 'host');
+      assert.equal(statsd.port, 1234);
+      assert.equal(statsd.prefix, 'prefix');
+      assert.equal(statsd.suffix, 'suffix');
+    });
+
+    it('should attempt to cache a dns record if dnsCache is specified', function(done){
+      var dns = require('dns'),
+          originalLookup = dns.lookup,
+          statsd;
+
+      // replace the dns lookup function with our mock dns lookup
+      dns.lookup = function(host, callback){
+        process.nextTick(function(){
+          dns.lookup = originalLookup;
+          assert.equal(statsd.host, host);
+          callback(null, '127.0.0.1', 4);
+          assert.equal(statsd.host, '127.0.0.1');
+          done()
+        });
+      };
+
+      var statsd = new StatsD({host: 'localhost', cacheDns: true})
+    });
+
+    it('should not attempt to cache a dns record if dnsCache is specified', function(done){
+      var dns = require('dns'),
+          originalLookup = dns.lookup,
+          statsd;
+
+      // replace the dns lookup function with our mock dns lookup
+      dns.lookup = function(host, callback){
+        assert.ok(false, 'StatsD constructor should not invoke dns.lookup when dnsCache is unspecified');
+        dns.lookup = originalLookup;
+      };
+
+      var statsd = new StatsD({host: 'localhost'})
+      process.nextTick(function(){
+        dns.lookup = originalLookup;
+        done()
+      });
+    });
+
     it('should create a global variable set to StatsD() when specified', function(){
       var statsd = new StatsD('host', 1234, 'prefix', 'suffix', true);
       assert.ok(global.statsd instanceof StatsD);
