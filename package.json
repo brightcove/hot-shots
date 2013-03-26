@@ -1,6 +1,6 @@
 { "name" : "node-statsd"
 , "description" : "node client for Etsy'd StatsD server"
-, "version" : "0.0.4"
+, "version" : "0.0.5"
 , "author" : "Steve Ivy"
 , "contributors": [ "Russ Bradberry <rbradberry@gmail.com>" ]
 , "repository" :
