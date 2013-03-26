@@ -18,12 +18,13 @@ $ npm install node-statsd
 
 All initialization parameters are optional.
 
-Parameters:
+Parameters (specified as an options hash):
 * `host`:      The host to send stats to `default: localhost`
 * `port`:      The port to send stats to `default: 8125`
 * `prefix`:    What to prefix each stat name with `default: ''`
 * `suffix`:    What to suffix each stat name with `default: ''`
-* `globalize`: Expost this StatsD instance globally? `default: false`
+* `globalize`: Expose this StatsD instance globally? `default: false`
+* `dnsCache`:  Cache the initial dns lookup to *host* `default: false`
 
 All StatsD methods have the same API:
 * `name`:       Stat name `required`
