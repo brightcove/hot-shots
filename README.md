@@ -46,8 +46,8 @@ If an array is specified as the `name` parameter each item in that array will be
   // Decrement: Decrements a stat by a value (default is -1)
   client.decrement('my_counter');
 
-  // Gauge: Guages a stat by a specified amount
-  client.guage('my_guage', 123.45);
+  // Gauge: Gauge a stat by a specified amount
+  client.gauge('my_gauge', 123.45);
 
   // Set: Counts unique occurrences of a stat (alias of unique)
   client.set('my_unique', 'foobar');
