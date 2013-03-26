@@ -22,6 +22,38 @@ function udpTest(test, callback){
 }
 
 /**
+ * Given a StatsD method, make sure no data is sent to the server
+ * for this method when used on a mock Client.
+ */
+function assertMockClientMethod(method, finished){
+ var testFinished = "test finished message";
+
+  udpTest(function(message, server){
+    // We only expect to get our own test finished message, no stats.
+    assert.equal(message, testFinished);
+    server.close();
+    finished();
+  }, function(server){
+    var address = server.address(),
+        statsd = new StatsD(address.address, address.port, 'prefix', 'suffix', false, false,
+                            /* mock = true */ true),
+        socket = dgram.createSocket("udp4"),
+        buf = new Buffer(testFinished);
+
+    statsd[method]('test', 1, null, function(error, bytes){
+      assert.ok(!error);
+      assert.equal(bytes, 0);
+      // We should call finished() here, but we have to work around
+      // https://github.com/joyent/node/issues/2867 on node 0.6,
+      // such that we don't close the socket within the `listening` event
+      // and pass a single message through instead.
+      socket.send(buf, 0, buf.length, address.port, address.address,
+                  function(){ socket.close(); });
+    });
+  });
+}
+
+/**
  * Since sampling uses random, we need to patch Math.random() to always give
  * a consisten result
  */
@@ -33,12 +65,13 @@ Math.random = function(){
 
 describe('StatsD', function(){
   describe('#init', function(){
-    it('should set a default values when not specified', function(){
+    it('should set default values when not specified', function(){
       var statsd = new StatsD();
       assert.equal(statsd.host, 'localhost');
       assert.equal(statsd.port, 8125);
       assert.equal(statsd.prefix, '');
       assert.equal(statsd.suffix, '');
+      assert.ok(!statsd.mock);
     });
 
     it('should set the proper values when specified', function(){
@@ -69,11 +102,11 @@ describe('StatsD', function(){
           assert.equal(statsd.host, host);
           callback(null, '127.0.0.1', 4);
           assert.equal(statsd.host, '127.0.0.1');
-          done()
+          done();
         });
       };
 
-      var statsd = new StatsD({host: 'localhost', cacheDns: true})
+      statsd = new StatsD({host: 'localhost', cacheDns: true});
     });
 
     it('should not attempt to cache a dns record if dnsCache is specified', function(done){
@@ -87,10 +120,10 @@ describe('StatsD', function(){
         dns.lookup = originalLookup;
       };
 
-      var statsd = new StatsD({host: 'localhost'})
+      statsd = new StatsD({host: 'localhost'});
       process.nextTick(function(){
         dns.lookup = originalLookup;
-        done()
+        done();
       });
     });
 
@@ -104,6 +137,11 @@ describe('StatsD', function(){
     it('should not create a global variable when not specified', function(){
       var statsd = new StatsD('host', 1234, 'prefix', 'suffix');
       assert.equal(global.statsd, undefined);
+    });
+
+    it('should create a mock Client when mock variable is specified', function(){
+      var statsd = new StatsD('host', 1234, 'prefix', 'suffix', false, false, true);
+      assert.ok(statsd.mock);
     });
 
     it('should create a socket variable that is an instance of dgram.Socket', function(){
@@ -168,6 +206,10 @@ describe('StatsD', function(){
         });
       });
     });
+
+    it('should send no timing stat when a mock Client is used', function(finished){
+      assertMockClientMethod('timing', finished);
+    });
   });
 
   describe('#gauge', function(finished){
@@ -226,6 +268,10 @@ describe('StatsD', function(){
         });
       });
     });
+
+    it('should send no gauge stat when a mock Client is used', function(finished){
+      assertMockClientMethod('gauge', finished);
+    });
   });
 
   describe('#increment', function(finished){
@@ -283,6 +329,10 @@ describe('StatsD', function(){
           assert.equal(bytes, 10);
         });
       });
+    });
+
+    it('should send no increment stat when a mock Client is used', function(finished){
+      assertMockClientMethod('increment', finished);
     });
   });
 
@@ -343,6 +393,10 @@ describe('StatsD', function(){
         });
       });
     });
+
+    it('should send no decrement stat when a mock Client is used', function(finished){
+      assertMockClientMethod('decrement', finished);
+    });
   });
 
   describe('#set', function(finished){
@@ -400,6 +454,10 @@ describe('StatsD', function(){
           assert.equal(bytes, 12);
         });
       });
+    });
+
+    it('should send no set stat when a mock Client is used', function(finished){
+      assertMockClientMethod('set', finished);
     });
   });
 
