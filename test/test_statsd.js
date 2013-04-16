@@ -38,7 +38,16 @@ function assertMockClientMethod(method, finished){
         statsd = new StatsD(address.address, address.port, 'prefix', 'suffix', false, false,
                             /* mock = true */ true),
         socket = dgram.createSocket("udp4"),
-        buf = new Buffer(testFinished);
+        buf = new Buffer(testFinished),
+        callbackThrows = false;
+
+    // Regression test for "undefined is not a function" with missing callback on mock instance.
+    try {
+      statsd[method]('test', 1);
+    } catch(e) {
+      callbackThrows = true;
+    }
+    assert.ok(!callbackThrows);
 
     statsd[method]('test', 1, null, function(error, bytes){
       assert.ok(!error);
