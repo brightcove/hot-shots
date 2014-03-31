@@ -173,6 +173,19 @@ describe('StatsD', function(){
       });
     });
 
+    it('should send proper time format with tags', function(finished){
+      udpTest(function(message, server){
+        assert.equal(message, 'test:42|ms|#foo,bar');
+        server.close();
+        finished();
+      }, function(server){
+        var address = server.address(),
+            statsd = new StatsD(address.address, address.port);
+
+        statsd.timing('test', 42, ['foo', 'bar']);
+      });
+    });
+
     it('should send proper time format with prefix, suffix, sampling and callback', function(finished){
       var called = false;
       udpTest(function(message, server){
@@ -232,6 +245,19 @@ describe('StatsD', function(){
             statsd = new StatsD(address.address, address.port);
 
         statsd.histogram('test', 42);
+      });
+    });
+
+    it('should send proper histogram format with tags', function(finished){
+      udpTest(function(message, server){
+        assert.equal(message, 'test:42|h|#foo,bar');
+        server.close();
+        finished();
+      }, function(server){
+        var address = server.address(),
+            statsd = new StatsD(address.address, address.port);
+
+        statsd.histogram('test', 42, ['foo', 'bar']);
       });
     });
 
@@ -297,6 +323,19 @@ describe('StatsD', function(){
       });
     });
 
+    it('should send proper gauge format with tags', function(finished){
+      udpTest(function(message, server){
+        assert.equal(message, 'test:42|g|#foo,bar');
+        server.close();
+        finished();
+      }, function(server){
+        var address = server.address(),
+            statsd = new StatsD(address.address, address.port);
+
+        statsd.gauge('test', 42, ['foo', 'bar']);
+      });
+    });
+
     it('should send proper gauge format with prefix, suffix, sampling and callback', function(finished){
       var called = false;
       udpTest(function(message, server){
@@ -356,6 +395,19 @@ describe('StatsD', function(){
             statsd = new StatsD(address.address, address.port);
 
         statsd.increment('test');
+      });
+    });
+
+    it('should send proper count format with tags', function(finished){
+      udpTest(function(message, server){
+        assert.equal(message, 'test:42|c|#foo,bar');
+        server.close();
+        finished();
+      }, function(server){
+        var address = server.address(),
+            statsd = new StatsD(address.address, address.port);
+
+        statsd.increment('test', 42, ['foo', 'bar']);
       });
     });
 
@@ -421,6 +473,19 @@ describe('StatsD', function(){
       });
     });
 
+    it('should send proper count format with tags', function(finished){
+      udpTest(function(message, server){
+        assert.equal(message, 'test:-42|c|#foo,bar');
+        server.close();
+        finished();
+      }, function(server){
+        var address = server.address(),
+            statsd = new StatsD(address.address, address.port);
+
+        statsd.decrement('test', 42, ['foo', 'bar']);
+      });
+    });
+
     it('should send proper count format with prefix, suffix, sampling and callback', function(finished){
       var called = false;
       udpTest(function(message, server){
@@ -481,6 +546,19 @@ describe('StatsD', function(){
             statsd = new StatsD(address.address, address.port);
 
         statsd.set('test', 42);
+      });
+    });
+
+    it('should send proper set format with tags', function(finished){
+      udpTest(function(message, server){
+        assert.equal(message, 'test:42|s|#foo,bar');
+        server.close();
+        finished();
+      }, function(server){
+        var address = server.address(),
+            statsd = new StatsD(address.address, address.port);
+
+        statsd.set('test', 42, ['foo', 'bar']);
       });
     });
 
