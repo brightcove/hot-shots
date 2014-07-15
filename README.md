@@ -31,6 +31,7 @@ All StatsD methods have the same API:
 * `name`:       Stat name `required`
 * `value`:      Stat value `required except in increment/decrement where it defaults to 1/-1 respectively`
 * `sampleRate`: Sends only a sample of data to StatsD `default: 1`
+* `tags`:       The Array of tags to add to metrics
 * `callback`:   The callback to execute once the metric has been sent
 
 If an array is specified as the `name` parameter each item in that array will be sent along with the specified value.
@@ -48,6 +49,9 @@ If an array is specified as the `name` parameter each item in that array will be
   // Decrement: Decrements a stat by a value (default is -1)
   client.decrement('my_counter');
 
+  // Histogram: send data for histogram stat
+  client.histogram('my_histogram', 42);
+
   // Gauge: Gauge a stat by a specified amount
   client.gauge('my_gauge', 123.45);
 
@@ -61,8 +65,11 @@ If an array is specified as the `name` parameter each item in that array will be
   // Sampling, this will sample 25% of the time the StatsD Daemon will compensate for sampling
   client.increment('my_counter', 1, 0.25);
 
+  // Tags, this will add user-defined tags to the data
+  client.histogram('my_histogram', 42, ['foo', 'bar']);
+
   // Using the callback
-  client.set(['foo', 'bar'], 42, null, function(error, bytes){
+  client.set(['foo', 'bar'], 42, function(error, bytes){
     //this only gets called once after all messages have been sent
     if(error){
       console.error('Oh noes! There was an error:', error);
@@ -70,6 +77,15 @@ If an array is specified as the `name` parameter each item in that array will be
       console.log('Successfully sent', bytes, 'bytes');
     }
   });
+
+  // Sampling, tags and callback are optional and could be used in any combination
+  client.histogram('my_histogram', 42, 0.25); // 25% Sample Rate
+  client.histogram('my_histogram', 42, ['tag']); // User-defined tag
+  client.histogram('my_histogram', 42, next); // Callback
+  client.histogram('my_histogram', 42, 0.25, ['tag']);
+  client.histogram('my_histogram', 42, 0.25, next);
+  client.histogram('my_histogram', 42, ['tag'], next);
+  client.histogram('my_histogram', 42, 0.25, ['tag'], next);
 ```
 
 ## Errors
