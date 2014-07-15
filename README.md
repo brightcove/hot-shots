@@ -31,7 +31,7 @@ All StatsD methods have the same API:
 * `name`:       Stat name `required`
 * `value`:      Stat value `required except in increment/decrement where it defaults to 1/-1 respectively`
 * `sampleRate`: Sends only a sample of data to StatsD `default: 1`
-* `tags`:       The Array of tags to add to metrics
+* `tags`:       The Array of tags to add to metrics `default: []`
 * `callback`:   The callback to execute once the metric has been sent
 
 If an array is specified as the `name` parameter each item in that array will be sent along with the specified value.
