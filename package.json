@@ -11,7 +11,7 @@
 , "directories" : { "lib" : "./lib/" }
 , "engines" : { "node" : ">=0.1.97" }
 , "scripts": {
-      "test": "node ./node_modules/mocha/bin/mocha -R spec"
+      "test": "mocha -R spec"
     }
 , "dependencies" : {}
 , "devDependencies": {
