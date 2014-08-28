@@ -37,7 +37,7 @@ All StatsD methods have the same API:
 If an array is specified as the `name` parameter each item in that array will be sent along with the specified value.
 
 ```javascript
-  var StatsD = require('node-statsd').StatsD,
+  var StatsD = require('node-statsd'),
       client = new StatsD();
 
   // Timing: sends a timing command with the specified milliseconds
