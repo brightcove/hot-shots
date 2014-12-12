@@ -75,28 +75,48 @@ Math.random = function(){
 describe('StatsD', function(){
   describe('#init', function(){
     it('should set default values when not specified', function(){
+      // cachedDns isn't tested here; see below
       var statsd = new StatsD();
       assert.equal(statsd.host, 'localhost');
       assert.equal(statsd.port, 8125);
       assert.equal(statsd.prefix, '');
       assert.equal(statsd.suffix, '');
+      assert.equal(global.statsd, undefined);
+      assert.equal(statsd.mock, undefined);
+      assert.deepEqual(statsd.global_tags, []);
       assert.ok(!statsd.mock);
     });
 
     it('should set the proper values when specified', function(){
-      var statsd = new StatsD('host', 1234, 'prefix', 'suffix');
+      // cachedDns isn't tested here; see below
+      var statsd = new StatsD('host', 1234, 'prefix', 'suffix', true, null, true, ['gtag']);
       assert.equal(statsd.host, 'host');
       assert.equal(statsd.port, 1234);
       assert.equal(statsd.prefix, 'prefix');
       assert.equal(statsd.suffix, 'suffix');
+      assert.equal(statsd, global.statsd);
+      assert.equal(statsd.mock, true);
+      assert.deepEqual(statsd.global_tags, ['gtag']);
     });
 
     it('should set the proper values with options hash format', function(){
-      var statsd = new StatsD({host: 'host', port: 1234, prefix: 'prefix', suffix: 'suffix'});
+      // cachedDns isn't tested here; see below
+      var statsd = new StatsD({
+        host: 'host',
+        port: 1234,
+        prefix: 'prefix',
+        suffix: 'suffix',
+        globalize: true,
+        mock: true,
+        global_tags: ['gtag']
+      });
       assert.equal(statsd.host, 'host');
       assert.equal(statsd.port, 1234);
       assert.equal(statsd.prefix, 'prefix');
       assert.equal(statsd.suffix, 'suffix');
+      assert.equal(statsd, global.statsd);
+      assert.equal(statsd.mock, true);
+      assert.deepEqual(statsd.global_tags, ['gtag']);
     });
 
     it('should attempt to cache a dns record if dnsCache is specified', function(done){
@@ -156,6 +176,56 @@ describe('StatsD', function(){
     it('should create a socket variable that is an instance of dgram.Socket', function(){
       var statsd = new StatsD();
       assert.ok(statsd.socket instanceof dgram.Socket);
+    });
+
+  });
+
+  describe('#global_tags', function(){
+    it('should not add global tags if they are not specified', function(finished){
+      udpTest(function(message, server){
+        assert.equal(message, 'test:1|c');
+        server.close();
+        finished();
+      }, function(server){
+        var address = server.address(),
+            statsd = new StatsD(address.address, address.port);
+
+        statsd.increment('test');
+      });
+    });
+
+    it('should add global tags if they are specified', function(finished){
+      udpTest(function(message, server){
+        assert.equal(message, 'test:1|c|#gtag');
+        server.close();
+        finished();
+      }, function(server){
+        var address = server.address(),
+            statsd = new StatsD({
+              host: address.address,
+              port: address.port,
+              global_tags: ['gtag']
+            });
+
+        statsd.increment('test');
+      });
+    });
+
+    it('should combine global tags and metric tags', function(finished){
+      udpTest(function(message, server){
+        assert.equal(message, 'test:1337|c|#foo,gtag');
+        server.close();
+        finished();
+      }, function(server){
+        var address = server.address(),
+            statsd = new StatsD({
+              host: address.address,
+              port: address.port,
+              global_tags: ['gtag']
+            });
+
+        statsd.increment('test', 1337, ['foo']);
+      });
     });
   });
 
