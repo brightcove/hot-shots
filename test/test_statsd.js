@@ -48,6 +48,7 @@ function assertMockClientMethod(method, finished){
       callbackThrows = true;
     }
     assert.ok(!callbackThrows);
+
     statsd[method]('test', 1, null, function(error, bytes){
       assert.ok(!error);
       assert.equal(bytes, 0);
@@ -717,13 +718,13 @@ describe('StatsD', function(){
         var address = server.address(),
             statsd = new StatsD(address.address, address.port),
             options = {
-                  date_happened: date,
-                  hostname: 'host',
-                  aggregation_key: 'ag_key',
-                  priority: 'low',
-                  source_type_name: 'source_type',
-                  alert_type: 'warning'
-                };
+              date_happened: date,
+              hostname: 'host',
+              aggregation_key: 'ag_key',
+              priority: 'low',
+              source_type_name: 'source_type',
+              alert_type: 'warning'
+            };
 
         statsd.event('test title', 'another desc', options);
       });

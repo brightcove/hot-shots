@@ -112,8 +112,8 @@ The event method has the following API:
 Some of the functionality mentioned above is specific to DogStatsD and will not do anything if are using the regular statsd client.  This includes:
 * global_tags parameter
 * tags parameter
-* histogram API
-* event API
+* histogram method
+* event method
 
 ## Errors
 
