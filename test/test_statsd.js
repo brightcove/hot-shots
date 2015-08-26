@@ -48,7 +48,6 @@ function assertMockClientMethod(method, finished){
       callbackThrows = true;
     }
     assert.ok(!callbackThrows);
-
     statsd[method]('test', 1, null, function(error, bytes){
       assert.ok(!error);
       assert.equal(bytes, 0);
@@ -680,4 +679,91 @@ describe('StatsD', function(){
     });
   });
 
+  describe('#event', function(finished) {
+    it('should send proper event format for title and text', function (finished) {
+      udpTest(function (message, server) {
+        assert.equal(message, '_e{4,11}:test|description');
+        server.close();
+        finished();
+      }, function (server) {
+        var address = server.address(),
+            statsd = new StatsD(address.address, address.port);
+
+        statsd.event('test', 'description');
+      });
+    });
+
+    it('should reuse the title when when text is missing', function (finished) {
+      udpTest(function (message, server) {
+        assert.equal(message, '_e{4,4}:test|test');
+        server.close();
+        finished();
+      }, function (server) {
+        var address = server.address(),
+            statsd = new StatsD(address.address, address.port);
+
+        statsd.event('test');
+      });
+    });
+
+    it('should send proper event format for title, text, and options', function (finished) {
+      var date = new Date();
+      udpTest(function (message, server) {
+        assert.equal(message, '_e{10,12}:test title|another desc|d:' + date.getTime() +
+            '|h:host|k:ag_key|p:low|s:source_type|t:warning');
+        server.close();
+        finished();
+      }, function (server) {
+        var address = server.address(),
+            statsd = new StatsD(address.address, address.port),
+            options = {
+                  date_happened: date,
+                  hostname: 'host',
+                  aggregation_key: 'ag_key',
+                  priority: 'low',
+                  source_type_name: 'source_type',
+                  alert_type: 'warning'
+                };
+
+        statsd.event('test title', 'another desc', options);
+      });
+    });
+
+    it('should send proper event format for title, text, some options, and tags', function (finished) {
+      udpTest(function (message, server) {
+        assert.equal(message, '_e{10,12}:test title|another desc|h:host|#foo,bar');
+        server.close();
+        finished();
+      }, function (server) {
+        var address = server.address(),
+            statsd = new StatsD(address.address, address.port),
+            options = {
+              hostname: 'host'
+            };
+
+        statsd.event('test title', 'another desc', options, ['foo', 'bar']);
+      });
+    });
+
+    it('should send proper event format for title, text, tags, and a callback', function (finished) {
+      var called = true;
+      udpTest(function (message, server) {
+        assert.equal(message, '_e{10,12}:test title|another desc|#foo,bar');
+        assert.equal(called, true);
+        server.close();
+        finished();
+      }, function (server) {
+        var address = server.address(),
+            statsd = new StatsD(address.address, address.port);
+
+        statsd.event('test title', 'another desc', null, ['foo', 'bar'], function(){
+          called = true;
+        });
+      });
+    });
+
+    it('should send no event stat when a mock Client is used', function(finished){
+      assertMockClientMethod('event', finished);
+    });
+  });
 });

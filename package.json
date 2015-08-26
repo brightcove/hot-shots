@@ -17,9 +17,5 @@
 , "devDependencies": {
     "mocha":"*"
 }
-, "licenses" :
-  [ { "type" : "MIT"
-    , "url" : "http://github.com/sivy/node-stats/raw/master/LICENSE"
-    }
-  ]
+, "license" : "MIT"
 }

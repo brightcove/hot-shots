@@ -1,6 +1,7 @@
 # node-statsd
 
-A node.js client for [Etsy](http://etsy.com)'s [StatsD](https://github.com/etsy/statsd) server.
+A node.js client for [Etsy](http://etsy.com)'s [StatsD](https://github.com/etsy/statsd) server and
+Datadog's [DogStatsD](http://docs.datadoghq.com/guides/dogstatsd/) server.
 
 This client will let you fire stats at your StatsD server from a node.js application.
 
@@ -28,7 +29,7 @@ Parameters (specified as an options hash):
 * `mock`:        Create a mock StatsD instance, sending no stats to the server? `default: false`
 * `global_tags`: Optional tags that will be added to every metric `default: []`
 
-All StatsD methods have the same API:
+All StatsD methods other than event have the same API:
 * `name`:       Stat name `required`
 * `value`:      Stat value `required except in increment/decrement where it defaults to 1/-1 respectively`
 * `sampleRate`: Sends only a sample of data to StatsD `default: 1`
@@ -36,6 +37,20 @@ All StatsD methods have the same API:
 * `callback`:   The callback to execute once the metric has been sent
 
 If an array is specified as the `name` parameter each item in that array will be sent along with the specified value.
+
+The event method has the following API:
+
+* `title`:       Event title `required`
+* `text`:        Event description `default is title`
+* `options`:     Options for the event
+  * `date_happened`    Assign a timestamp to the event `default is now`
+  * `hostname`         Assign a hostname to the event.
+  * `aggregation_key`  Assign an aggregation key to the event, to group it with some others.
+  * `priority`         Can be ‘normal’ or ‘low’ `default: normal`
+  * `source_type_name` Assign a source type to the event.
+  * `alert_type`       Can be ‘error’, ‘warning’, ‘info’ or ‘success’ `default: info`
+* `tags`:       The Array of tags to add to metrics `default: []`
+* `callback`:   The callback to execute once the metric has been sent
 
 ```javascript
   var StatsD = require('node-statsd'),
@@ -59,6 +74,9 @@ If an array is specified as the `name` parameter each item in that array will be
   // Set: Counts unique occurrences of a stat (alias of unique)
   client.set('my_unique', 'foobar');
   client.unique('my_unique', 'foobarbaz');
+
+  // Event: sends the titled event
+  client.event('my_title', 'description');
 
   // Incrementing multiple items
   client.increment(['these', 'are', 'different', 'stats']);
@@ -88,6 +106,14 @@ If an array is specified as the `name` parameter each item in that array will be
   client.histogram('my_histogram', 42, ['tag'], next);
   client.histogram('my_histogram', 42, 0.25, ['tag'], next);
 ```
+
+## DogStatsD-specific usage
+
+Some of the functionality mentioned above is specific to DogStatsD and will not do anything if are using the regular statsd client.  This includes:
+* global_tags parameter
+* tags parameter
+* histogram API
+* event API
 
 ## Errors
 
