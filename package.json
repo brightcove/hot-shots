@@ -1,21 +1,22 @@
-{ "name" : "node-statsd"
-, "description" : "node client for Etsy'd StatsD server"
-, "version" : "0.1.1"
-, "author" : "Steve Ivy"
-, "contributors": [ "Russ Bradberry <rbradberry@gmail.com>" ]
-, "repository" :
+{ "name" : "hot-shots",
+  "description" : "Node.js client for statsd and DogStatsD",
+  "version" : "0.0.1",
+  "author" : "Steve Ivy",
+  "contributors": [ "Russ Bradberry <rbradberry@gmail.com>",
+    "Brian Deitte <bdeitte@gmail.com>" ],
+  "repository" :
   { "type" : "git"
-  , "url" : "git://github.com/sivy/node-statsd.git"
-  }
-, "bugs" : { "url" : "https://github.com/sivy/node-statsd/issues" }
-, "directories" : { "lib" : "./lib/" }
-, "engines" : { "node" : ">=0.1.97" }
-, "scripts": {
-      "test": "mocha -R spec"
-    }
-, "dependencies" : {}
-, "devDependencies": {
+  , "url" : "git://github.com/brightcove/hot-shots.git"
+  },
+  "bugs" : { "url" : "https://github.com/brightcove/hot-shots/issues" },
+  "directories" : { "lib" : "./lib/" },
+  "engines" : { "node" : ">=0.8.0" },
+  "scripts": {
+    "test": "mocha -R spec"
+  },
+  "dependencies" : {},
+  "devDependencies": {
     "mocha":"*"
-}
-, "license" : "MIT"
+  },
+  "license" : "MIT"
 }

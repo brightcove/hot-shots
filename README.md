@@ -1,13 +1,9 @@
-# node-statsd
+# hot-shots
 
-A node.js client for [Etsy](http://etsy.com)'s [StatsD](https://github.com/etsy/statsd) server and
+A Node.js client for [Etsy](http://etsy.com)'s [StatsD](https://github.com/etsy/statsd) server and
 Datadog's [DogStatsD](http://docs.datadoghq.com/guides/dogstatsd/) server.
 
-This client will let you fire stats at your StatsD server from a node.js application.
-
-node-statsd Runs and is tested on Node 0.6+ on all *nix platforms and 0.8+ on all platforms including Windows.
-
-[![Build Status](https://secure.travis-ci.org/sivy/node-statsd.png?branch=master)](http://travis-ci.org/sivy/node-statsd)
+This project is a fork off of [node-statsd](https://github.com/sivy/node-statsd)
 
 ## Installation
 
@@ -127,7 +123,14 @@ client.socket.on('error', function(error) {
 
 If you want to catch errors in sending a message then use the callback provided.
 
+## Name
+
+Why is this project named hot-shots?  Because:
+a) It's impossible to find another statsd name on npm
+b) It's the name of a dumb movie
+c) No good reason
+
 ## License
 
-node-statsd is licensed under the MIT license.
+hot-shots is licensed under the MIT license.
 
