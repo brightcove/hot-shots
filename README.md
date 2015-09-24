@@ -126,6 +126,7 @@ If you want to catch errors in sending a message then use the callback provided.
 ## Name
 
 Why is this project named hot-shots?  Because:
+
 1. It's impossible to find another statsd name on npm
 2. It's the name of a dumb movie
 3. No good reason
