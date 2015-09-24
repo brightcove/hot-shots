@@ -8,7 +8,7 @@ This project is a fork off of [node-statsd](https://github.com/sivy/node-statsd)
 ## Installation
 
 ```
-$ npm install node-statsd
+$ npm install hot-shots
 ```
 
 ## Usage
@@ -49,7 +49,7 @@ The event method has the following API:
 * `callback`:   The callback to execute once the metric has been sent
 
 ```javascript
-  var StatsD = require('node-statsd'),
+  var StatsD = require('hot-shots'),
       client = new StatsD();
 
   // Timing: sends a timing command with the specified milliseconds
@@ -113,7 +113,7 @@ Some of the functionality mentioned above is specific to DogStatsD and will not 
 
 ## Errors
 
-In the event that there is a socket error, `node-statsd` will allow this error to bubble up.  If you would like to catch the errors, just attach a listener to the socket property on the instance.
+In the event that there is a socket error, `hot-shots` will allow this error to bubble up.  If you would like to catch the errors, just attach a listener to the socket property on the instance.
 
 ```javascript
 client.socket.on('error', function(error) {
