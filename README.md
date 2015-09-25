@@ -5,6 +5,8 @@ Datadog's [DogStatsD](http://docs.datadoghq.com/guides/dogstatsd/) server.
 
 This project is a fork off of [node-statsd](https://github.com/sivy/node-statsd)
 
+[![Build Status](https://secure.travis-ci.org/brightcove/hot-shots.png?branch=master)](http://travis-ci.org/brightcove/hot-shots)
+
 ## Installation
 
 ```
@@ -122,6 +124,15 @@ client.socket.on('error', function(error) {
 ```
 
 If you want to catch errors in sending a message then use the callback provided.
+
+## Submitting changes
+
+Thanks for considering making any updates to this project!  Here are the steps to take in your fork:
+
+1. Make sure you've added any new tests needed
+2. Run "npm install && npm unit"
+3. Update the HEAD section in CHANGES.md with a description of what you have done
+4. Push your changes and create the PR, and we'll try to get this merged in right away
 
 ## Name
 

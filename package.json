@@ -7,6 +7,12 @@
     "Russ Bradberry <rbradberry@gmail.com>",
     "Brian Deitte <bdeitte@gmail.com>"
   ],
+  "keywords": [
+    "statsd",
+    "dogstatsd",
+    "datadog",
+    "metrics"
+  ],
   "repository": {
     "type": "git",
     "url": "git://github.com/brightcove/hot-shots.git"
@@ -21,11 +27,15 @@
     "node": ">=0.8.0"
   },
   "scripts": {
-    "test": "mocha -R spec"
+    "test": "mocha -R spec",
+    "lint": "jshint lib/**.js test/**.js",
+    "pretest": "npm run lint"
   },
   "dependencies": {},
   "devDependencies": {
-    "mocha": "*"
+    "jshint": "2.x",
+    "mocha": "2.x"
+
   },
   "license": "MIT"
 }
