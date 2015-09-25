@@ -1,7 +1,7 @@
 {
   "name": "hot-shots",
   "description": "Node.js client for statsd and DogStatsD",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "author": "Steve Ivy",
   "contributors": [
     "Russ Bradberry <rbradberry@gmail.com>",
@@ -35,7 +35,6 @@
   "devDependencies": {
     "jshint": "2.x",
     "mocha": "2.x"
-
   },
   "license": "MIT"
 }
