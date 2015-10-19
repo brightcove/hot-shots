@@ -679,5 +679,77 @@ describe('StatsD', function(){
       assertMockClientMethod('set', finished);
     });
   });
+  describe('buffer', function() {
+    it('should aggregate packets when maxBufferSize is set to non-zero', function (finished) {
+      udpTest(function (message, server) {
+        assert.equal(message, 'a:1|c\nb:2|c\n');
+        server.close();
+        finished();
+      }, function (server) {
+        var address = server.address();
+        var options = {
+          host: address.host,
+          port: address.port,
+          maxBufferSize: 8
+        };
+        var statsd = new StatsD(options);
 
+        statsd.increment('a', 1);
+        statsd.increment('b', 2);
+      });
+    });
+
+    it('should not aggregate packets when maxBufferSize is set to zero', function (finished) {
+      var results = [
+        'a:1|c',
+        'b:2|c'
+      ];
+      var msgCount = 0;
+      udpTest(function (message, server) {
+        var index = results.indexOf(message);
+        assert.equal(index >= 0, true);
+        results.splice(index, 1);
+        msgCount++;
+        if (msgCount >= 2) {
+          assert.equal(results.length, 0);
+          server.close();
+          finished();
+        }
+      }, function (server) {
+        var address = server.address();
+        var options = {
+          host: address.host,
+          port: address.port,
+          maxBufferSize: 0
+        };
+        var statsd = new StatsD(options);
+
+        statsd.increment('a', 1);
+        statsd.increment('b', 2);
+      });
+    });
+
+    it('should flush the buffer when timeout value elapsed', function (finished) {
+      var timestamp;
+      udpTest(function (message, server) {
+        assert.equal(message, 'a:1|c\n');
+        var elapsed = Date.now() - timestamp;
+        assert.equal(elapsed > 1000, true);
+        server.close();
+        finished();
+      }, function (server) {
+        var address = server.address();
+        var options = {
+          host: address.host,
+          port: address.port,
+          maxBufferSize: 1220,
+          bufferFlushInterval: 1100
+        };
+        var statsd = new StatsD(options);
+
+        timestamp = new Date();
+        statsd.increment('a', 1);
+      });
+    });
+  });
 });
