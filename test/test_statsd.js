@@ -83,7 +83,7 @@ describe('StatsD', function(){
       assert.equal(statsd.suffix, '');
       assert.equal(global.statsd, undefined);
       assert.equal(statsd.mock, undefined);
-      assert.deepEqual(statsd.global_tags, []);
+      assert.deepEqual(statsd.globalTags, []);
       assert.ok(!statsd.mock);
     });
 
@@ -96,7 +96,7 @@ describe('StatsD', function(){
       assert.equal(statsd.suffix, 'suffix');
       assert.equal(statsd, global.statsd);
       assert.equal(statsd.mock, true);
-      assert.deepEqual(statsd.global_tags, ['gtag']);
+      assert.deepEqual(statsd.globalTags, ['gtag']);
     });
 
     it('should set the proper values with options hash format', function(){
@@ -108,7 +108,7 @@ describe('StatsD', function(){
         suffix: 'suffix',
         globalize: true,
         mock: true,
-        global_tags: ['gtag']
+        globalTags: ['gtag']
       });
       assert.equal(statsd.host, 'host');
       assert.equal(statsd.port, 1234);
@@ -116,7 +116,7 @@ describe('StatsD', function(){
       assert.equal(statsd.suffix, 'suffix');
       assert.equal(statsd, global.statsd);
       assert.equal(statsd.mock, true);
-      assert.deepEqual(statsd.global_tags, ['gtag']);
+      assert.deepEqual(statsd.globalTags, ['gtag']);
     });
 
     it('should attempt to cache a dns record if dnsCache is specified', function(done){
@@ -180,7 +180,7 @@ describe('StatsD', function(){
 
   });
 
-  describe('#global_tags', function(){
+  describe('#globalTags', function(){
     it('should not add global tags if they are not specified', function(finished){
       udpTest(function(message, server){
         assert.equal(message, 'test:1|c');
@@ -204,7 +204,7 @@ describe('StatsD', function(){
             statsd = new StatsD({
               host: address.address,
               port: address.port,
-              global_tags: ['gtag']
+              globalTags: ['gtag']
             });
 
         statsd.increment('test');
@@ -221,7 +221,7 @@ describe('StatsD', function(){
             statsd = new StatsD({
               host: address.address,
               port: address.port,
-              global_tags: ['gtag']
+              globalTags: ['gtag']
             });
 
         statsd.increment('test', 1337, ['foo']);

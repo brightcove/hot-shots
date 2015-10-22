@@ -25,7 +25,9 @@ Parameters (specified as an options hash):
 * `globalize`:   Expose this StatsD instance globally? `default: false`
 * `cacheDns`:    Cache the initial dns lookup to *host* `default: false`
 * `mock`:        Create a mock StatsD instance, sending no stats to the server? `default: false`
-* `global_tags`: Optional tags that will be added to every metric `default: []`
+* `globalTags`:  Tags that will be added to every metric `default: []`
+* `maxBufferSize`: If larger than 0,  metrics will be buffered and only sent when the string length is greater than the size. `default: 0`
+* `bufferFlushInterval`: If buffering is in use, this is the time in ms to always flush any buffered metrics. `default: 1000`
 
 All StatsD methods other than event have the same API:
 * `name`:       Stat name `required`
