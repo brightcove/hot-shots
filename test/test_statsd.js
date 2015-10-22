@@ -83,7 +83,7 @@ describe('StatsD', function(){
       assert.equal(statsd.suffix, '');
       assert.equal(global.statsd, undefined);
       assert.equal(statsd.mock, undefined);
-      assert.deepEqual(statsd.global_tags, []);
+      assert.deepEqual(statsd.globalTags, []);
       assert.ok(!statsd.mock);
     });
 
@@ -96,7 +96,7 @@ describe('StatsD', function(){
       assert.equal(statsd.suffix, 'suffix');
       assert.equal(statsd, global.statsd);
       assert.equal(statsd.mock, true);
-      assert.deepEqual(statsd.global_tags, ['gtag']);
+      assert.deepEqual(statsd.globalTags, ['gtag']);
     });
 
     it('should set the proper values with options hash format', function(){
@@ -108,7 +108,7 @@ describe('StatsD', function(){
         suffix: 'suffix',
         globalize: true,
         mock: true,
-        global_tags: ['gtag']
+        globalTags: ['gtag']
       });
       assert.equal(statsd.host, 'host');
       assert.equal(statsd.port, 1234);
@@ -116,7 +116,7 @@ describe('StatsD', function(){
       assert.equal(statsd.suffix, 'suffix');
       assert.equal(statsd, global.statsd);
       assert.equal(statsd.mock, true);
-      assert.deepEqual(statsd.global_tags, ['gtag']);
+      assert.deepEqual(statsd.globalTags, ['gtag']);
     });
 
     it('should attempt to cache a dns record if dnsCache is specified', function(done){
@@ -180,7 +180,7 @@ describe('StatsD', function(){
 
   });
 
-  describe('#global_tags', function(){
+  describe('#globalTags', function(){
     it('should not add global tags if they are not specified', function(finished){
       udpTest(function(message, server){
         assert.equal(message, 'test:1|c');
@@ -204,7 +204,7 @@ describe('StatsD', function(){
             statsd = new StatsD({
               host: address.address,
               port: address.port,
-              global_tags: ['gtag']
+              globalTags: ['gtag']
             });
 
         statsd.increment('test');
@@ -221,7 +221,7 @@ describe('StatsD', function(){
             statsd = new StatsD({
               host: address.address,
               port: address.port,
-              global_tags: ['gtag']
+              globalTags: ['gtag']
             });
 
         statsd.increment('test', 1337, ['foo']);
@@ -679,7 +679,6 @@ describe('StatsD', function(){
       assertMockClientMethod('set', finished);
     });
   });
-
   describe('#event', function(finished) {
     it('should send proper event format for title and text', function (finished) {
       udpTest(function (message, server) {
@@ -765,6 +764,79 @@ describe('StatsD', function(){
 
     it('should send no event stat when a mock Client is used', function(finished){
       assertMockClientMethod('event', finished);
+    });
+  });  
+  describe('buffer', function() {
+    it('should aggregate packets when maxBufferSize is set to non-zero', function (finished) {
+      udpTest(function (message, server) {
+        assert.equal(message, 'a:1|c\nb:2|c\n');
+        server.close();
+        finished();
+      }, function (server) {
+        var address = server.address();
+        var options = {
+          host: address.host,
+          port: address.port,
+          maxBufferSize: 8
+        };
+        var statsd = new StatsD(options);
+
+        statsd.increment('a', 1);
+        statsd.increment('b', 2);
+      });
+    });
+
+    it('should not aggregate packets when maxBufferSize is set to zero', function (finished) {
+      var results = [
+        'a:1|c',
+        'b:2|c'
+      ];
+      var msgCount = 0;
+      udpTest(function (message, server) {
+        var index = results.indexOf(message);
+        assert.equal(index >= 0, true);
+        results.splice(index, 1);
+        msgCount++;
+        if (msgCount >= 2) {
+          assert.equal(results.length, 0);
+          server.close();
+          finished();
+        }
+      }, function (server) {
+        var address = server.address();
+        var options = {
+          host: address.host,
+          port: address.port,
+          maxBufferSize: 0
+        };
+        var statsd = new StatsD(options);
+
+        statsd.increment('a', 1);
+        statsd.increment('b', 2);
+      });
+    });
+
+    it('should flush the buffer when timeout value elapsed', function (finished) {
+      var timestamp;
+      udpTest(function (message, server) {
+        assert.equal(message, 'a:1|c\n');
+        var elapsed = Date.now() - timestamp;
+        assert.equal(elapsed > 1000, true);
+        server.close();
+        finished();
+      }, function (server) {
+        var address = server.address();
+        var options = {
+          host: address.host,
+          port: address.port,
+          maxBufferSize: 1220,
+          bufferFlushInterval: 1100
+        };
+        var statsd = new StatsD(options);
+
+        timestamp = new Date();
+        statsd.increment('a', 1);
+      });
     });
   });
 });
