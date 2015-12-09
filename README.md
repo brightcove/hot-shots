@@ -65,7 +65,7 @@ The event method has the following API:
   // Decrement: Decrements a stat by a value (default is -1)
   client.decrement('my_counter');
 
-  // Histogram: send data for histogram stat
+  // Histogram: send data for histogram stat (DataDog and Telegraf only)
   client.histogram('my_histogram', 42);
 
   // Gauge: Gauge a stat by a specified amount
@@ -84,7 +84,7 @@ The event method has the following API:
   // Sampling, this will sample 25% of the time the StatsD Daemon will compensate for sampling
   client.increment('my_counter', 1, 0.25);
 
-  // Tags, this will add user-defined tags to the data
+  // Tags, this will add user-defined tags to the data (DataDog and Telegraf only)
   client.histogram('my_histogram', 42, ['foo', 'bar']);
 
   // Using the callback
@@ -97,7 +97,7 @@ The event method has the following API:
     }
   });
 
-  // Sampling, tags and callback are optional and could be used in any combination
+  // Sampling, tags and callback are optional and could be used in any combination (DataDog and Telegraf only)
   client.histogram('my_histogram', 42, 0.25); // 25% Sample Rate
   client.histogram('my_histogram', 42, ['tag']); // User-defined tag
   client.histogram('my_histogram', 42, next); // Callback
@@ -107,12 +107,16 @@ The event method has the following API:
   client.histogram('my_histogram', 42, 0.25, ['tag'], next);
 ```
 
-## DogStatsD-specific usage
+## DogStatsD and Telegraf functionality
 
-Some of the functionality mentioned above is specific to DogStatsD and will not do anything if are using the regular statsd client.  This includes:
-* global_tags parameter
+Some of the functionality mentioned above is specific to DogStatsD or Telegraf.  They will not do anything if you are using the regular statsd client.
+* globalTags parameter
 * tags parameter
 * histogram method
+
+## DogStatsD functionality
+
+Some of the functionality mentioned above is specific to DogStatsD.  They will not do anything if you are using the regular statsd client or Telegraf.
 * event method
 
 ## Errors
