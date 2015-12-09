@@ -6,6 +6,9 @@ CHANGELOG
 
 --------------------
 
+## 2.1.0 (2015-12-9)
+* Add options.telegraf to enable support for Telegraf's StatsD line protocol format
+
 ## 2.0.0 (2015-10-22)
 * Add options.maxBufferSize and optinons.bufferFlushInterval
 * Change options.global_tags to options.globalTags for conistency

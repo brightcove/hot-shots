@@ -227,6 +227,43 @@ describe('StatsD', function(){
         statsd.increment('test', 1337, ['foo']);
       });
     });
+
+    it('should add global tags using telegraf format when enabled', function(finished){
+      udpTest(function(message, server){
+        assert.equal(message, 'test,gtag=gvalue:1|c');
+        server.close();
+        finished();
+      }, function(server){
+        var address = server.address(),
+            statsd = new StatsD({
+              host: address.address,
+              port: address.port,
+              globalTags: ['gtag:gvalue'],
+              telegraf: true
+            });
+
+        statsd.increment('test');
+      });
+    });
+
+    it('should combine global tags and metric tags using telegraf format when enabled', function(finished){
+      udpTest(function(message, server){
+        assert.equal(message, 'test,foo=bar,gtag=gvalue:1337|c');
+        server.close();
+        finished();
+      }, function(server){
+        var address = server.address(),
+            statsd = new StatsD({
+              host: address.address,
+              port: address.port,
+              globalTags: ['gtag=gvalue'],
+              telegraf: true
+            });
+
+        statsd.increment('test', 1337, ['foo:bar']);
+      });
+    });
+
   });
 
   describe('#timing', function(finished){
@@ -765,7 +802,28 @@ describe('StatsD', function(){
     it('should send no event stat when a mock Client is used', function(finished){
       assertMockClientMethod('event', finished);
     });
-  });  
+
+    it('should throw and execption when using telegraf format', function(finished){
+      udpTest(function () {
+        // will not fire
+      }, function (server) {
+        var address = server.address(),
+            statsd = new StatsD({
+              host: address.address,
+              port: address.port,
+              telegraf: true
+            });
+
+        assert.throws(function () {
+          statsd.event('test title', 'another desc', null, ['foo', 'bar']);
+        }, function (err) {
+          server.close();
+          finished();
+        });
+      });
+    });
+
+  });
   describe('buffer', function() {
     it('should aggregate packets when maxBufferSize is set to non-zero', function (finished) {
       udpTest(function (message, server) {
