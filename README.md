@@ -1,7 +1,6 @@
 # hot-shots
 
-A Node.js client for [Etsy](http://etsy.com)'s [StatsD](https://github.com/etsy/statsd) server and
-Datadog's [DogStatsD](http://docs.datadoghq.com/guides/dogstatsd/) server.
+A Node.js client for [Etsy](http://etsy.com)'s [StatsD](https://github.com/etsy/statsd) server that supports both Datadog's [DogStatsD](http://docs.datadoghq.com/guides/dogstatsd/) and [InfluxDB's](http://influxdb.com) [Telegraf](https://github.com/influxdb/telegraf) StatsD server.
 
 This project is a fork off of [node-statsd](https://github.com/sivy/node-statsd)
 
@@ -28,6 +27,7 @@ Parameters (specified as an options hash):
 * `globalTags`:  Tags that will be added to every metric `default: []`
 * `maxBufferSize`: If larger than 0,  metrics will be buffered and only sent when the string length is greater than the size. `default: 0`
 * `bufferFlushInterval`: If buffering is in use, this is the time in ms to always flush any buffered metrics. `default: 1000`
+* `telegraf`:    Use Telegraf's StatsD line protocol `default: false`
 
 All StatsD methods other than event have the same API:
 * `name`:       Stat name `required`
@@ -75,7 +75,7 @@ The event method has the following API:
   client.set('my_unique', 'foobar');
   client.unique('my_unique', 'foobarbaz');
 
-  // Event: sends the titled event
+  // Event: sends the titled event (DataDog only)
   client.event('my_title', 'description');
 
   // Incrementing multiple items
@@ -147,4 +147,3 @@ Why is this project named hot-shots?  Because:
 ## License
 
 hot-shots is licensed under the MIT license.
-
