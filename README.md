@@ -136,7 +136,7 @@ If you want to catch errors in sending a message then use the callback provided.
 Thanks for considering making any updates to this project!  Here are the steps to take in your fork:
 
 1. Make sure you've added any new tests needed
-2. Run "npm install && npm unit"
+2. Run "npm install && npm test"
 3. Update the HEAD section in CHANGES.md with a description of what you have done
 4. Push your changes and create the PR, and we'll try to get this merged in right away
 
