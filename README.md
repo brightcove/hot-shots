@@ -112,7 +112,7 @@ The event method has the following API:
 Some of the functionality mentioned above is specific to DogStatsD or Telegraf.  They will not do anything if you are using the regular statsd client.
 * globalTags parameter- DogStatsD or Telegraf
 * tags parameter- DogStatsD or Telegraf
-* telegraph parameter- Telegraf
+* telegraf parameter- Telegraf
 * histogram method- DogStatsD or Telegraf
 * event method- DogStatsD
 
