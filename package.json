@@ -11,7 +11,8 @@
     "statsd",
     "dogstatsd",
     "datadog",
-    "metrics"
+    "metrics",
+    "telegraf"
   ],
   "repository": {
     "type": "git",

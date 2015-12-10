@@ -1,6 +1,6 @@
 # hot-shots
 
-A Node.js client for [Etsy](http://etsy.com)'s [StatsD](https://github.com/etsy/statsd) server that supports both Datadog's [DogStatsD](http://docs.datadoghq.com/guides/dogstatsd/) and [InfluxDB's](http://influxdb.com) [Telegraf](https://github.com/influxdb/telegraf) StatsD server.
+A Node.js client for [Etsy](http://etsy.com)'s [StatsD](https://github.com/etsy/statsd) server, Datadog's [DogStatsD](http://docs.datadoghq.com/guides/dogstatsd/) server, and [InfluxDB's](http://influxdb.com) [Telegraf](https://github.com/influxdb/telegraf) StatsD server.
 
 This project is a fork off of [node-statsd](https://github.com/sivy/node-statsd)
 
@@ -27,7 +27,7 @@ Parameters (specified as an options hash):
 * `globalTags`:  Tags that will be added to every metric `default: []`
 * `maxBufferSize`: If larger than 0,  metrics will be buffered and only sent when the string length is greater than the size. `default: 0`
 * `bufferFlushInterval`: If buffering is in use, this is the time in ms to always flush any buffered metrics. `default: 1000`
-* `telegraf`:    Use Telegraf's StatsD line protocol `default: false`
+* `telegraf`:    Use Telegraf's StatsD line protocol, which is slightly different than the rest `default: false`
 
 All StatsD methods other than event have the same API:
 * `name`:       Stat name `required`
@@ -110,14 +110,11 @@ The event method has the following API:
 ## DogStatsD and Telegraf functionality
 
 Some of the functionality mentioned above is specific to DogStatsD or Telegraf.  They will not do anything if you are using the regular statsd client.
-* globalTags parameter
-* tags parameter
-* histogram method
-
-## DogStatsD functionality
-
-Some of the functionality mentioned above is specific to DogStatsD.  They will not do anything if you are using the regular statsd client or Telegraf.
-* event method
+* globalTags parameter- DogStatsD or Telegraf
+* tags parameter- DogStatsD or Telegraf
+* telegraph parameter- Telegraf
+* histogram method- DogStatsD or Telegraf
+* event method- DogStatsD
 
 ## Errors
 
