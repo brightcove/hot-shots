@@ -6,6 +6,9 @@ CHANGELOG
 
 --------------------
 
+## 2.1.1 (2015-12-9)
+* @bdeitte Doc updates
+
 ## 2.1.0 (2015-12-9)
 * @mmoulton Add options.telegraf to enable support for Telegraf's StatsD line protocol format
 * @mmoulton Ensure message callback is sent in buffered case, even when we just buffer.
