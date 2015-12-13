@@ -2,7 +2,7 @@ CHANGELOG
 =========
 
 ## HEAD (Unreleased)
-* none
+* @bdeitte Even more doc updates
 
 --------------------
 

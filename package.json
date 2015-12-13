@@ -1,6 +1,6 @@
 {
   "name": "hot-shots",
-  "description": "Node.js client for statsd and DogStatsD",
+  "description": "Node.js client for StatsD, DogStatsD, and Telegraf",
   "version": "2.1.1",
   "author": "Steve Ivy",
   "contributors": [
