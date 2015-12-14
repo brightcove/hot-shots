@@ -230,7 +230,7 @@ describe('StatsD', function(){
 
     it('should add global tags using telegraf format when enabled', function(finished){
       udpTest(function(message, server){
-        assert.equal(message, 'test,gtag=gvalue:1|c');
+        assert.equal(message, 'test,gtag=gvalue,gtag2=gvalue2:1|c');
         server.close();
         finished();
       }, function(server){
@@ -238,7 +238,7 @@ describe('StatsD', function(){
             statsd = new StatsD({
               host: address.address,
               port: address.port,
-              globalTags: ['gtag:gvalue'],
+              globalTags: ['gtag:gvalue', 'gtag2:gvalue2'],
               telegraf: true
             });
 
