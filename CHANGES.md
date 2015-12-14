@@ -2,9 +2,13 @@ CHANGELOG
 =========
 
 ## HEAD (Unreleased)
-* @bdeitte Even more doc updates
+none
 
 --------------------
+
+## 2.1.2 (2015-12-9)
+* @bdeitte Even more doc updates
+* @mmoulton Fix multiple tags with Telegraf
 
 ## 2.1.1 (2015-12-9)
 * @bdeitte Doc updates
