@@ -66,7 +66,6 @@ function assertMockClientMethod(method, finished){
  * Since sampling uses random, we need to patch Math.random() to always give
  * a consisten result
  */
-var oldRandom = Math.random;
 Math.random = function(){
   return 0.42;
 };
@@ -824,7 +823,8 @@ describe('StatsD', function(){
     });
 
   });
-  describe('buffer', function() {
+
+  describe('#buffer', function() {
     it('should aggregate packets when maxBufferSize is set to non-zero', function (finished) {
       udpTest(function (message, server) {
         assert.equal(message, 'a:1|c\nb:2|c\n');
@@ -896,5 +896,53 @@ describe('StatsD', function(){
         statsd.increment('a', 1);
       });
     });
+  });
+
+  describe('#callbacks', function(finished){
+    it('should call callback after histogram call', function(finished){
+      udpTest(function(message, server){
+        assert.equal(message, 'test:42|h');
+        server.close();
+      }, function(server){
+        var address = server.address(),
+            statsd = new StatsD(address.address, address.port);
+
+        statsd.histogram('test', 42, null, null, function(err, data) {
+          assert.equal(data, 9);
+          finished();
+        });
+      });
+    });
+
+    it('should call callback after close call', function(finished){
+      udpTest(function(message, server){
+        throw new Error('should not be called');
+      }, function(server){
+        var address = server.address(),
+            statsd = new StatsD(address.address, address.port);
+
+        statsd.close(function() {
+          finished();
+        });
+      });
+    });
+
+    it('should have error in callback after bad histogram call', function(finished){
+      udpTest(function(message, server){
+        throw new Error('should not be called');
+      }, function(server){
+        var address = server.address(),
+            statsd = new StatsD(address.address, address.port);
+
+        statsd.close(function() {
+          statsd.histogram('test', 42, null, null, function(err, data) {
+            assert.ok(err !== undefined);
+            assert.ok(data === undefined);
+            finished();
+          });
+        });
+      });
+    });
+
   });
 });

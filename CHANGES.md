@@ -6,6 +6,10 @@ none
 
 --------------------
 
+## 2.2.0 (2015-1-10)
+* @bdeitte Document and expand on close API
+* @bdeitte Catch more error cases for callbacks
+
 ## 2.1.2 (2015-12-9)
 * @bdeitte Even more doc updates
 * @mmoulton Fix multiple tags with Telegraf

@@ -29,7 +29,7 @@ Parameters (specified as an options hash):
 * `bufferFlushInterval`: If buffering is in use, this is the time in ms to always flush any buffered metrics. `default: 1000`
 * `telegraf`:    Use Telegraf's StatsD line protocol, which is slightly different than the rest `default: false`
 
-All StatsD methods other than event have the same API:
+All StatsD methods other than event and close have the same API:
 * `name`:       Stat name `required`
 * `value`:      Stat value `required except in increment/decrement where it defaults to 1/-1 respectively`
 * `sampleRate`: Sends only a sample of data to StatsD `default: 1`
@@ -37,6 +37,10 @@ All StatsD methods other than event have the same API:
 * `callback`:   The callback to execute once the metric has been sent or buffered
 
 If an array is specified as the `name` parameter each item in that array will be sent along with the specified value.
+
+The close method has the following API:
+
+* `callback`:   The callback to execute once close is complete.  All other calls to statsd will fail once this is called.
 
 The event method has the following API:
 
@@ -50,7 +54,7 @@ The event method has the following API:
   * `source_type_name` Assign a source type to the event.
   * `alert_type`       Can be ‘error’, ‘warning’, ‘info’ or ‘success’ `default: info`
 * `tags`:       The Array of tags to add to metrics `default: []`
-* `callback`:   The callback to execute once the metric has been sent
+* `callback`:   The callback to execute once the metric has been sent.
 
 ```javascript
   var StatsD = require('hot-shots'),
@@ -105,6 +109,12 @@ The event method has the following API:
   client.histogram('my_histogram', 42, 0.25, next);
   client.histogram('my_histogram', 42, ['tag'], next);
   client.histogram('my_histogram', 42, 0.25, ['tag'], next);
+
+  // Close statsd.  This will ensure all stats are sent and stop statsd
+  // from doing anything more.
+  client.close(function(err) {
+    console.log('The close did not work quite right: ', err);
+  });
 ```
 
 ## DogStatsD and Telegraf functionality
@@ -118,6 +128,8 @@ Some of the functionality mentioned above is specific to DogStatsD or Telegraf. 
 
 ## Errors
 
+As usual, callbacks will have an error as their first parameter.  You can have an error in both the message and close callbacks.
+
 In the event that there is a socket error, `hot-shots` will allow this error to bubble up.  If you would like to catch the errors, just attach a listener to the socket property on the instance.
 
 ```javascript
@@ -125,8 +137,6 @@ client.socket.on('error', function(error) {
   return console.error("Error in socket: ", error);
 });
 ```
-
-If you want to catch errors in sending a message then use the callback provided.
 
 ## Submitting changes
 
