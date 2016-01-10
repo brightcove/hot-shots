@@ -60,6 +60,12 @@ The event method has the following API:
   var StatsD = require('hot-shots'),
       client = new StatsD();
 
+  // Catch socket errors so they don't go unhandled, as explained
+  // in the Errors section below
+  client.socket.on('error', function(error) {
+    console.error("Error in socket: ", error);
+  });
+
   // Timing: sends a timing command with the specified milliseconds
   client.timing('response_time', 42);
 
@@ -91,7 +97,8 @@ The event method has the following API:
   // Tags, this will add user-defined tags to the data (DataDog and Telegraf only)
   client.histogram('my_histogram', 42, ['foo', 'bar']);
 
-  // Using the callback
+  // Using the callback.  This is the same format for the callback
+  // with all non-close calls
   client.set(['foo', 'bar'], 42, function(error, bytes){
     //this only gets called once after all messages have been sent
     if(error){
@@ -134,7 +141,7 @@ In the event that there is a socket error, `hot-shots` will allow this error to 
 
 ```javascript
 client.socket.on('error', function(error) {
-  return console.error("Error in socket: ", error);
+  console.error("Error in socket: ", error);
 });
 ```
 
