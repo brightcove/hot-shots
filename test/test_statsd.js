@@ -504,6 +504,19 @@ describe('StatsD', function(){
       });
     });
 
+    it('should use when increment is 0', function(finished){
+      udpTest(function(message, server){
+        assert.equal(message, 'test:0|c');
+        server.close();
+        finished();
+      }, function(server){
+        var address = server.address(),
+            statsd = new StatsD(address.address, address.port);
+
+        statsd.increment('test', 0);
+      });
+    });
+
     it('should send proper count format with tags', function(finished){
       udpTest(function(message, server){
         assert.equal(message, 'test:42|c|#foo,bar');

@@ -149,10 +149,13 @@ client.socket.on('error', function(error) {
 
 Thanks for considering making any updates to this project!  Here are the steps to take in your fork:
 
-1. Make sure you've added any new tests needed
-2. Run "npm install && npm test"
-3. Update the HEAD section in CHANGES.md with a description of what you have done
-4. Push your changes and create the PR, and we'll try to get this merged in right away
+1. Run "npm install"
+2. Add your changes in your fork as well as any new tests needed
+3. Run "npm test"
+4. Update the HEAD section in CHANGES.md with a description of what you have done
+5. Push your changes and create the PR
+
+When you've done all this we're happy to try to get this merged in right away.
 
 ## Name
 
