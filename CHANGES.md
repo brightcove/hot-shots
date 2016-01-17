@@ -6,6 +6,10 @@ none
 
 --------------------
 
+## 2.3.0 (2015-1-17)
+* @bdeitte Fix increment(name, 0) to send a 0 count instead of 1
+* @bdeitte Flush the queue when needed on close()
+
 ## 2.2.0 (2015-1-10)
 * @bdeitte Document and expand on close API
 * @bdeitte Catch more error cases for callbacks
