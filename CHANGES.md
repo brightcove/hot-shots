@@ -6,7 +6,7 @@ none
 
 --------------------
 
-## 2.3.1 (2015-1-17)
+## 2.3.1 (2015-2-3)
 * @Pchelolo Ensure messages not larger then maxBufferSize
 
 ## 2.3.0 (2015-1-17)
