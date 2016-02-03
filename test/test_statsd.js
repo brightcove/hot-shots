@@ -848,10 +848,27 @@ describe('StatsD', function(){
         var options = {
           host: address.host,
           port: address.port,
+          maxBufferSize: 12
+        };
+        var statsd = new StatsD(options);
+        statsd.increment('a', 1);
+        statsd.increment('b', 2);
+      });
+    });
+
+    it('should not send batches larger then maxBufferSize', function (finished) {
+      udpTest(function (message, server) {
+        assert.equal(message, 'a:1|c\n');
+        server.close();
+        finished();
+      }, function (server) {
+        var address = server.address();
+        var options = {
+          host: address.host,
+          port: address.port,
           maxBufferSize: 8
         };
         var statsd = new StatsD(options);
-
         statsd.increment('a', 1);
         statsd.increment('b', 2);
       });
