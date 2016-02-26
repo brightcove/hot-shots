@@ -6,6 +6,11 @@ none
 
 --------------------
 
+## 2.4.0 (2015-2-26)
+* @arlolra Shrink npm package
+* @arlolra/@bdeitte Move DNS errors when caching them to send() and use callback when possible
+* @bdeitte Use callback for Telegraf error when possible
+
 ## 2.3.1 (2015-2-3)
 * @Pchelolo Ensure messages not larger then maxBufferSize
 

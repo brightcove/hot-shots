@@ -137,6 +137,25 @@ describe('StatsD', function(){
       statsd = new StatsD({host: 'localhost', cacheDns: true});
     });
 
+    it('should given an error in callbacks for a bad dns record if dnsCache is specified', function(done){
+      var dns = require('dns'),
+          originalLookup = dns.lookup,
+          statsd;
+
+      // replace the dns lookup function with our mock dns lookup
+      dns.lookup = function(host, callback){
+	return callback(new Error('that is a bad host'));
+      };
+
+      statsd = new StatsD({host: 'localhost', cacheDns: true});
+
+      statsd.increment('test', 1, 1, null, function(err) {
+	assert.equal(err.message, 'that is a bad host');
+        dns.lookup = originalLookup;
+        done();
+      });
+    });
+
     it('should not attempt to cache a dns record if dnsCache is not specified', function(done){
       var dns = require('dns'),
           originalLookup = dns.lookup,
@@ -150,45 +169,6 @@ describe('StatsD', function(){
 
       statsd = new StatsD({host: 'localhost'});
       process.nextTick(function(){
-        dns.lookup = originalLookup;
-        done();
-      });
-    });
-
-    it('should cache a dns record if dnsCache is specified', function(done){
-      var dns = require('dns'),
-          originalLookup = dns.lookup,
-          options = {host: 'localhost', cacheDns: true};
-
-      // replace the dns lookup function with our mock dns lookup
-      dns.lookup = function(host, callback){
-        process.nextTick(function(){
-          dns.lookup = originalLookup;
-          assert.equal(options.host, host);
-          callback(null, '127.0.0.1', 4);
-        });
-      };
-
-      StatsD.create(options, function(err, statsd) {
-        assert.ifError(err);
-        assert.equal(statsd.host, '127.0.0.1');
-        done();
-      });
-    });
-
-    it('should not cache a dns record if dnsCache is not specified', function(done){
-      var dns = require('dns'),
-          originalLookup = dns.lookup,
-          options = {host: 'localhost'};
-
-      // replace the dns lookup function with our mock dns lookup
-      dns.lookup = function(host, callback){
-        callback(new Error('StatsD.create should not invoke dns.lookup when dnsCache is unspecified'));
-      };
-
-      StatsD.create(options, function(err, statsd) {
-        assert.ifError(err);
-        assert.equal(statsd.host, options.host);
         dns.lookup = originalLookup;
         done();
       });
