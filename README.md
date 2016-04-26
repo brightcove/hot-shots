@@ -117,6 +117,15 @@ The event method has the following API:
   client.histogram('my_histogram', 42, ['tag'], next);
   client.histogram('my_histogram', 42, 0.25, ['tag'], next);
 
+  // Use a child client to add more context to the client.
+  // Clients can be nested.
+  var childClient = client.childClient({
+    prefix: 'additionalPrefix.',
+    suffix: '.additionalSuffix',
+    globalTags: ['globalTag1:forAllMetricsFromChildClient']
+  });
+  childClient.increment('my_counter_with_more_tags');
+
   // Close statsd.  This will ensure all stats are sent and stop statsd
   // from doing anything more.
   client.close(function(err) {

@@ -237,6 +237,16 @@ describe('StatsD child client', doTests.bind(null, function () {
     // empty options to verify same behaviour
   });
 }));
+describe('StatsD child of a child client', doTests.bind(null, function () {
+  var statsd = new (
+      Function.prototype.bind.apply(mainStatsD, [null].concat(Array.prototype.slice.call(arguments, 0)))
+  )();
+  return statsd.childClient({
+    // empty options to verify same behaviour
+  }).childClient({
+    // empty options to verify same behaviour
+  });
+}));
 
 function doTests(StatsD){
 
