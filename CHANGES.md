@@ -2,7 +2,7 @@ CHANGELOG
 =========
 
 ## HEAD (Unreleased)
-none
+* @ash2k Method to create child clients
 
 --------------------
 

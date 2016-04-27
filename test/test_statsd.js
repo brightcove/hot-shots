@@ -1,6 +1,6 @@
 var dgram = require('dgram'),
     assert = require('assert'),
-    StatsD = require('../').StatsD;
+    mainStatsD = require('../').StatsD;
 
 /**
  * Creates a test harness, that binds to an ephemeral port
@@ -22,69 +22,20 @@ function udpTest(test, callback){
 }
 
 /**
- * Given a StatsD method, make sure no data is sent to the server
- * for this method when used on a mock Client.
- */
-function assertMockClientMethod(method, finished){
- var testFinished = "test finished message";
-
-  udpTest(function(message, server){
-    // We only expect to get our own test finished message, no stats.
-    assert.equal(message, testFinished);
-    server.close();
-    finished();
-  }, function(server){
-    var address = server.address(),
-        statsd = new StatsD(address.address, address.port, 'prefix', 'suffix', false, false,
-                            /* mock = true */ true),
-        socket = dgram.createSocket("udp4"),
-        buf = new Buffer(testFinished),
-        callbackThrows = false;
-
-    // Regression test for "undefined is not a function" with missing callback on mock instance.
-    try {
-      statsd[method]('test', 1);
-    } catch(e) {
-      callbackThrows = true;
-    }
-    assert.ok(!callbackThrows);
-
-    statsd[method]('test', 1, null, function(error, bytes){
-      assert.ok(!error);
-      assert.equal(bytes, 0);
-      // We should call finished() here, but we have to work around
-      // https://github.com/joyent/node/issues/2867 on node 0.6,
-      // such that we don't close the socket within the `listening` event
-      // and pass a single message through instead.
-      socket.send(buf, 0, buf.length, address.port, address.address,
-                  function(){ socket.close(); });
-    });
-  });
-}
-
-/**
  * Since sampling uses random, we need to patch Math.random() to always give
- * a consisten result
+ * a consistent result
  */
 Math.random = function(){
   return 0.42;
 };
 
+beforeEach(function () {
+  //remove it from the namespace to not fail other tests
+  delete global.statsd;
+});
 
-describe('StatsD', function(){
-  describe('#init', function(){
-    it('should set default values when not specified', function(){
-      // cachedDns isn't tested here; see below
-      var statsd = new StatsD();
-      assert.equal(statsd.host, 'localhost');
-      assert.equal(statsd.port, 8125);
-      assert.equal(statsd.prefix, '');
-      assert.equal(statsd.suffix, '');
-      assert.equal(global.statsd, undefined);
-      assert.equal(statsd.mock, undefined);
-      assert.deepEqual(statsd.globalTags, []);
-      assert.ok(!statsd.mock);
-    });
+describe('StatsD (main client only)', function (StatsD) {
+  describe('#init', function() {
 
     it('should set the proper values when specified', function(){
       // cachedDns isn't tested here; see below
@@ -144,16 +95,215 @@ describe('StatsD', function(){
 
       // replace the dns lookup function with our mock dns lookup
       dns.lookup = function(host, callback){
-	return callback(new Error('that is a bad host'));
+        return callback(new Error('that is a bad host'));
       };
 
       statsd = new StatsD({host: 'localhost', cacheDns: true});
 
       statsd.increment('test', 1, 1, null, function(err) {
-	assert.equal(err.message, 'that is a bad host');
+        assert.equal(err.message, 'that is a bad host');
         dns.lookup = originalLookup;
         done();
       });
+    });
+
+    it('should create a global variable set to StatsD() when specified', function(){
+      var statsd = new StatsD('host', 1234, 'prefix', 'suffix', true);
+      assert.ok(global.statsd instanceof StatsD);
+    });
+
+  });
+
+  describe('#buffer', function() {
+    it('should aggregate packets when maxBufferSize is set to non-zero', function (finished) {
+      udpTest(function (message, server) {
+        assert.equal(message, 'a:1|c\nb:2|c\n');
+        server.close();
+        finished();
+      }, function (server) {
+        var address = server.address();
+        var options = {
+          host: address.host,
+          port: address.port,
+          maxBufferSize: 12
+        };
+        var statsd = new StatsD(options);
+        statsd.increment('a', 1);
+        statsd.increment('b', 2);
+      });
+    });
+  });
+
+}.bind(null, mainStatsD));
+
+describe('StatsD (child client only)', function (StatsD) {
+  describe('#init', function() {
+
+    it('should set the proper values when specified', function(){
+      var statsd = new StatsD('host', 1234, 'prefix', 'suffix', true, null, true, ['gtag']);
+      var child = statsd.childClient({
+            prefix: 'preff.',
+            suffix: '.suff',
+            globalTags: ['awesomeness:over9000']
+          });
+      assert.equal(child.prefix, 'preff.prefix');
+      assert.equal(child.suffix, 'suffix.suff');
+      assert.equal(statsd, global.statsd);
+      assert.deepEqual(child.globalTags, ['gtag', 'awesomeness:over9000']);
+    });
+
+  });
+
+  describe('#buffer', function() {
+    it('should aggregate packets when maxBufferSize is set to non-zero', function (finished) {
+      udpTest(function (message, server) {
+        assert.equal(message, 'a:1|c\nb:2|c\n');
+        server.close();
+        finished();
+      }, function (server) {
+        var address = server.address();
+        var options = {
+          host: address.host,
+          port: address.port,
+          maxBufferSize: 12
+        };
+        var statsd = new StatsD(options).childClient();
+        statsd.increment('a', 1);
+        statsd.increment('b', 2);
+      });
+    });
+  });
+
+  describe('#childClient', function() {
+
+    it('should add tags, prefix and suffix without parent values', function (finished) {
+      udpTest(function (message, server) {
+        assert.equal(message, 'preff.a.suff:1|c|#awesomeness:over9000\npreff.b.suff:2|c|#awesomeness:over9000\n');
+        server.close();
+        finished();
+      }, function (server) {
+        var address = server.address();
+        var options = {
+          host: address.host,
+          port: address.port,
+          maxBufferSize: 500
+        };
+        var statsd = new StatsD(options).childClient({
+          prefix: 'preff.',
+          suffix: '.suff',
+          globalTags: ['awesomeness:over9000']
+        });
+        statsd.increment('a', 1);
+        statsd.increment('b', 2);
+      });
+    });
+
+    it('should add tags, prefix and suffix with parent values', function (finished) {
+      udpTest(function (message, server) {
+        assert.equal(message, 'preff.p.a.s.suff:1|c|#xyz,awesomeness:over9000\npreff.p.b.s.suff:2|c|#xyz,awesomeness:over9000\n');
+        server.close();
+        finished();
+      }, function (server) {
+        var address = server.address();
+        var options = {
+          host: address.host,
+          port: address.port,
+          prefix: 'p.',
+          suffix: '.s',
+          globalTags: ['xyz'],
+          maxBufferSize: 500
+        };
+        var statsd = new StatsD(options).childClient({
+          prefix: 'preff.',
+          suffix: '.suff',
+          globalTags: ['awesomeness:over9000']
+        });
+        statsd.increment('a', 1);
+        statsd.increment('b', 2);
+      });
+    });
+
+  });
+
+}.bind(null, mainStatsD));
+
+describe('StatsD main client', doTests.bind(null, mainStatsD));
+describe('StatsD child client', doTests.bind(null, function () {
+  // https://stackoverflow.com/questions/1606797/use-of-apply-with-new-operator-is-this-possible
+  var statsd = new (
+      Function.prototype.bind.apply(mainStatsD, [null].concat(Array.prototype.slice.call(arguments, 0)))
+  )();
+  return statsd.childClient({
+    // empty options to verify same behaviour
+  });
+}));
+describe('StatsD child of a child client', doTests.bind(null, function () {
+  var statsd = new (
+      Function.prototype.bind.apply(mainStatsD, [null].concat(Array.prototype.slice.call(arguments, 0)))
+  )();
+  return statsd.childClient({
+    // empty options to verify same behaviour
+  }).childClient({
+    // empty options to verify same behaviour
+  });
+}));
+
+function doTests(StatsD){
+
+  /**
+   * Given a StatsD method, make sure no data is sent to the server
+   * for this method when used on a mock Client.
+   */
+  function assertMockClientMethod(method, finished){
+    var testFinished = "test finished message";
+
+    udpTest(function(message, server){
+      // We only expect to get our own test finished message, no stats.
+      assert.equal(message, testFinished);
+      server.close();
+      finished();
+    }, function(server){
+      var address = server.address(),
+          statsd = new StatsD(address.address, address.port, 'prefix', 'suffix', false, false,
+              /* mock = true */ true),
+          socket = dgram.createSocket("udp4"),
+          buf = new Buffer(testFinished),
+          callbackThrows = false;
+
+      // Regression test for "undefined is not a function" with missing callback on mock instance.
+      try {
+        statsd[method]('test', 1);
+      } catch(e) {
+        callbackThrows = true;
+      }
+      assert.ok(!callbackThrows);
+
+      statsd[method]('test', 1, null, function(error, bytes){
+        assert.ok(!error);
+        assert.equal(bytes, 0);
+        // We should call finished() here, but we have to work around
+        // https://github.com/joyent/node/issues/2867 on node 0.6,
+        // such that we don't close the socket within the `listening` event
+        // and pass a single message through instead.
+        socket.send(buf, 0, buf.length, address.port, address.address,
+            function(){ socket.close(); });
+      });
+    });
+  }
+
+  describe('#init', function(){
+
+    it('should set default values when not specified', function(){
+      // cachedDns isn't tested here; see below
+      var statsd = new StatsD();
+      assert.equal(statsd.host, 'localhost');
+      assert.equal(statsd.port, 8125);
+      assert.equal(statsd.prefix, '');
+      assert.equal(statsd.suffix, '');
+      assert.equal(global.statsd, undefined);
+      assert.equal(statsd.mock, undefined);
+      assert.deepEqual(statsd.globalTags, []);
+      assert.ok(!statsd.mock);
     });
 
     it('should not attempt to cache a dns record if dnsCache is not specified', function(done){
@@ -172,13 +322,6 @@ describe('StatsD', function(){
         dns.lookup = originalLookup;
         done();
       });
-    });
-
-    it('should create a global variable set to StatsD() when specified', function(){
-      var statsd = new StatsD('host', 1234, 'prefix', 'suffix', true);
-      assert.ok(global.statsd instanceof StatsD);
-      //remove it from the namespace to not fail other tests
-      delete global.statsd;
     });
 
     it('should not create a global variable when not specified', function(){
@@ -994,4 +1137,4 @@ describe('StatsD', function(){
     });
 
   });
-});
+}
