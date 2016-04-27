@@ -2,9 +2,12 @@ CHANGELOG
 =========
 
 ## HEAD (Unreleased)
-* @ash2k Method to create child clients
 
 --------------------
+
+## 3.0.0 (2015-4-27)
+* @ash2k Method to create child clients
+* @ash2k Shrink npm package a bit more
 
 ## 2.4.0 (2015-2-26)
 * @arlolra Shrink npm package
