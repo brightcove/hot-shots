@@ -6,7 +6,7 @@ CHANGELOG
 --------------------
 
 ## 3.0.0 (2015-4-27)
-* @ash2k Method to create child clients
+* @ash2k Method to create child clients.  (This is not a backwards-incompatible change but is rather large.)
 * @ash2k Shrink npm package a bit more
 
 ## 2.4.0 (2015-2-26)
@@ -37,7 +37,7 @@ CHANGELOG
 * @mmoulton Ensure message callback is sent in buffered case, even when we just buffer.
 
 ## 2.0.0 (2015-10-22)
-* @jjofseattle Add options.maxBufferSize and optinons.bufferFlushInterval
+* @jjofseattle Add options.maxBufferSize and options.bufferFlushInterval
 * @bdeitte Change options.global_tags to options.globalTags for conistency
 
 ## 1.0.2 (2015-09-25)
