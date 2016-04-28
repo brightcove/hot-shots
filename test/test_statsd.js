@@ -1,3 +1,5 @@
+"use strict";
+
 var dgram = require('dgram'),
     assert = require('assert'),
     mainStatsD = require('../').StatsD;
@@ -200,7 +202,8 @@ describe('StatsD (child client only)', function (StatsD) {
 
     it('should add tags, prefix and suffix with parent values', function (finished) {
       udpTest(function (message, server) {
-        assert.equal(message, 'preff.p.a.s.suff:1|c|#xyz,awesomeness:over9000\npreff.p.b.s.suff:2|c|#xyz,awesomeness:over9000\n');
+        assert.equal(message, 'preff.p.a.s.suff:1|c|#xyz,awesomeness:' +
+         'over9000\npreff.p.b.s.suff:2|c|#xyz,awesomeness:over9000\n');
         server.close();
         finished();
       }, function (server) {
@@ -227,29 +230,7 @@ describe('StatsD (child client only)', function (StatsD) {
 
 }.bind(null, mainStatsD));
 
-describe('StatsD main client', doTests.bind(null, mainStatsD));
-describe('StatsD child client', doTests.bind(null, function () {
-  // https://stackoverflow.com/questions/1606797/use-of-apply-with-new-operator-is-this-possible
-  var statsd = new (
-      Function.prototype.bind.apply(mainStatsD, [null].concat(Array.prototype.slice.call(arguments, 0)))
-  )();
-  return statsd.childClient({
-    // empty options to verify same behaviour
-  });
-}));
-describe('StatsD child of a child client', doTests.bind(null, function () {
-  var statsd = new (
-      Function.prototype.bind.apply(mainStatsD, [null].concat(Array.prototype.slice.call(arguments, 0)))
-  )();
-  return statsd.childClient({
-    // empty options to verify same behaviour
-  }).childClient({
-    // empty options to verify same behaviour
-  });
-}));
-
-function doTests(StatsD){
-
+function doTests(StatsD) {
   /**
    * Given a StatsD method, make sure no data is sent to the server
    * for this method when used on a mock Client.
@@ -1138,3 +1119,24 @@ function doTests(StatsD){
 
   });
 }
+
+describe('StatsD main client', doTests.bind(null, mainStatsD));
+describe('StatsD child client', doTests.bind(null, function () {
+  // https://stackoverflow.com/questions/1606797/use-of-apply-with-new-operator-is-this-possible
+  var statsd = new (
+      Function.prototype.bind.apply(mainStatsD, [null].concat(Array.prototype.slice.call(arguments, 0)))
+  )();
+  return statsd.childClient({
+    // empty options to verify same behaviour
+  });
+}));
+describe('StatsD child of a child client', doTests.bind(null, function () {
+  var statsd = new (
+      Function.prototype.bind.apply(mainStatsD, [null].concat(Array.prototype.slice.call(arguments, 0)))
+  )();
+  return statsd.childClient({
+    // empty options to verify same behaviour
+  }).childClient({
+    // empty options to verify same behaviour
+  });
+}));
