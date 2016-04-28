@@ -5,6 +5,9 @@ CHANGELOG
 
 --------------------
 
+## 3.0.1 (2015-4-28)
+* @bdeitte Add 'use strict' to files and make changes needed for this.
+
 ## 3.0.0 (2015-4-27)
 * @ash2k Method to create child clients.  (This is not a backwards-incompatible change but is rather large.)
 * @ash2k Shrink npm package a bit more
