@@ -1,0 +1,19 @@
+{
+  "curly": true,
+  "latedef": true,
+  "noarg": true,
+  "maxlen": 120,
+  "undef": true,
+  "node": true,
+  "nonstandard": true,
+  // Used by mocha
+  "predef": [
+    "callback",
+    "describe",
+    "it",
+    "before",
+    "beforeEach",
+    "after",
+    "afterEach"
+  ]
+}
