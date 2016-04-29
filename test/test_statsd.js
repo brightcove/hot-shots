@@ -408,7 +408,7 @@ function doTests(StatsD) {
 
   });
 
-  describe('#timing', function(finished){
+  describe('#timing', function(){
     it('should send proper time format without prefix, suffix, sampling and callback', function(finished){
       udpTest(function(message, server){
         assert.equal(message, 'test:42|ms');
@@ -483,7 +483,7 @@ function doTests(StatsD) {
     });
   });
 
-  describe('#histogram', function(finished){
+  describe('#histogram', function(){
     it('should send proper histogram format without prefix, suffix, sampling and callback', function(finished){
       udpTest(function(message, server){
         assert.equal(message, 'test:42|h');
@@ -591,7 +591,7 @@ function doTests(StatsD) {
 
   });
 
-  describe('#gauge', function(finished){
+  describe('#gauge', function(){
     it('should send proper gauge format without prefix, suffix, sampling and callback', function(finished){
       udpTest(function(message, server){
         assert.equal(message, 'test:42|g');
@@ -666,7 +666,7 @@ function doTests(StatsD) {
     });
   });
 
-  describe('#increment', function(finished){
+  describe('#increment', function(){
     it('should send count by 1 when no params are specified', function(finished){
       udpTest(function(message, server){
         assert.equal(message, 'test:1|c');
@@ -754,7 +754,7 @@ function doTests(StatsD) {
     });
   });
 
-  describe('#decrement', function(finished){
+  describe('#decrement', function(){
     it('should send count by -1 when no params are specified', function(finished){
       udpTest(function(message, server){
         assert.equal(message, 'test:-1|c');
@@ -830,7 +830,7 @@ function doTests(StatsD) {
     });
   });
 
-  describe('#set', function(finished){
+  describe('#set', function(){
     it('should send proper set format without prefix, suffix, sampling and callback', function(finished){
       udpTest(function(message, server){
         assert.equal(message, 'test:42|s');
@@ -904,7 +904,7 @@ function doTests(StatsD) {
       assertMockClientMethod('set', finished);
     });
   });
-  describe('#event', function(finished) {
+  describe('#event', function() {
     it('should send proper event format for title and text', function (finished) {
       udpTest(function (message, server) {
         assert.equal(message, '_e{4,11}:test|description');
