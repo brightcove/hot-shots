@@ -2,6 +2,7 @@ CHANGELOG
 =========
 
 ## HEAD (Unreleased)
+* @ash2k Support a client-wide error handler used in case no callback provided and to handle various exceptions.
 
 --------------------
 

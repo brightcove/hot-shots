@@ -408,7 +408,7 @@ function doTests(StatsD) {
 
   });
 
-  describe('#timing', function(finished){
+  describe('#timing', function(){
     it('should send proper time format without prefix, suffix, sampling and callback', function(finished){
       udpTest(function(message, server){
         assert.equal(message, 'test:42|ms');
@@ -483,7 +483,7 @@ function doTests(StatsD) {
     });
   });
 
-  describe('#histogram', function(finished){
+  describe('#histogram', function(){
     it('should send proper histogram format without prefix, suffix, sampling and callback', function(finished){
       udpTest(function(message, server){
         assert.equal(message, 'test:42|h');
@@ -556,9 +556,42 @@ function doTests(StatsD) {
     it('should send no histogram stat when a mock Client is used', function(finished){
       assertMockClientMethod('histogram', finished);
     });
+
+    it('should call callback after histogram call', function(finished){
+      udpTest(function(message, server){
+        assert.equal(message, 'test:42|h');
+        server.close();
+      }, function(server){
+        var address = server.address(),
+          statsd = new StatsD(address.address, address.port);
+
+        statsd.histogram('test', 42, null, null, function(err, data) {
+          assert.equal(data, 9);
+          finished();
+        });
+      });
+    });
+
+    it('should have error in callback after bad histogram call', function(finished){
+      udpTest(function(message, server){
+        throw new Error('should not be called');
+      }, function(server){
+        var address = server.address(),
+          statsd = new StatsD(address.address, address.port);
+
+        statsd.close(function() {
+          statsd.histogram('test', 42, null, null, function(err, data) {
+            assert.ok(err !== undefined);
+            assert.ok(data === undefined);
+            finished();
+          });
+        });
+      });
+    });
+
   });
 
-  describe('#gauge', function(finished){
+  describe('#gauge', function(){
     it('should send proper gauge format without prefix, suffix, sampling and callback', function(finished){
       udpTest(function(message, server){
         assert.equal(message, 'test:42|g');
@@ -633,7 +666,7 @@ function doTests(StatsD) {
     });
   });
 
-  describe('#increment', function(finished){
+  describe('#increment', function(){
     it('should send count by 1 when no params are specified', function(finished){
       udpTest(function(message, server){
         assert.equal(message, 'test:1|c');
@@ -721,7 +754,7 @@ function doTests(StatsD) {
     });
   });
 
-  describe('#decrement', function(finished){
+  describe('#decrement', function(){
     it('should send count by -1 when no params are specified', function(finished){
       udpTest(function(message, server){
         assert.equal(message, 'test:-1|c');
@@ -797,7 +830,7 @@ function doTests(StatsD) {
     });
   });
 
-  describe('#set', function(finished){
+  describe('#set', function(){
     it('should send proper set format without prefix, suffix, sampling and callback', function(finished){
       udpTest(function(message, server){
         assert.equal(message, 'test:42|s');
@@ -871,7 +904,7 @@ function doTests(StatsD) {
       assertMockClientMethod('set', finished);
     });
   });
-  describe('#event', function(finished) {
+  describe('#event', function() {
     it('should send proper event format for title and text', function (finished) {
       udpTest(function (message, server) {
         assert.equal(message, '_e{4,11}:test|description');
@@ -978,6 +1011,16 @@ function doTests(StatsD) {
       });
     });
 
+    it('should use errorHandler', function (finished) {
+      var statsd = new StatsD({
+        telegraf: true,
+        errorHandler: function () {
+          finished();
+        }
+      });
+      statsd.event('test title', 'another desc');
+    });
+
   });
 
   describe('#buffer', function() {
@@ -1071,21 +1114,7 @@ function doTests(StatsD) {
     });
   });
 
-  describe('#callbacks', function(finished){
-    it('should call callback after histogram call', function(finished){
-      udpTest(function(message, server){
-        assert.equal(message, 'test:42|h');
-        server.close();
-      }, function(server){
-        var address = server.address(),
-            statsd = new StatsD(address.address, address.port);
-
-        statsd.histogram('test', 42, null, null, function(err, data) {
-          assert.equal(data, 9);
-          finished();
-        });
-      });
-    });
+  describe('#close', function(){
 
     it('should call callback after close call', function(finished){
       udpTest(function(message, server){
@@ -1100,21 +1129,66 @@ function doTests(StatsD) {
       });
     });
 
-    it('should have error in callback after bad histogram call', function(finished){
-      udpTest(function(message, server){
-        throw new Error('should not be called');
-      }, function(server){
-        var address = server.address(),
-            statsd = new StatsD(address.address, address.port);
-
-        statsd.close(function() {
-          statsd.histogram('test', 42, null, null, function(err, data) {
-            assert.ok(err !== undefined);
-            assert.ok(data === undefined);
-            finished();
-          });
-        });
+    it('should use errorHandler', function (finished) {
+      var statsd = new StatsD({
+        errorHandler: function (e) {
+          finished();
+        }
       });
+      statsd.socket.close = function () {
+        throw new Error('boom!');
+      };
+      statsd.close();
+    });
+
+  });
+
+  describe('#send', function() {
+
+    it('should use errorHandler', function (finished) {
+      var err = new Error('boom!');
+      var statsd = new StatsD({
+        errorHandler: function (e) {
+          assert.equal(e, err);
+          finished();
+        }
+      });
+      statsd.dnsError = err;
+      statsd.send('test title');
+    });
+
+  });
+
+  describe('#sendMessage', function() {
+
+    it('should use errorHandler', function (finished) {
+      var err = new Error('boom!');
+      var statsd = new StatsD({
+        errorHandler: function (e) {
+          assert.equal(e, err);
+          finished();
+        }
+      });
+      statsd.dnsError = err;
+      statsd.send('test title');
+    });
+
+  });
+
+  describe('#sendAll', function() {
+
+    it('should use errorHandler', function (finished) {
+      var err = new Error('boom!');
+      var statsd = new StatsD({
+        errorHandler: function (e) {
+          assert.equal(e, err);
+          finished();
+        }
+      });
+      statsd.sendStat = function (item, value, type, sampleRate, tags, callback) {
+        callback(err);
+      };
+      statsd.sendAll(['test title'], 'another desc');
     });
 
   });
