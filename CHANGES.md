@@ -2,9 +2,11 @@ CHANGELOG
 =========
 
 ## HEAD (Unreleased)
-* @ash2k Support a client-wide error handler used in case no callback provided and to handle various exceptions.
 
 --------------------
+
+## 3.1.0 (2015-5-3)
+* @ash2k Support a client-wide error handler used in case no callback is provided and to handle various exceptions.
 
 ## 3.0.1 (2015-4-28)
 * @bdeitte Add 'use strict' to files and make changes needed for this.
@@ -42,7 +44,7 @@ CHANGELOG
 
 ## 2.0.0 (2015-10-22)
 * @jjofseattle Add options.maxBufferSize and options.bufferFlushInterval
-* @bdeitte Change options.global_tags to options.globalTags for conistency
+* @bdeitte Change options.global_tags to options.globalTags for consistency
 
 ## 1.0.2 (2015-09-25)
 * @ainsleyc Thrown error when cacheDNS flag fails to resolve DNS name
