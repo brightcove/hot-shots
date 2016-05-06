@@ -951,7 +951,7 @@ function doTests(StatsD) {
     it('should send proper event format for title, text, and options', function (finished) {
       var date = new Date();
       udpTest(function (message, server) {
-        assert.equal(message, '_e{10,12}:test title|another desc|d:' + date.getTime() +
+        assert.equal(message, '_e{10,31}:test title|another\\nmultiline\\ndescription|d:' + date.getTime() +
             '|h:host|k:ag_key|p:low|s:source_type|t:warning');
         server.close();
         finished();
@@ -967,7 +967,7 @@ function doTests(StatsD) {
               alert_type: 'warning'
             };
 
-        statsd.event('test title', 'another desc', options);
+        statsd.event('test title', 'another\nmultiline\ndescription', options);
       });
     });
 

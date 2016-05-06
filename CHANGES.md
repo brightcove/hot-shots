@@ -2,6 +2,7 @@ CHANGELOG
 =========
 
 ## HEAD (Unreleased)
+* @ash2k Support multiline text in DataDog events
 
 --------------------
 
