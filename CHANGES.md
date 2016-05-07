@@ -2,9 +2,11 @@ CHANGELOG
 =========
 
 ## HEAD (Unreleased)
-@ash2k Provided tags, including `childClient()` tags, override global tags with same names.
 
 --------------------
+
+## 4.0.0 (2015-5-7)
+@ash2k Provided tags, including `childClient()` tags, override global tags with same names.
 
 ## 3.1.0 (2015-5-3)
 * @ash2k Support a client-wide error handler used in case no callback is provided and to handle various exceptions.
