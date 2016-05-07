@@ -142,16 +142,16 @@ describe('StatsD (child client only)', function (StatsD) {
   describe('#init', function() {
 
     it('should set the proper values when specified', function(){
-      var statsd = new StatsD('host', 1234, 'prefix', 'suffix', true, null, true, ['gtag']);
+      var statsd = new StatsD('host', 1234, 'prefix', 'suffix', true, null, true, ['gtag', 'tag1:234234']);
       var child = statsd.childClient({
             prefix: 'preff.',
             suffix: '.suff',
-            globalTags: ['awesomeness:over9000']
+            globalTags: ['awesomeness:over9000', 'tag1:xxx', 'bar', ':baz']
           });
       assert.equal(child.prefix, 'preff.prefix');
       assert.equal(child.suffix, 'suffix.suff');
       assert.equal(statsd, global.statsd);
-      assert.deepEqual(child.globalTags, ['gtag', 'awesomeness:over9000']);
+      assert.deepEqual(child.globalTags, ['gtag', 'tag1:xxx', 'awesomeness:over9000', 'bar', ':baz']);
     });
 
   });
@@ -355,7 +355,7 @@ function doTests(StatsD) {
 
     it('should combine global tags and metric tags', function(finished){
       udpTest(function(message, server){
-        assert.equal(message, 'test:1337|c|#foo,gtag');
+        assert.equal(message, 'test:1337|c|#gtag,foo');
         server.close();
         finished();
       }, function(server){
@@ -367,6 +367,23 @@ function doTests(StatsD) {
             });
 
         statsd.increment('test', 1337, ['foo']);
+      });
+    });
+
+    it('should override global tags with metric tags', function(finished){
+      udpTest(function(message, server){
+        assert.equal(message, 'test:1337|c|#foo,gtag:234,bar');
+        server.close();
+        finished();
+      }, function(server){
+        var address = server.address(),
+            statsd = new StatsD({
+              host: address.address,
+              port: address.port,
+              globalTags: ['foo', 'gtag:123']
+            });
+
+        statsd.increment('test', 1337, ['gtag:234', 'bar']);
       });
     });
 
@@ -390,7 +407,7 @@ function doTests(StatsD) {
 
     it('should combine global tags and metric tags using telegraf format when enabled', function(finished){
       udpTest(function(message, server){
-        assert.equal(message, 'test,foo=bar,gtag=gvalue:1337|c');
+        assert.equal(message, 'test,gtag=gvalue,foo=bar:1337|c');
         server.close();
         finished();
       }, function(server){

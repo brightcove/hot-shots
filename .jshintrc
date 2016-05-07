@@ -1,6 +1,6 @@
 {
   "curly": true,
-  "latedef": true,
+  "latedef": "nofunc",
   "noarg": true,
   "maxlen": 120,
   "undef": true,

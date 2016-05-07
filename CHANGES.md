@@ -2,6 +2,7 @@ CHANGELOG
 =========
 
 ## HEAD (Unreleased)
+@ash2k Provided tags, including `childClient()` tags, override global tags with same names.
 
 --------------------
 
