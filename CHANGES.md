@@ -2,9 +2,11 @@ CHANGELOG
 =========
 
 ## HEAD (Unreleased)
-* @ash2k Support multiline text in DataDog events
 
 --------------------
+
+## 4.1.0 (2015-5-8)
+* @ash2k Support multiline text in DataDog events
 
 ## 4.0.0 (2015-5-7)
 @ash2k Provided tags, including `childClient()` tags, override global tags with same names.
