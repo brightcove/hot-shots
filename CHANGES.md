@@ -5,6 +5,9 @@ CHANGELOG
 
 --------------------
 
+## 4.1.1 (2015-5-22)
+* @ash2k date_happened should be seconds, not milliseconds
+
 ## 4.1.0 (2015-5-8)
 * @ash2k Support multiline text in DataDog events
 
