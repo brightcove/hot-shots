@@ -57,6 +57,17 @@ The event method has the following API:
 * `tags`:       The Array of tags to add to metrics `default: []`
 * `callback`:   The callback to execute once the metric has been sent.
 
+The check method has the following API:
+
+* `name`:        Check name `required`
+* `status`:      Check status `required`
+* `options`:     Options for the check
+  * `date_happened`    Assign a timestamp to the check `default is now`
+  * `hostname`         Assign a hostname to the check.
+  * `message`          Assign a message to the check.
+* `tags`:       The Array of tags to add to metrics `default: []`
+* `callback`:   The callback to execute once the metric has been sent.
+
 ```javascript
   var StatsD = require('hot-shots'),
       client = new StatsD();
