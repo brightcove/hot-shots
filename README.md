@@ -100,6 +100,9 @@ The check method has the following API:
   // Event: sends the titled event (DataDog only)
   client.event('my_title', 'description');
 
+  // Check: sends a service check (DataDog only)
+  client.check('service.up', client.CHECKS.OK, { hostname: 'host-1' }, ['foo', 'bar'])
+
   // Incrementing multiple items
   client.increment(['these', 'are', 'different', 'stats']);
 
@@ -153,6 +156,7 @@ Some of the functionality mentioned above is specific to DogStatsD or Telegraf. 
 * telegraf parameter- Telegraf
 * histogram method- DogStatsD or Telegraf
 * event method- DogStatsD
+* check method- DogStatsD
 
 ## Errors
 
