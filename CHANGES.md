@@ -5,38 +5,41 @@ CHANGELOG
 
 --------------------
 
-## 4.1.1 (2015-5-22)
+## 4.2.0 (2016-8-3)
+* @mhahn Add support for DataDog service checks
+
+## 4.1.1 (2016-5-22)
 * @ash2k date_happened should be seconds, not milliseconds
 
-## 4.1.0 (2015-5-8)
+## 4.1.0 (2016-5-8)
 * @ash2k Support multiline text in DataDog events
 
-## 4.0.0 (2015-5-7)
+## 4.0.0 (2016-5-7)
 @ash2k Provided tags, including `childClient()` tags, override global tags with same names.
 
-## 3.1.0 (2015-5-3)
+## 3.1.0 (2016-5-3)
 * @ash2k Support a client-wide error handler used in case no callback is provided and to handle various exceptions.
 
-## 3.0.1 (2015-4-28)
+## 3.0.1 (2016-4-28)
 * @bdeitte Add 'use strict' to files and make changes needed for this.
 
-## 3.0.0 (2015-4-27)
+## 3.0.0 (2016-4-27)
 * @ash2k Method to create child clients.  (This is not a backwards-incompatible change but is rather large.)
 * @ash2k Shrink npm package a bit more
 
-## 2.4.0 (2015-2-26)
+## 2.4.0 (2016-2-26)
 * @arlolra Shrink npm package
 * @arlolra/@bdeitte Move DNS errors when caching them to send() and use callback when possible
 * @bdeitte Use callback for Telegraf error when possible
 
-## 2.3.1 (2015-2-3)
+## 2.3.1 (2016-2-3)
 * @Pchelolo Ensure messages not larger then maxBufferSize
 
-## 2.3.0 (2015-1-17)
+## 2.3.0 (2016-1-17)
 * @bdeitte Fix increment(name, 0) to send a 0 count instead of 1
 * @bdeitte Flush the queue when needed on close()
 
-## 2.2.0 (2015-1-10)
+## 2.2.0 (2016-1-10)
 * @bdeitte Document and expand on close API
 * @bdeitte Catch more error cases for callbacks
 
