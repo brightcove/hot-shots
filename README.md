@@ -57,6 +57,17 @@ The event method has the following API:
 * `tags`:       The Array of tags to add to metrics `default: []`
 * `callback`:   The callback to execute once the metric has been sent.
 
+The check method has the following API:
+
+* `name`:        Check name `required`
+* `status`:      Check status `required`
+* `options`:     Options for the check
+  * `date_happened`    Assign a timestamp to the check `default is now`
+  * `hostname`         Assign a hostname to the check.
+  * `message`          Assign a message to the check.
+* `tags`:       The Array of tags to add to metrics `default: []`
+* `callback`:   The callback to execute once the metric has been sent.
+
 ```javascript
   var StatsD = require('hot-shots'),
       client = new StatsD();
@@ -88,6 +99,9 @@ The event method has the following API:
 
   // Event: sends the titled event (DataDog only)
   client.event('my_title', 'description');
+
+  // Check: sends a service check (DataDog only)
+  client.check('service.up', client.CHECKS.OK, { hostname: 'host-1' }, ['foo', 'bar'])
 
   // Incrementing multiple items
   client.increment(['these', 'are', 'different', 'stats']);
@@ -142,6 +156,7 @@ Some of the functionality mentioned above is specific to DogStatsD or Telegraf. 
 * telegraf parameter- Telegraf
 * histogram method- DogStatsD or Telegraf
 * event method- DogStatsD
+* check method- DogStatsD
 
 ## Errors
 

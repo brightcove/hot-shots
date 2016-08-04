@@ -1040,6 +1040,110 @@ function doTests(StatsD) {
 
   });
 
+  describe('#check', function() {
+    it('should send proper check format for name and status', function (finished) {
+      udpTest(function (message, server) {
+        assert.equal(message, '_sc|check.name|0');
+        server.close();
+        finished();
+      }, function (server) {
+        var address = server.address(),
+            statsd = new StatsD(address.address, address.port);
+
+        statsd.check('check.name', statsd.CHECKS.OK);
+      });
+    });
+
+    it('should send proper check format for name, status, and options', function (finished) {
+      var date = new Date();
+      udpTest(function (message, server) {
+        assert.equal(message, '_sc|check.name|1|d:' +
+          Math.round(date.getTime() / 1000) + '|h:host|m:message');
+        server.close();
+        finished();
+      }, function (server) {
+        var address = server.address(),
+            statsd = new StatsD(address.address, address.port),
+            options = {
+              date_happened: date,
+              hostname: 'host',
+              message: 'message'
+            };
+
+        statsd.check('check.name', statsd.CHECKS.WARNING, options);
+      });
+    });
+
+    it('should send proper check format for name, status, some options, and tags', function (finished) {
+      udpTest(function (message, server) {
+        assert.equal(message, '_sc|check.name|2|h:host|#foo,bar|m:message');
+        server.close();
+        finished();
+      }, function (server) {
+        var address = server.address(),
+            statsd = new StatsD(address.address, address.port),
+            options = {
+              hostname: 'host',
+              message: 'message'
+            };
+
+        statsd.check('check.name', statsd.CHECKS.CRITICAL, options, ['foo', 'bar']);
+      });
+    });
+
+    it('should send proper event format for name, status, tags, and a callback', function (finished) {
+      var called = true;
+      udpTest(function (message, server) {
+        assert.equal(message, '_sc|check.name|0|#foo,bar');
+        assert.equal(called, true);
+        server.close();
+        finished();
+      }, function (server) {
+        var address = server.address(),
+            statsd = new StatsD(address.address, address.port);
+
+        statsd.check('check.name', statsd.CHECKS.OK, null, ['foo', 'bar'], function(){
+          called = true;
+        });
+      });
+    });
+
+    it('should send no event stat when a mock Client is used', function(finished){
+      assertMockClientMethod('check', finished);
+    });
+
+    it('should throw and execption when using telegraf format', function(finished){
+      udpTest(function () {
+        // will not fire
+      }, function (server) {
+        var address = server.address(),
+            statsd = new StatsD({
+              host: address.address,
+              port: address.port,
+              telegraf: true
+            });
+
+        assert.throws(function () {
+          statsd.check('check.name', statsd.CHECKS.OK, null, ['foo', 'bar']);
+        }, function (err) {
+          server.close();
+          finished();
+        });
+      });
+    });
+
+    it('should use errorHandler', function (finished) {
+      var statsd = new StatsD({
+        telegraf: true,
+        errorHandler: function () {
+          finished();
+        }
+      });
+      statsd.check('check.name', statsd.CHECKS.OK);
+    });
+
+  });
+
   describe('#buffer', function() {
     it('should aggregate packets when maxBufferSize is set to non-zero', function (finished) {
       udpTest(function (message, server) {
