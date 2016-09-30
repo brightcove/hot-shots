@@ -1,6 +1,7 @@
 "use strict";
 
 var dgram = require('dgram'),
+    domain = require('domain'),
     assert = require('assert'),
     mainStatsD = require('../').StatsD;
 
@@ -1292,6 +1293,55 @@ function doTests(StatsD) {
       });
       statsd.dnsError = err;
       statsd.send('test title');
+    });
+    
+    it('should errback for an unresolvable host', function (finished) {
+      var statsd = new StatsD({
+        host: 'unresolvable'
+      });
+    
+      statsd.send('test title', [], function (error) {
+        assert.ok(error);
+        assert.equal(error.code, 'ENOTFOUND');
+        finished();
+      });
+    });
+    
+    it('should use errorHandler for an unresolvable host', function (finished) {
+      var statsd = new StatsD({
+        host: 'unresolvable',
+        errorHandler: function (error) {
+          assert.ok(error);
+          assert.equal(error.code, 'ENOTFOUND');
+          finished();
+        }
+      });
+    
+      statsd.send('test title');
+    });
+    
+    it('should throw for an unresolvable host', function (finished) {
+      var d = domain.create();
+      var statsd = new StatsD({
+        host: 'unresolvable',
+      });
+      
+      d.add(statsd.socket);
+      
+      d.on('error', function (error) {
+        assert.ok(error);
+        assert.equal(error.code, 'ENOTFOUND');
+        
+        // Important to exit the domain or further tests will continue to run
+        // therein.
+        d.exit();
+        
+        finished();
+      });
+    
+      d.run(function () {
+        statsd.send('test title');
+      });
     });
 
   });

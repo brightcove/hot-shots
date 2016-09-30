@@ -164,9 +164,19 @@ As usual, callbacks will have an error as their first parameter.  You can have a
 
 If the optional callback is not given, an error is thrown in some cases and a console.log message is used in others.  An error will only be thrown when there is a missing callback if it is some potential configuration issue to be fixed.
 
-In the event that there is a socket error, `hot-shots` will allow this error to bubble up.  If you would like to catch the errors, just attach a listener to the socket property on the instance.
+In the event that there is a socket error, `hot-shots` will allow this error to bubble up unless an `errorHandler` is specified.  If you would like to catch the errors, either specify an `errorHandler` in your root client or just attach a listener to the socket property on the instance.
 
 ```javascript
+// Using errorHandler
+var client = new StatsD({
+  errorHandler: function (error) {
+    console.log("Socket errors caught here: ", error);
+  }
+})
+```
+
+```javascript
+// Attaching an error handler to client's socket
 client.socket.on('error', function(error) {
   console.error("Error in socket: ", error);
 });
