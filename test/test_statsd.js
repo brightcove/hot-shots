@@ -1331,6 +1331,11 @@ function doTests(StatsD) {
       d.on('error', function (error) {
         assert.ok(error);
         assert.equal(error.code, 'ENOTFOUND');
+        
+        // Important to exit the domain or further tests will continue to run
+        // therein.
+        d.exit();
+        
         finished();
       });
     
