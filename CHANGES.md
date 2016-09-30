@@ -5,6 +5,9 @@ CHANGELOG
 
 --------------------
 
+## 4.3.0 (2016-9-30)
+* @ggoodman Allow socket errors to be handled with errorHandler
+
 ## 4.2.0 (2016-8-3)
 * @mhahn Add support for DataDog service checks
 
