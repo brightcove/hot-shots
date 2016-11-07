@@ -2,9 +2,11 @@ CHANGELOG
 =========
 
 ## HEAD (Unreleased)
-* @RandomSeeded Fix callbacks not being triggered when using buffers
 
 --------------------
+
+## 4.3.1 (2016-11-7)
+* @RandomSeeded Fix callbacks not being triggered when using buffers
 
 ## 4.3.0 (2016-9-30)
 * @ggoodman Allow socket errors to be handled with errorHandler
@@ -19,7 +21,7 @@ CHANGELOG
 * @ash2k Support multiline text in DataDog events
 
 ## 4.0.0 (2016-5-7)
-@ash2k Provided tags, including `childClient()` tags, override global tags with same names.
+* @ash2k Provided tags, including `childClient()` tags, override global tags with same names.
 
 ## 3.1.0 (2016-5-3)
 * @ash2k Support a client-wide error handler used in case no callback is provided and to handle various exceptions.
