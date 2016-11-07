@@ -2,6 +2,7 @@ CHANGELOG
 =========
 
 ## HEAD (Unreleased)
+* @RandomSeeded Fix callbacks not being triggered when using buffers
 
 --------------------
 
