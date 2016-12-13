@@ -12,6 +12,15 @@ This project is a fork off of [node-statsd](https://github.com/sivy/node-statsd)
 $ npm install hot-shots
 ```
 
+## Migrating from node-statsd
+
+You generally just need to do two things:
+
+1. Change node-statsd to hot-shots in all requires
+2. Change global_stats to globalStats as a parameter name
+
+You may also want to use the Datadog events support in here instead of other libraries.  You can also change the detailed [change log](https://github.com/brightcove/hot-shots/blob/master/CHANGES.md) for what has changed since the last release of node-statsd.
+
 ## Usage
 
 All initialization parameters are optional.
