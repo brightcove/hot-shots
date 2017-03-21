@@ -61,7 +61,8 @@ describe('StatsD (main client only)', function (StatsD) {
         suffix: 'suffix',
         globalize: true,
         mock: true,
-        globalTags: ['gtag']
+        globalTags: ['gtag'],
+        sampleRate: 0.6
       });
       assert.equal(statsd.host, 'host');
       assert.equal(statsd.port, 1234);
@@ -69,6 +70,7 @@ describe('StatsD (main client only)', function (StatsD) {
       assert.equal(statsd.suffix, 'suffix');
       assert.equal(statsd, global.statsd);
       assert.equal(statsd.mock, true);
+      assert.sampleRate(statsd.sampleRate, 0.6);
       assert.deepEqual(statsd.globalTags, ['gtag']);
     });
 
@@ -1294,19 +1296,19 @@ function doTests(StatsD) {
       statsd.dnsError = err;
       statsd.send('test title');
     });
-    
+
     it('should errback for an unresolvable host', function (finished) {
       var statsd = new StatsD({
         host: 'unresolvable'
       });
-    
+
       statsd.send('test title', [], function (error) {
         assert.ok(error);
         assert.equal(error.code, 'ENOTFOUND');
         finished();
       });
     });
-    
+
     it('should use errorHandler for an unresolvable host', function (finished) {
       var statsd = new StatsD({
         host: 'unresolvable',
@@ -1316,29 +1318,29 @@ function doTests(StatsD) {
           finished();
         }
       });
-    
+
       statsd.send('test title');
     });
-    
+
     it('should throw for an unresolvable host', function (finished) {
       var d = domain.create();
       var statsd = new StatsD({
         host: 'unresolvable',
       });
-      
+
       d.add(statsd.socket);
-      
+
       d.on('error', function (error) {
         assert.ok(error);
         assert.equal(error.code, 'ENOTFOUND');
-        
+
         // Important to exit the domain or further tests will continue to run
         // therein.
         d.exit();
-        
+
         finished();
       });
-    
+
       d.run(function () {
         statsd.send('test title');
       });
