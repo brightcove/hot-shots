@@ -70,7 +70,7 @@ describe('StatsD (main client only)', function (StatsD) {
       assert.equal(statsd.suffix, 'suffix');
       assert.equal(statsd, global.statsd);
       assert.equal(statsd.mock, true);
-      assert.sampleRate(statsd.sampleRate, 0.6);
+      assert.equal(statsd.sampleRate, 0.6);
       assert.deepEqual(statsd.globalTags, ['gtag']);
     });
 
