@@ -1,10 +1,6 @@
 CHANGELOG
 =========
 
-## HEAD (Unreleased)
-
---------------------
-
 ## 4.4.0 (2017-3-23)
 * @RijulB Global sample rate
 
