@@ -5,6 +5,9 @@ CHANGELOG
 
 --------------------
 
+## 4.4.0 (2017-3-23)
+* @RijulB Global sample rate
+
 ## 4.3.1 (2016-11-7)
 * @RandomSeeded Fix callbacks not being triggered when using buffers
 
