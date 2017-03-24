@@ -199,9 +199,8 @@ Thanks for considering making any updates to this project!  Here are the steps t
 1. Run "npm install"
 2. Add your changes in your fork as well as any new tests needed
 3. Run "npm test"
-4. Update the HEAD section in CHANGES.md with a description of what you have done
-5. Update README.md with any needed documentation
-6. Push your changes and create the PR
+4. Update README.md with any needed documentation
+5. Push your changes and create the PR
 
 When you've done all this we're happy to try to get this merged in right away.
 
