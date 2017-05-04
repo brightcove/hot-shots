@@ -726,6 +726,32 @@ function doTests(StatsD) {
       });
     });
 
+    it('should send default count 1 with tags', function(finished){
+      udpTest(function(message, server){
+        assert.equal(message, 'test:1|c|#foo,bar');
+        server.close();
+        finished();
+      }, function(server){
+        var address = server.address(),
+            statsd = new StatsD(address.address, address.port);
+
+        statsd.increment('test', ['foo', 'bar']);
+      });
+    });
+
+    it('should send tags when sampleRate is omitted', function(finished){
+      udpTest(function(message, server){
+        assert.equal(message, 'test:23|c|#foo,bar');
+        server.close();
+        finished();
+      }, function(server){
+        var address = server.address(),
+            statsd = new StatsD(address.address, address.port);
+
+        statsd.increment('test', 23, ['foo', 'bar']);
+      });
+    });
+
     it('should send proper count format with prefix, suffix, sampling and callback', function(finished){
       var called = false;
       udpTest(function(message, server){
