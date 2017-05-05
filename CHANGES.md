@@ -1,6 +1,9 @@
 CHANGELOG
 =========
 
+## 4.5.0 (2017-5-4)
+* @jsocol Support default value with tags in increment
+
 ## 4.4.0 (2017-3-23)
 * @RijulB Global sample rate
 
