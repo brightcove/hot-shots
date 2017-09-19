@@ -3,6 +3,7 @@
   "description": "Node.js client for StatsD, DogStatsD, and Telegraf",
   "version": "4.5.0",
   "author": "Steve Ivy",
+  "types": "./types.d.ts",
   "contributors": [
     "Russ Bradberry <rbradberry@gmail.com>",
     "Brian Deitte <bdeitte@gmail.com>",
