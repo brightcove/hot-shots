@@ -1,6 +1,9 @@
 CHANGELOG
 =========
 
+## 4.6.0 (2017-9-19)
+* @jgwmaxwell TypeScript typings
+
 ## 4.5.0 (2017-5-4)
 * @jsocol Support default value with tags in increment
 
