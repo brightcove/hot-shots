@@ -1,6 +1,9 @@
 CHANGELOG
 =========
 
+## 4.7.0 (2017-9-21)
+* @bdeitte Revert TypeScript typings, which ended up not being semver minor
+
 ## 4.6.0 (2017-9-19)
 * @jgwmaxwell TypeScript typings
 
