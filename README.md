@@ -17,7 +17,6 @@ $ npm install hot-shots
 You generally just need to do two things:
 
 1. Change node-statsd to hot-shots in all requires
-2. Change global_stats to globalStats as a parameter name
 
 You may also want to use the Datadog events support in here instead of other libraries.  You can also check the detailed [change log](https://github.com/brightcove/hot-shots/blob/master/CHANGES.md) for what has changed since the last release of node-statsd.
 

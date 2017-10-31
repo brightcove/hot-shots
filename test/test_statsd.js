@@ -74,6 +74,14 @@ describe('StatsD (main client only)', function (StatsD) {
       assert.deepEqual(statsd.globalTags, ['gtag']);
     });
 
+    it('should map global_tags to globalTags for backwards compatibility', function(){
+      // cachedDns isn't tested here; see below
+      var statsd = new StatsD({
+        global_tags: ['gtag']
+      });
+      assert.deepEqual(statsd.globalTags, ['gtag']);
+    });
+
     it('should attempt to cache a dns record if dnsCache is specified', function(done){
       var dns = require('dns'),
           originalLookup = dns.lookup,
