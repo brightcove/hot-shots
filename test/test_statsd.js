@@ -1095,7 +1095,7 @@ function doTests(StatsD) {
               port: address.port,
               prefix: 'prefix.',
               suffix: '.suffix'
-            })
+            });
 
         statsd.check('check.name', statsd.CHECKS.OK);
       });
