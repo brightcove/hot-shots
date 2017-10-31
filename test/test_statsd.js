@@ -75,7 +75,6 @@ describe('StatsD (main client only)', function (StatsD) {
     });
 
     it('should map global_tags to globalTags for backwards compatibility', function(){
-      // cachedDns isn't tested here; see below
       var statsd = new StatsD({
         global_tags: ['gtag']
       });
