@@ -1083,6 +1083,24 @@ function doTests(StatsD) {
       });
     });
 
+    it('should send proper check format for name and status with global prefix and suffix', function (finished) {
+      udpTest(function (message, server) {
+        assert.equal(message, '_sc|prefix.check.name.suffix|0');
+        server.close();
+        finished();
+      }, function (server) {
+        var address = server.address(),
+            statsd = new StatsD({
+              host: address.address,
+              port: address.port,
+              prefix: 'prefix.',
+              suffix: '.suffix'
+            })
+
+        statsd.check('check.name', statsd.CHECKS.OK);
+      });
+    });
+
     it('should send proper check format for name, status, and options', function (finished) {
       var date = new Date();
       udpTest(function (message, server) {
