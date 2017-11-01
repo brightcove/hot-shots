@@ -1,6 +1,10 @@
 CHANGELOG
 =========
 
+## 4.8.0 (2017-10-31)
+* @Jiggmin concat prefix and suffix in check function
+* @Jiggmin commit package-lock.json
+
 ## 4.7.1 (2017-10-31)
 * @Jiggmin Add backwards compatibility for global_tags
 
