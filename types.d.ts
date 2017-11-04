@@ -1,18 +1,23 @@
+import dgram = require("dgram");
+
 declare module "hot-shots" {
   export interface ClientOptions {
+    bufferFlushInterval?: number;
+    bufferHolder?: { buffer: string };
+    cacheDns?: boolean;
+    errorHandler?: (err: Error) => void;
+    globalTags?: string[];
+    globalize?: boolean;
     host?: string;
+    isChild?: boolean;
+    maxBufferSize?: number;
+    mock?: boolean;
     port?: number;
     prefix?: string;
-    suffix?: string;
-    globalize?: boolean;
-    cacheDns?: boolean;
-    mock?: boolean;
-    globalTags?: string[];
-    maxBufferSize?: number;
-    bufferFlushInterval?: number;
-    telegraf?: boolean;
     sampleRate?: number;
-    errorHandler?: (err: Error) => void;
+    socket?: dgram.Socket;
+    suffix?: string;
+    telegraf?: boolean;
   }
 
   export interface CheckOptions {
