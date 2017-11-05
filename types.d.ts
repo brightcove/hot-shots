@@ -76,6 +76,7 @@ declare module "hot-shots" {
 
     public CHECKS: DatadogChecks;
   }
-
-  export default StatsD;
 }
+
+declare const StatsDClient: StatsD;
+export default StatsDClient;
