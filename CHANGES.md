@@ -8,6 +8,9 @@ CHANGELOG
 ## 4.7.1 (2017-10-31)
 * @Jiggmin Add backwards compatibility for global_tags
 
+## 5.0.0 (2017-11-9)
+* @jgwmaxwell TypeScript typings, resolving the default export issue and missing options from last time.  This is being marked as a major release, in caution given the revert last time, but it is not actually known to cause any backwards-compatible issues.
+
 ## 4.7.0 (2017-9-21)
 * @bdeitte Revert TypeScript typings, which ended up not being semver minor
 
