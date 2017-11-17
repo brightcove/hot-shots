@@ -14,7 +14,7 @@ $ npm install hot-shots
 
 ## Migrating from node-statsd
 
-You generally just need to do two things:
+You generally just need to do one thing:
 
 1. Change node-statsd to hot-shots in all requires
 
