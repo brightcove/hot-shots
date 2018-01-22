@@ -1,6 +1,6 @@
 import dgram = require("dgram");
 
-declare module "hot-shots" {
+declare module "hot-shots/lib" {
   export interface ClientOptions {
     bufferFlushInterval?: number;
     bufferHolder?: { buffer: string };
