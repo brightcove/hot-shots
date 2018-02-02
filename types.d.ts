@@ -19,6 +19,12 @@ declare module "hot-shots" {
     suffix?: string;
     telegraf?: boolean;
   }
+  
+  export interface ChildClientOptions {
+    globalTags?: string[];
+    prefix?: string;
+    suffix?: string;
+  }
 
   export interface CheckOptions {
     date_happened?: Date;
@@ -57,6 +63,8 @@ declare module "hot-shots" {
 
   export class StatsD {
     constructor(options?: ClientOptions);
+    childClient(options?: ChildClientOptions): StatsD;
+    
     increment(stat: string): void;
     increment(stat: string | string[], value: number, sampleRate?: number, tags?: string[], callback?: StatsCb): void;
 
