@@ -14,9 +14,7 @@ $ npm install hot-shots
 
 ## Migrating from node-statsd
 
-You generally just need to do one thing:
-
-1. Change node-statsd to hot-shots in all requires
+You should only need to do one thing: change node-statsd to hot-shots in all requires.
 
 You may also want to use the Datadog events support in here instead of other libraries.  You can also check the detailed [change log](https://github.com/brightcove/hot-shots/blob/master/CHANGES.md) for what has changed since the last release of node-statsd.
 
