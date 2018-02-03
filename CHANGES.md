@@ -1,6 +1,9 @@
 CHANGELOG
 =========
 
+## 5.0.1 (2018-2-2)
+* @punya-asapp Add childClient to TypeScript types
+
 ## 5.0.0 (2017-11-9)
 * @jgwmaxwell TypeScript typings, resolving the default export issue and missing options from last time.  This is being marked as a major release, in caution given the revert last time, but it is not actually known to cause any backwards-compatible issues.
 
