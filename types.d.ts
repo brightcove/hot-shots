@@ -1,12 +1,13 @@
 import dgram = require("dgram");
 
 declare module "hot-shots" {
+  export type Tags = { [key: string]: string } | string[];
   export interface ClientOptions {
     bufferFlushInterval?: number;
     bufferHolder?: { buffer: string };
     cacheDns?: boolean;
     errorHandler?: (err: Error) => void;
-    globalTags?: string[];
+    globalTags?: Tags;
     globalize?: boolean;
     host?: string;
     isChild?: boolean;
@@ -19,9 +20,9 @@ declare module "hot-shots" {
     suffix?: string;
     telegraf?: boolean;
   }
-  
+
   export interface ChildClientOptions {
-    globalTags?: string[];
+    globalTags?: Tags;
     prefix?: string;
     suffix?: string;
   }
@@ -59,28 +60,28 @@ declare module "hot-shots" {
   }
 
   export type StatsCb = (error: Error | undefined, bytes: any) => void;
-  export type StatsCall = (stat: string | string[], value: number, sampleRate?: number, tags?: string[], callback?: StatsCb) => void;
+  export type StatsCall = (stat: string | string[], value: number, sampleRate?: number, tags?: Tags, callback?: StatsCb) => void;
 
   export class StatsD {
     constructor(options?: ClientOptions);
     childClient(options?: ChildClientOptions): StatsD;
-    
+
     increment(stat: string): void;
-    increment(stat: string | string[], value: number, sampleRate?: number, tags?: string[], callback?: StatsCb): void;
+    increment(stat: string | string[], value: number, sampleRate?: number, tags?: Tags, callback?: StatsCb): void;
 
     decrement(stat: string): void;
-    decrement(stat: string | string[], value: number, sampleRate?: number, tags?: string[], callback?: StatsCb): void;
+    decrement(stat: string | string[], value: number, sampleRate?: number, tags?: Tags, callback?: StatsCb): void;
 
-    timing(stat: string | string[], value: number, sampleRate?: number, tags?: string[], callback?: StatsCb): void;
-    histogram(stat: string | string[], value: number, sampleRate?: number, tags?: string[], callback?: StatsCb): void;
-    gauge(stat: string | string[], value: number, sampleRate?: number, tags?: string[], callback?: StatsCb): void;
-    set(stat: string | string[], value: number, sampleRate?: number, tags?: string[], callback?: StatsCb): void;
-    unique(stat: string | string[], value: number, sampleRate?: number, tags?: string[], callback?: StatsCb): void;
+    timing(stat: string | string[], value: number, sampleRate?: number, tags?: Tags, callback?: StatsCb): void;
+    histogram(stat: string | string[], value: number, sampleRate?: number, tags?: Tags, callback?: StatsCb): void;
+    gauge(stat: string | string[], value: number, sampleRate?: number, tags?: Tags, callback?: StatsCb): void;
+    set(stat: string | string[], value: number, sampleRate?: number, tags?: Tags, callback?: StatsCb): void;
+    unique(stat: string | string[], value: number, sampleRate?: number, tags?: Tags, callback?: StatsCb): void;
 
     close(callback: () => void): void;
 
-    event(title: string, text?: string, options?: EventOptions, tags?: string[], callback?: StatsCb): void;
-    check(name: string, status: DatadogChecksValues, options?: CheckOptions, tags?: string[], callback?: StatsCb): void;
+    event(title: string, text?: string, options?: EventOptions, tags?: Tags, callback?: StatsCb): void;
+    check(name: string, status: DatadogChecksValues, options?: CheckOptions, tags?: Tags, callback?: StatsCb): void;
 
     public CHECKS: DatadogChecks;
   }
