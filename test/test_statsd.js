@@ -397,6 +397,40 @@ function doTests(StatsD) {
       });
     });
 
+    it('should format global tags', function(finished){
+      udpTest(function(message, server){
+        assert.equal(message, 'test:1337|c|#gtag:234,foo:bar');
+        server.close();
+        finished();
+      }, function(server){
+        var address = server.address(),
+            statsd = new StatsD({
+              host: address.address,
+              port: address.port,
+              globalTags: { gtag: "123", foo: "bar"}
+            });
+
+        statsd.increment('test', 1337, { gtag: "234"});
+      });
+    });
+
+    it('should replace reserved characters with underscores in tags', function(finished){
+      udpTest(function(message, server){
+        assert.equal(message, 'test:1337|c|#foo:b_a_r,reserved_character:is_replaced_');
+        server.close();
+        finished();
+      }, function(server){
+        var address = server.address(),
+            statsd = new StatsD({
+              host: address.address,
+              port: address.port,
+              globalTags: { foo: "b,a,r"}
+            });
+
+        statsd.increment('test', 1337, { "reserved:character": "is@replaced@"});
+      });
+    });
+
     it('should add global tags using telegraf format when enabled', function(finished){
       udpTest(function(message, server){
         assert.equal(message, 'test,gtag=gvalue,gtag2=gvalue2:1|c');
@@ -430,6 +464,24 @@ function doTests(StatsD) {
             });
 
         statsd.increment('test', 1337, ['foo:bar']);
+      });
+    });
+
+    it('should format global key-value tags using telegraf format when enabled', function(finished){
+      udpTest(function(message, server){
+        assert.equal(message, 'test,gtag=gvalue,foo=bar:1337|c');
+        server.close();
+        finished();
+      }, function(server){
+        var address = server.address(),
+            statsd = new StatsD({
+              host: address.address,
+              port: address.port,
+              globalTags: { gtag: "gvalue"},
+              telegraf: true
+            });
+
+        statsd.increment('test', 1337, { foo: "bar" });
       });
     });
 
@@ -508,6 +560,37 @@ function doTests(StatsD) {
     it('should send no timing stat when a mock Client is used', function(finished){
       assertMockClientMethod('timing', finished);
     });
+
+    it('should format tags to datadog format by default', function(finished){
+      udpTest(function(message, server){
+        assert.equal(message, 'test:42|ms|#foo:bar');
+        server.close();
+        finished();
+      }, function(server){
+        var address = server.address(),
+            statsd = new StatsD(address.address, address.port);
+
+        statsd.timing('test', 42, {foo: 'bar'});
+      });
+    });
+
+    it('should format tags when using telegraf format', function(finished){
+      udpTest(function(message, server){
+        assert.equal(message, 'test,foo=bar:42|ms');
+        server.close();
+        finished();
+      }, function(server){
+        var address = server.address(),
+            statsd = new StatsD({
+              address: address.address,
+              port: address.port,
+              telegraf: true
+            });
+
+        statsd.timing('test', 42, { foo: 'bar'});
+      });
+    });
+
   });
 
   describe('#histogram', function(){

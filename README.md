@@ -30,7 +30,7 @@ Parameters (specified as an options hash):
 * `globalize`:   Expose this StatsD instance globally? `default: false`
 * `cacheDns`:    Cache the initial dns lookup to *host* `default: false`
 * `mock`:        Create a mock StatsD instance, sending no stats to the server? `default: false`
-* `globalTags`:  Tags that will be added to every metric `default: []`
+* `globalTags`:  Tags that will be added to every metric. Can be either an object or list of tags. `default: {}`
 * `maxBufferSize`: If larger than 0,  metrics will be buffered and only sent when the string length is greater than the size. `default: 0`
 * `bufferFlushInterval`: If buffering is in use, this is the time in ms to always flush any buffered metrics. `default: 1000`
 * `telegraf`:    Use Telegraf's StatsD line protocol, which is slightly different than the rest `default: false`
@@ -41,7 +41,7 @@ All StatsD methods other than event and close have the same API:
 * `name`:       Stat name `required`
 * `value`:      Stat value `required except in increment/decrement where it defaults to 1/-1 respectively`
 * `sampleRate`: Sends only a sample of data to StatsD `default: 1`
-* `tags`:       The Array of tags to add to metrics `default: []`
+* `tags`:       The tags to add to metrics. Can be either an object `{ tag: "value"}` or an array of tags. `default: []`
 * `callback`:   The callback to execute once the metric has been sent or buffered
 
 If an array is specified as the `name` parameter each item in that array will be sent along with the specified value.
@@ -61,7 +61,7 @@ The event method has the following API:
   * `priority`         Can be ‘normal’ or ‘low’ `default: normal`
   * `source_type_name` Assign a source type to the event.
   * `alert_type`       Can be ‘error’, ‘warning’, ‘info’ or ‘success’ `default: info`
-* `tags`:       The Array of tags to add to metrics `default: []`
+* `tags`:       The tags to add to metrics. Can be either an object `{ tag: "value"}` or an array of tags. `default: []`
 * `callback`:   The callback to execute once the metric has been sent.
 
 The check method has the following API:
@@ -72,7 +72,7 @@ The check method has the following API:
   * `date_happened`    Assign a timestamp to the check `default is now`
   * `hostname`         Assign a hostname to the check.
   * `message`          Assign a message to the check.
-* `tags`:       The Array of tags to add to metrics `default: []`
+* `tags`:       The tags to add to metrics. Can be either an object `{ tag: "value"}` or an array of tags. `default: []`
 * `callback`:   The callback to execute once the metric has been sent.
 
 ```javascript
@@ -132,19 +132,20 @@ The check method has the following API:
 
   // Sampling, tags and callback are optional and could be used in any combination (DataDog and Telegraf only)
   client.histogram('my_histogram', 42, 0.25); // 25% Sample Rate
-  client.histogram('my_histogram', 42, ['tag']); // User-defined tag
+  client.histogram('my_histogram', 42, { tag: 'value'}]); // User-defined tag
+  client.histogram('my_histogram', 42, ['tag:value']); // Tags as an array
   client.histogram('my_histogram', 42, next); // Callback
   client.histogram('my_histogram', 42, 0.25, ['tag']);
   client.histogram('my_histogram', 42, 0.25, next);
-  client.histogram('my_histogram', 42, ['tag'], next);
-  client.histogram('my_histogram', 42, 0.25, ['tag'], next);
+  client.histogram('my_histogram', 42, { tag: 'value'}, next);
+  client.histogram('my_histogram', 42, 0.25, { tag: 'value'}, next);
 
   // Use a child client to add more context to the client.
   // Clients can be nested.
   var childClient = client.childClient({
     prefix: 'additionalPrefix.',
     suffix: '.additionalSuffix',
-    globalTags: ['globalTag1:forAllMetricsFromChildClient']
+    globalTags: { globalTag1: 'forAllMetricsFromChildClient'}
   });
   childClient.increment('my_counter_with_more_tags');
 
@@ -159,7 +160,7 @@ The check method has the following API:
 
 Some of the functionality mentioned above is specific to DogStatsD or Telegraf.  They will not do anything if you are using the regular statsd client.
 * globalTags parameter- DogStatsD or Telegraf
-* tags parameter- DogStatsD or Telegraf
+* tags parameter- DogStatsD or Telegraf.
 * telegraf parameter- Telegraf
 * histogram method- DogStatsD or Telegraf
 * event method- DogStatsD
