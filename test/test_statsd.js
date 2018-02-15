@@ -487,6 +487,31 @@ function doTests(StatsD) {
 
   });
 
+  describe('#timer', function() {
+    it('should send data to timing function', function(finished) {
+      udpTest(function (message, server) {
+        // Search for a string similar to 'test:0.123|ms'
+        var re = RegExp("(test:)([0-9]+\.[0-9]+)\\|{1}(ms)");
+        assert.equal(true, re.test(message));
+        server.close();
+        finished();
+      }, function (server) {
+        var address = server.address(),
+          statsd = new StatsD(address.address, address.port);
+
+        var testFunc = function(a, b) {
+          return a + b;
+        };
+
+        var metricsArgs = {
+          stat: 'test'
+        };
+
+        statsd.timer(testFunc, metricsArgs)(2, 2);
+      });
+    });
+  });
+
   describe('#timing', function(){
     it('should send proper time format without prefix, suffix, sampling and callback', function(finished){
       udpTest(function(message, server){
