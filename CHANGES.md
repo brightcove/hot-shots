@@ -1,6 +1,9 @@
 CHANGELOG
 =========
 
+## 5.1.0 (2018-2-14)
+* @lautis Pass key-value tags as objects
+
 ## 5.0.1 (2018-2-2)
 * @punya-asapp Add childClient to TypeScript types
 

@@ -198,7 +198,8 @@ Thanks for considering making any updates to this project!  Here are the steps t
 2. Add your changes in your fork as well as any new tests needed
 3. Run "npm test"
 4. Update README.md with any needed documentation
-5. Push your changes and create the PR
+5. If you have made any API changes, update types.d.ts
+6. Push your changes and create the PR
 
 When you've done all this we're happy to try to get this merged in right away.
 
