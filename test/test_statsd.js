@@ -488,7 +488,7 @@ function doTests(StatsD) {
   });
 
   describe('#timer', function() {
-    it('should send data to timing function', function(finished) {
+    it('should send stat and time to execute to timing function', function(finished) {
       udpTest(function (message, server) {
         // Search for a string similar to 'test:0.123|ms'
         var re = RegExp("(test:)([0-9]+\.[0-9]+)\\|{1}(ms)");
@@ -505,6 +505,30 @@ function doTests(StatsD) {
 
         var metricsArgs = {
           stat: 'test'
+        };
+
+        statsd.timer(testFunc, metricsArgs)(2, 2);
+      });
+    });
+
+    it('should send data with tags to timing function', function(finished) {
+      udpTest(function (message, server) {
+        // Search for a string similar to 'test:0.123|ms|#foo,bar'
+        var re = RegExp("(test:)([0-9]+\.[0-9]+)\\|{1}(ms)\\|{1}\\#(foo,bar)");
+        assert.equal(true, re.test(message));
+        server.close();
+        finished();
+      }, function (server) {
+        var address = server.address(),
+          statsd = new StatsD(address.address, address.port);
+
+        var testFunc = function (a, b) {
+          return a + b;
+        };
+
+        var metricsArgs = {
+          stat: 'test',
+          tags: ['foo', 'bar']
         };
 
         statsd.timer(testFunc, metricsArgs)(2, 2);
