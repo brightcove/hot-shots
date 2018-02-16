@@ -503,11 +503,7 @@ function doTests(StatsD) {
           return a + b;
         };
 
-        var metricsArgs = {
-          stat: 'test'
-        };
-
-        statsd.timer(testFunc, metricsArgs)(2, 2);
+        statsd.timer(testFunc, 'test')(2, 2);
       });
     });
 
@@ -526,12 +522,7 @@ function doTests(StatsD) {
           return a + b;
         };
 
-        var metricsArgs = {
-          stat: 'test',
-          tags: ['foo', 'bar']
-        };
-
-        statsd.timer(testFunc, metricsArgs)(2, 2);
+        statsd.timer(testFunc, 'test', undefined, ['foo', 'bar'])(2, 2);
       });
     });
   });

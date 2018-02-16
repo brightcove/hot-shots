@@ -91,8 +91,7 @@ The check method has the following API:
   // Timer: Records how long a given function takes to execute (in milliseconds),
   // and then sends that value using 'client.timing'
   var fn = function(a, b) { return a + b };
-  var metricsArgs = { 'stat': 'response_time' };
-  client.timer(fn, metricsArgs)(2, 2);
+  client.timer(fn, 'fn_execution_time')(2, 2);
 
   // Increment: Increments a stat by a value (default is 1)
   client.increment('my_counter');
