@@ -88,8 +88,11 @@ The check method has the following API:
   // Timing: sends a timing command with the specified milliseconds
   client.timing('response_time', 42);
 
-  // Timer: Records how long a given function takes to execute (in milliseconds),
-  // and then sends that value using 'client.timing'
+  // Timer: Returns a function that you call to record how long the first
+  // parameter takes to execute (in milliseconds) and then sends that value
+  // using 'client.timing'.
+  // The parameters after the first one (in this case 'fn')
+  // match those in timer.
   var fn = function(a, b) { return a + b };
   client.timer(fn, 'fn_execution_time')(2, 2);
 
