@@ -92,7 +92,7 @@ The check method has the following API:
   // parameter takes to execute (in milliseconds) and then sends that value
   // using 'client.timing'.
   // The parameters after the first one (in this case 'fn')
-  // match those in timer.
+  // match those in 'client.timing'.
   var fn = function(a, b) { return a + b };
   client.timer(fn, 'fn_execution_time')(2, 2);
 
