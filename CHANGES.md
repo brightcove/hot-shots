@@ -1,6 +1,9 @@
 CHANGELOG
 =========
 
+## 5.2.0 (2018-2-28)
+* @ericapisani Add timer decorator function
+
 ## 5.1.0 (2018-2-14)
 * @lautis Pass key-value tags as objects
 
