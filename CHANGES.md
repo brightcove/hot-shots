@@ -1,6 +1,9 @@
 CHANGELOG
 =========
 
+## 5.3.0 (2018-4-3)
+@tanelso2 Added support for using default route on Linux
+
 ## 5.2.0 (2018-2-28)
 * @ericapisani Add timer decorator function
 
