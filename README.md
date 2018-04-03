@@ -36,6 +36,7 @@ Parameters (specified as an options hash):
 * `telegraf`:    Use Telegraf's StatsD line protocol, which is slightly different than the rest `default: false`
 * `sampleRate`:    Sends only a sample of data to StatsD for all StatsD methods.  Can be overriden at the method level. `default: 1`
 * `errorHandler`: A function with one argument. It is called to handle various errors. `default: none`, errors are thrown/logger to console
+* `useDefaultRoute`: Use the default interface on a Linux system. Useful when running in containers
 
 All StatsD methods other than event and close have the same API:
 * `name`:       Stat name `required`

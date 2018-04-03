@@ -19,6 +19,7 @@ declare module "hot-shots" {
     socket?: dgram.Socket;
     suffix?: string;
     telegraf?: boolean;
+    useDefaultRoute?: boolean;
   }
 
   export interface ChildClientOptions {
