@@ -75,6 +75,7 @@ declare module "hot-shots" {
 
     timing(stat: string | string[], value: number, sampleRate?: number, tags?: Tags, callback?: StatsCb): void;
     histogram(stat: string | string[], value: number, sampleRate?: number, tags?: Tags, callback?: StatsCb): void;
+    distribution(stat: string | string[], value: number, sampleRate?: number, tags?: Tags, callback?: StatsCb): void;
     gauge(stat: string | string[], value: number, sampleRate?: number, tags?: Tags, callback?: StatsCb): void;
     set(stat: string | string[], value: number, sampleRate?: number, tags?: Tags, callback?: StatsCb): void;
     unique(stat: string | string[], value: number, sampleRate?: number, tags?: Tags, callback?: StatsCb): void;

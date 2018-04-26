@@ -740,6 +740,114 @@ function doTests(StatsD) {
     });
 
   });
+  
+  describe('#distribution', function(){
+    it('should send proper distribution format without prefix, suffix, sampling and callback', function(finished){
+      udpTest(function(message, server){
+        assert.equal(message, 'test:42|d');
+        server.close();
+        finished();
+      }, function(server){
+        var address = server.address(),
+            statsd = new StatsD(address.address, address.port);
+
+        statsd.distribution('test', 42);
+      });
+    });
+
+    it('should send proper distribution format with tags', function(finished){
+      udpTest(function(message, server){
+        assert.equal(message, 'test:42|d|#foo,bar');
+        server.close();
+        finished();
+      }, function(server){
+        var address = server.address(),
+            statsd = new StatsD(address.address, address.port);
+
+        statsd.distribution('test', 42, ['foo', 'bar']);
+      });
+    });
+
+    it('should send proper distribution format with prefix, suffix, sampling and callback', function(finished){
+      var called = false;
+      udpTest(function(message, server){
+        assert.equal(message, 'foo.test.bar:42|d|@0.5');
+        assert.equal(called, true);
+        server.close();
+        finished();
+      }, function(server){
+        var address = server.address(),
+            statsd = new StatsD(address.address, address.port, 'foo.', '.bar');
+
+        statsd.distribution('test', 42, 0.5, function(){
+          called = true;
+        });
+      });
+    });
+
+    it('should properly send a and b with the same value', function(finished){
+      var called = 0,
+          messageNumber = 0;
+
+      udpTest(function(message, server){
+        if(messageNumber === 0){
+          assert.equal(message, 'a:42|d');
+          messageNumber += 1;
+        } else {
+          assert.equal(message, 'b:42|d');
+          server.close();
+          finished();
+        }
+      }, function(server){
+        var address = server.address(),
+            statsd = new StatsD(address.address, address.port);
+
+        statsd.distribution(['a', 'b'], 42, null, function(error, bytes){
+          called += 1;
+          assert.ok(called === 1); //ensure it only gets called once
+          assert.equal(error, null);
+          assert.equal(bytes, 12);
+        });
+      });
+    });
+
+    it('should send no distribution stat when a mock Client is used', function(finished){
+      assertMockClientMethod('distribution', finished);
+    });
+
+    it('should call callback after distribution call', function(finished){
+      udpTest(function(message, server){
+        assert.equal(message, 'test:42|d');
+        server.close();
+      }, function(server){
+        var address = server.address(),
+          statsd = new StatsD(address.address, address.port);
+
+        statsd.distribution('test', 42, null, null, function(err, data) {
+          assert.equal(data, 9);
+          finished();
+        });
+      });
+    });
+
+    it('should have error in callback after bad distribution call', function(finished){
+      udpTest(function(message, server){
+        throw new Error('should not be called');
+      }, function(server){
+        var address = server.address(),
+          statsd = new StatsD(address.address, address.port);
+
+        statsd.close(function() {
+          statsd.distribution('test', 42, null, null, function(err, data) {
+            assert.ok(err !== undefined);
+            assert.ok(data === undefined);
+            finished();
+          });
+        });
+      });
+    });
+
+  });
 
   describe('#gauge', function(){
     it('should send proper gauge format without prefix, suffix, sampling and callback', function(finished){

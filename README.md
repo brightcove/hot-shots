@@ -106,6 +106,9 @@ The check method has the following API:
   // Histogram: send data for histogram stat (DataDog and Telegraf only)
   client.histogram('my_histogram', 42);
 
+  // Distribution: Tracks the statistical distribution of a set of values across your infrastructure. (DataDog v6)
+  client.distribution('my_distribution', 42);
+
   // Gauge: Gauge a stat by a specified amount
   client.gauge('my_gauge', 123.45);
 
