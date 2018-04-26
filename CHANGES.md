@@ -1,7 +1,7 @@
 CHANGELOG
 =========
 
-## 5.4.0 (2018-4-3)
+## 5.4.0 (2018-4-26)
 * @RobGraham Added `distribution()` support for DataDog v6
 
 ## 5.3.0 (2018-4-3)
