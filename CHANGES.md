@@ -1,6 +1,10 @@
 CHANGELOG
 =========
 
+## 5.4.1 (2018-5-12)
+* @jasonsack Fixups for new useDefaultRoute option
+* @bdeitte Test against more modern set of Node versions in Travis
+
 ## 5.4.0 (2018-4-26)
 * @RobGraham Added `distribution()` support for DataDog v6
 
