@@ -30,6 +30,7 @@
     "node": ">=0.8.0"
   },
   "scripts": {
+    "coverage": "nyc --reporter=lcov npm test",
     "test": "mocha -R spec",
     "lint": "jshint lib/**.js test/**.js",
     "pretest": "npm run lint"
@@ -37,7 +38,8 @@
   "dependencies": {},
   "devDependencies": {
     "jshint": "2.x",
-    "mocha": "2.x"
+    "mocha": "2.x",
+    "nyc": "11.x"
   },
   "license": "MIT"
 }

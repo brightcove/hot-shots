@@ -7,3 +7,5 @@ perfTest
 .jshintrc
 .npmignore
 .travis.yml
+.nyc_output
+coverage
