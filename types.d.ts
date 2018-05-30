@@ -74,6 +74,7 @@ declare module "hot-shots" {
     decrement(stat: string | string[], value: number, sampleRate?: number, tags?: Tags, callback?: StatsCb): void;
 
     timing(stat: string | string[], value: number, sampleRate?: number, tags?: Tags, callback?: StatsCb): void;
+    timer(func: (...args: any[]) => any, stat: string, sampleRate: number, tags?: Tags, callback?: StatsCb): (...args: any[]) => any;
     histogram(stat: string | string[], value: number, sampleRate?: number, tags?: Tags, callback?: StatsCb): void;
     distribution(stat: string | string[], value: number, sampleRate?: number, tags?: Tags, callback?: StatsCb): void;
     gauge(stat: string | string[], value: number, sampleRate?: number, tags?: Tags, callback?: StatsCb): void;
