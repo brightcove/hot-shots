@@ -1,6 +1,9 @@
 CHANGELOG
 =========
 
+## 5.5.1 (2018-5-30)
+* @emou Typescript declaration for the 'timer' method
+
 ## 5.5.0 (2018-5-30)
 * @drewen Split up single file, add code coverage capabilities
 
