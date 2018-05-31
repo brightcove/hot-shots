@@ -1,6 +1,9 @@
 CHANGELOG
 =========
 
+## 5.5.0 (2018-5-30)
+* @drewen Split up single file, add code coverage capabilities
+
 ## 5.4.1 (2018-5-12)
 * @jasonsack Fixups for new useDefaultRoute option
 * @bdeitte Test against more modern set of Node versions in Travis
