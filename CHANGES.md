@@ -1,6 +1,9 @@
 CHANGELOG
 =========
 
+## 5.6.0 (2018-6-3)
+* @drewen TypeScript: add overload types for stats functions
+
 ## 5.5.1 (2018-5-30)
 * @emou Typescript declaration for the 'timer' method
 
