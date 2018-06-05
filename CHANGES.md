@@ -1,6 +1,9 @@
 CHANGELOG
 =========
 
+## 5.6.1 (2018-6-4)
+* @MattySheikh Typescript: add socket type for StatsD class
+
 ## 5.6.0 (2018-6-3)
 * @drewen TypeScript: add overload types for stats functions
 
