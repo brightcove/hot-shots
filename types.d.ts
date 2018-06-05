@@ -120,6 +120,7 @@ declare module "hot-shots" {
     check(name: string, status: DatadogChecksValues, options?: CheckOptions, tags?: Tags, callback?: StatsCb): void;
 
     public CHECKS: DatadogChecks;
+    public socket: dgram.Socket;
   }
 }
 
