@@ -525,6 +525,23 @@ function doTests(StatsD) {
         statsd.timer(testFunc, 'test', undefined, ['foo', 'bar'])(2, 2);
       });
     });
+
+    it('should support async functions', function(finished) {
+      udpTest(function (message, server) {
+        // Search for a string similar to 'test:0.123|ms'
+        var re = RegExp("(test:)([0-9]+\.[0-9]+)\\|{1}(ms)");
+        assert.equal(true, re.test(message));
+        server.close();
+        finished();
+      }, function (server) {
+        var address = server.address(),
+          statsd = new StatsD(address.address, address.port);
+
+        var testFunc = (a, b) => { return new Promise((resolve) => resolve(a + b)) };
+
+        statsd.timer(testFunc, 'test')(2, 2);
+      });
+    });
   });
 
   describe('#timing', function(){
