@@ -1,6 +1,9 @@
 CHANGELOG
 =========
 
+## 5.6.3 (2018-6-20)
+* singerb correct close() type definition
+
 ## 5.6.2 (2018-6-15)
 * @mjesuele Fix time in timer
 
