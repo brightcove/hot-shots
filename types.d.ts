@@ -113,7 +113,7 @@ declare module "hot-shots" {
     unique(stat: string | string[], value: number, callback?: StatsCb): void;
     unique(stat: string | string[], value: number, sampleRate?: number, callback?: StatsCb): void;
 
-    close(callback: () => void): void;
+    close(callback: (error?: Error) => void): void;
 
     event(title: string, text?: string, options?: EventOptions, tags?: Tags, callback?: StatsCb): void;
     event(title: string, text?: string, options?: EventOptions, callback?: StatsCb): void;
