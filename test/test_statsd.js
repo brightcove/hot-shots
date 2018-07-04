@@ -740,7 +740,7 @@ function doTests(StatsD) {
     });
 
   });
-  
+
   describe('#distribution', function(){
     it('should send proper distribution format without prefix, suffix, sampling and callback', function(finished){
       udpTest(function(message, server){
@@ -1563,6 +1563,15 @@ function doTests(StatsD) {
       statsd.send('test title');
     });
 
+    it('should record buffers when mocked', function (finished) {
+      var statsd = new StatsD({
+        mock: true
+      });
+      statsd.send('test', {}, function() {
+        assert.deepEqual(statsd.mockBuffer, ['test']);
+        finished();
+      });
+    });
   });
 
   describe('#sendMessage', function() {
