@@ -1,8 +1,11 @@
 CHANGELOG
 =========
 
+## 5.7.0 (2018-7-4)
+* @Willyham Add support for recording buffers in mock mode
+
 ## 5.6.3 (2018-6-20)
-* singerb correct close() type definition
+* @singerb correct close() type definition
 
 ## 5.6.2 (2018-6-15)
 * @mjesuele Fix time in timer

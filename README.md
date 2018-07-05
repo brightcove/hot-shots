@@ -29,7 +29,7 @@ Parameters (specified as an options hash):
 * `suffix`:      What to suffix each stat name with `default: ''`
 * `globalize`:   Expose this StatsD instance globally? `default: false`
 * `cacheDns`:    Cache the initial dns lookup to *host* `default: false`
-* `mock`:        Create a mock StatsD instance, sending no stats to the server? `default: false`
+* `mock`:        Create a mock StatsD instance, sending no stats to the server and allowing data to be read from mockBuffer? `default: false`
 * `globalTags`:  Tags that will be added to every metric. Can be either an object or list of tags. `default: {}`
 * `maxBufferSize`: If larger than 0,  metrics will be buffered and only sent when the string length is greater than the size. `default: 0`
 * `bufferFlushInterval`: If buffering is in use, this is the time in ms to always flush any buffered metrics. `default: 1000`
