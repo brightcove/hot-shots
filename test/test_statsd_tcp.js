@@ -115,7 +115,7 @@ describe('StatsD [TCP]', function (StatsDClient) {
       });
     });
 
-    xit('should combine global tags and metric tags', function (finished) {
+    it('should combine global tags and metric tags', function (finished) {
       tcpTest(function (message, server) {
         assert.equal(message, 'test:1337|c|#foo,gtag');
         server.close();
@@ -192,7 +192,7 @@ describe('StatsD [TCP]', function (StatsDClient) {
       });
     });
 
-    xit('should properly send a and b with the same value', function (finished) {
+    it('should properly send a and b with the same value', function (finished) {
       var called = false;
       var messageNumber = 0;
 
@@ -281,7 +281,7 @@ describe('StatsD [TCP]', function (StatsDClient) {
       });
     });
 
-    xit('should properly send a and b with the same value', function (finished) {
+    it('should properly send a and b with the same value', function (finished) {
       var called = 0;
       var messageNumber = 0;
 
@@ -370,7 +370,7 @@ describe('StatsD [TCP]', function (StatsDClient) {
       });
     });
 
-    xit('should properly send a and b with the same value', function (finished) {
+    it('should properly send a and b with the same value', function (finished) {
       var called = 0;
       var messageNumber = 0;
 
@@ -459,7 +459,7 @@ describe('StatsD [TCP]', function (StatsDClient) {
       });
     });
 
-    xit('should properly send a and b with the same value', function (finished) {
+    it('should properly send a and b with the same value', function (finished) {
       var called = 0;
       var messageNumber = 0;
 
@@ -548,7 +548,7 @@ describe('StatsD [TCP]', function (StatsDClient) {
       });
     });
 
-    xit('should properly send a and b with the same value', function (finished) {
+    it('should properly send a and b with the same value', function (finished) {
       var called = 0;
       var messageNumber = 0;
 
@@ -637,7 +637,7 @@ describe('StatsD [TCP]', function (StatsDClient) {
       });
     });
 
-    xit('should properly send a and b with the same value', function (finished) {
+    it('should properly send a and b with the same value', function (finished) {
       var called = 0;
       var messageNumber = 0;
 
