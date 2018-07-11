@@ -104,7 +104,7 @@ describe('StatsD [TCP]', function () {
         statsd.increment('test', 1337, ['foo']);
       });
       server.on('metrics', function (metrics) {
-        assert.equal(metrics, 'test:1337|c|#foo,gtag');
+        assert.equal(metrics, 'test:1337|c|#gtag,foo');
         server.close();
         done();
       });
