@@ -13,29 +13,14 @@ Math.random = function () {
 };
 
 function createServer(onListening) {
-  // This is the actual TCP server implementation of etsy/statsd
-  // Including the metrics handler which splits the TCP packet on "\n"
-  // to deal with multiple metrics in a single TCP stream data flush
   var server = net.createServer(function (socket) {
     socket.setEncoding('ascii');
-
-    var buffer = '';
     socket.on('data', function (data) {
-      buffer += data;
-      var offset = buffer.lastIndexOf("\n");
-      if (offset > -1) {
-        var packet = buffer.slice(0, offset + 1);
-        buffer = buffer.slice(offset + 1);
-
-        var parts;
-        if (packet.indexOf("\n") > -1) {
-          parts = packet.split("\n");
-        } else {
-          parts = [packet];
-        }
-
-        var metrics = parts.filter(part => part !== '');
-
+      var metrics;
+      if (data) {
+        metrics = data.split('\n').filter(function (part) {
+          return part !== '';
+        });
         server.emit('metrics', metrics);
       }
     });
