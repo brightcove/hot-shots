@@ -46,7 +46,7 @@ describe('StatsD [TCP]', function () {
   });
 
   describe('#init', function () {
-    it('should create a socket variable that is an instance of net.Socket if set to TCP', function () {
+    it('should create a socket variable that is an instance of net.Socket if set to TCP', function (done) {
       createServer(function (address) {
         statsd = new StatsD({
           host: address.address, 
@@ -167,8 +167,7 @@ describe('StatsD [TCP]', function () {
     });
 
     it('should properly send a and b with the same value', function (done) {
-      var called = false;
-      var messageNumber = 0;
+      var called = 0;
       server = createServer(function (address) {
         statsd = new StatsD({
           host: address.address, 
@@ -183,14 +182,9 @@ describe('StatsD [TCP]', function () {
         });
       });
       server.on('metrics', function (metrics) {
-        if (messageNumber === 0) {
-          assert.equal(metrics, 'a:42|ms');
-          messageNumber += 1;
-        } else {
-          assert.equal(metrics, 'b:42|ms');
-          server.close();
-          done();
-        }
+        assert.deepEqual(metrics, ['a:42|ms', 'b:42|ms']);
+        server.close();
+        done();
       });
     });
   });
@@ -252,7 +246,6 @@ describe('StatsD [TCP]', function () {
 
     it('should properly send a and b with the same value', function (done) {
       var called = 0;
-      var messageNumber = 0;
       server = createServer(function (address) {
         statsd = new StatsD({
           host: address.address, 
@@ -267,14 +260,9 @@ describe('StatsD [TCP]', function () {
         });
       });
       server.on('metrics', function (metrics) {
-        if (messageNumber === 0) {
-          assert.equal(metrics, 'a:42|h');
-          messageNumber += 1;
-        } else {
-          assert.equal(metrics, 'b:42|h');
-          server.close();
-          done();
-        }
+        assert.deepEqual(metrics, ['a:42|h', 'b:42|h']);
+        server.close();
+        done();
       });
     });
   });
@@ -336,7 +324,6 @@ describe('StatsD [TCP]', function () {
 
     it('should properly send a and b with the same value', function (done) {
       var called = 0;
-      var messageNumber = 0;
       server = createServer(function (address) {
         statsd = new StatsD({
           host: address.address, 
@@ -351,14 +338,9 @@ describe('StatsD [TCP]', function () {
         });
       });
       server.on('metrics', function (metrics) {
-        if (messageNumber === 0) {
-          assert.equal(metrics, 'a:42|g');
-          messageNumber += 1;
-        } else {
-          assert.equal(metrics, 'b:42|g');
-          server.close();
-          done();
-        }
+        assert.deepEqual(metrics, ['a:42|g', 'b:42|g']);
+        server.close();
+        done();
       });
     });
   });
@@ -420,7 +402,6 @@ describe('StatsD [TCP]', function () {
 
     it('should properly send a and b with the same value', function (done) {
       var called = 0;
-      var messageNumber = 0;
       server = createServer(function (address) {
         statsd = new StatsD({
           host: address.address, 
@@ -435,14 +416,9 @@ describe('StatsD [TCP]', function () {
         });
       });
       server.on('metrics', function (metrics) {
-        if (messageNumber === 0) {
-          assert.equal(metrics, 'a:42|c');
-          messageNumber += 1;
-        } else {
-          assert.equal(metrics, 'b:42|c');
-          server.close();
-          done();
-        }
+        assert.deepEqual(metrics, ['a:42|c', 'b:42|c']);
+        server.close();
+        done();
       });
     });
   });
@@ -504,7 +480,6 @@ describe('StatsD [TCP]', function () {
 
     it('should properly send a and b with the same value', function (done) {
       var called = 0;
-      var messageNumber = 0;
       server = createServer(function (address) {
         statsd = new StatsD({
           host: address.address, 
@@ -519,14 +494,9 @@ describe('StatsD [TCP]', function () {
         });
       });
       server.on('metrics', function (metrics) {
-        if (messageNumber === 0) {
-          assert.equal(metrics, 'a:-42|c');
-          messageNumber += 1;
-        } else {
-          assert.equal(metrics, 'b:-42|c');
-          server.close();
-          done();
-        }
+        assert.deepEqual(metrics, ['a:-42|c', 'b:-42|c']);
+        server.close();
+        done();
       });
     });
   });
@@ -588,7 +558,6 @@ describe('StatsD [TCP]', function () {
 
     it('should properly send a and b with the same value', function (done) {
       var called = 0;
-      var messageNumber = 0;
       server = createServer(function (address) {
         statsd = new StatsD({
           host: address.address, 
@@ -603,14 +572,9 @@ describe('StatsD [TCP]', function () {
         });
       });
       server.on('metrics', function (metrics) {
-        if (messageNumber === 0) {
-          assert.equal(metrics, 'a:42|s');
-          messageNumber += 1;
-        } else {
-          assert.equal(metrics, 'b:42|s');
-          server.close();
-          done();
-        }
+        assert.deepEqual(metrics, ['a:42|s', 'b:42|s']);
+        server.close();
+        done();
       });
     });
   });
