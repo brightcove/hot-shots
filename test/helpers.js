@@ -6,7 +6,15 @@ var net = require('net');
 var StatsD = require('../lib/statsd');
 
 function createStatsdClient(args, noOfChildren) {
-  var client = Array.isArray(args) ? new StatsD(...args) : new StatsD(args);
+  function construct(ctor, args) {
+    function F() {
+      return ctor.apply(this, args);
+    }
+    F.prototype = ctor.prototype;
+    return new F();
+  }
+  var client = Array.isArray(args) ? construct(StatsD, args) : new StatsD(args);
+
   switch (noOfChildren) {
     case 0:
       return client;
