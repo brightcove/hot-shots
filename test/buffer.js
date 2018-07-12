@@ -16,7 +16,7 @@ module.exports = function runBufferTestSuite() {
       statsd = null;
     });
 
-    ['main client', /*'child client', 'child of child client'*/].forEach(function (description, index) {
+    ['main client', 'child client', 'child of child client'].forEach(function (description, index) {
       describe(description, function () {
         describe('UDP', function () {
           it('should aggregate packets when maxBufferSize is set to non-zero', function (done) {
