@@ -23,12 +23,8 @@ function createTCPServer(onListening) {
   var server = net.createServer(function (socket) {
     socket.setEncoding('ascii');
     socket.on('data', function (data) {
-      var metrics;
       if (data) {
-        metrics = data.split('\n').filter(function (part) {
-          return part !== '';
-        });
-        server.emit('metrics', metrics);
+        server.emit('metrics', data);
       }
     });
   });
