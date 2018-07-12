@@ -3,6 +3,22 @@
 var dgram = require('dgram');
 var net = require('net');
 
+var StatsD = require('../lib/statsd');
+
+function createStatsdClient(args, noOfChildren) {
+  var client = Array.isArray(args) ? new StatsD(...args) : new StatsD(args);
+  switch (noOfChildren) {
+    case 0:
+      return client;
+    case 1:
+      return client.childClient({});
+    case 2:
+      return client.childClient({}).childClient({});
+    default:
+      return client;
+  }
+}
+
 function createTCPServer(onListening) {
   var server = net.createServer(function (socket) {
     socket.setEncoding('ascii');
@@ -41,6 +57,7 @@ function createUDPServer(onListening){
 }
 
 module.exports = {
+  createStatsdClient: createStatsdClient,
   createTCPServer: createTCPServer,
   createUDPServer: createUDPServer
 };
