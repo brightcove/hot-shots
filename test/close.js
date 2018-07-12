@@ -73,13 +73,14 @@ module.exports = function runCloseMethodTestSuite() {
                 protocol: 'tcp',
                 errorHandler: function (e) {
                   server.close();
-                  done();
                 }
               }, index);
               statsd.socket.destroy = function () {
                 throw new Error('Boom!');
               };
-              statsd.close();
+              statsd.close(function () {
+                done();
+              });
             });
           });
         });
