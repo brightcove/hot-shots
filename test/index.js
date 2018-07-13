@@ -8,6 +8,7 @@ var runSendMethodTestSuite = require('./send');
 var runSendAllMethodTestSuite = require('./sendAll');
 var runSendMessageMethodTestSuite = require('./sendMessage');
 var runTimerTestSuite = require('./timer');
+var runTimingTestSuite = require('./timing');
 
 /**
  * Since sampling uses random, we need to patch Math.random() to always give
@@ -31,4 +32,5 @@ describe('StatsD', function () {
   runSendAllMethodTestSuite();
   runSendMessageMethodTestSuite();
   runTimerTestSuite();
+  runTimingTestSuite();
 });
