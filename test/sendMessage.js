@@ -7,7 +7,7 @@ var createStatsdClient = require('./helpers').createStatsdClient;
 var createTCPServer = require('./helpers').createTCPServer;
 var createUDPServer = require('./helpers').createUDPServer;
 
-module.exports = function runSendAllMethodTestSuite() {
+module.exports = function runSendMessageMethodTestSuite() {
   describe('#sendMessage', function () {
     var server;
     var statsd;
