@@ -9,7 +9,7 @@ var createTCPServer = require('./helpers').createTCPServer;
 var createUDPServer = require('./helpers').createUDPServer;
 
 module.exports = function runHistogramTestSuite() {
-  describe('#histogram', function () {
+  describe('#statsFunctions', function () {
     var server;
     var statsd;
 
