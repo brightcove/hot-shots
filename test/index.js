@@ -4,6 +4,7 @@ var runBufferTestSuite = require('./buffer');
 var runCloseMethodTestSuite = require('./close');
 var runGlobalTagsTestSuite = require('./globalTags');
 var runInitTestSuite = require('./init');
+var runSendMethodTestSuite = require('./send');
 var runSendAllMethodTestSuite = require('./sendAll');
 var runTimerTestSuite = require('./timer');
 
@@ -25,6 +26,7 @@ describe('StatsD', function () {
   runCloseMethodTestSuite();
   runGlobalTagsTestSuite();
   runInitTestSuite();
+  runSendMethodTestSuite();
   runSendAllMethodTestSuite();
   runTimerTestSuite();
 });
