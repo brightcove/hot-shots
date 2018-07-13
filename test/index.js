@@ -6,6 +6,7 @@ var runGlobalTagsTestSuite = require('./globalTags');
 var runInitTestSuite = require('./init');
 var runSendMethodTestSuite = require('./send');
 var runSendAllMethodTestSuite = require('./sendAll');
+var runSendMessageMethodTestSuite = require('./sendMessage');
 var runTimerTestSuite = require('./timer');
 
 /**
@@ -28,5 +29,6 @@ describe('StatsD', function () {
   runInitTestSuite();
   runSendMethodTestSuite();
   runSendAllMethodTestSuite();
+  runSendMessageMethodTestSuite();
   runTimerTestSuite();
 });
