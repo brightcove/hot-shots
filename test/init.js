@@ -37,6 +37,10 @@ module.exports = function runInitTestSuite() {
           });
   
           it('should set the proper values with options hash format', function () {
+            // Don't do DNS lookup for this test
+            var originalLookup = dns.lookup;
+            dns.lookup = function () {};
+
             // cachedDns isn't tested here, hence the null
             var statsd = createStatsdClient({
               host: 'host',
@@ -65,6 +69,8 @@ module.exports = function runInitTestSuite() {
             assert.equal(statsd.bufferFlushInterval, 60);
             assert.deepEqual(statsd.telegraf, false);
             assert.equal(statsd.protocol, 'tcp');
+
+            dns.lookup = originalLookup;
           });
         }
 
