@@ -2,6 +2,7 @@
 
 var runBufferTestSuite = require('./buffer');
 var runCloseMethodTestSuite = require('./close');
+var runEventMethodTestSuite = require('./event');
 var runGlobalTagsTestSuite = require('./globalTags');
 var runInitTestSuite = require('./init');
 var runSendMethodTestSuite = require('./send');
@@ -26,6 +27,7 @@ beforeEach(function () {
 describe('StatsD', function () {
   runBufferTestSuite();
   runCloseMethodTestSuite();
+  runEventMethodTestSuite();
   runGlobalTagsTestSuite();
   runInitTestSuite();
   runSendMethodTestSuite();
