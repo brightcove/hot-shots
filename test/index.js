@@ -1,6 +1,7 @@
 'use strict'
 
 var runBufferTestSuite = require('./buffer');
+var runCheckMethodTestSuite = require('./check');
 var runCloseMethodTestSuite = require('./close');
 var runEventMethodTestSuite = require('./event');
 var runGlobalTagsTestSuite = require('./globalTags');
@@ -26,6 +27,7 @@ beforeEach(function () {
 
 describe('StatsD', function () {
   runBufferTestSuite();
+  runCheckMethodTestSuite();
   runCloseMethodTestSuite();
   runEventMethodTestSuite();
   runGlobalTagsTestSuite();
