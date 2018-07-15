@@ -37,6 +37,7 @@ Parameters (specified as an options hash):
 * `sampleRate`:    Sends only a sample of data to StatsD for all StatsD methods.  Can be overriden at the method level. `default: 1`
 * `errorHandler`: A function with one argument. It is called to handle various errors. `default: none`, errors are thrown/logger to console
 * `useDefaultRoute`: Use the default interface on a Linux system. Useful when running in containers
+* `protocol`: Use `tcp` option for TCP protocol. Defaults to UDP otherwise
 
 All StatsD methods other than event and close have the same API:
 * `name`:       Stat name `required`
