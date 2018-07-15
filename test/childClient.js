@@ -8,7 +8,7 @@ var createTCPServer = require('./helpers').createTCPServer;
 var createUDPServer = require('./helpers').createUDPServer;
 
 module.exports = function runChildClientTestSuite() {
-  describe.only('#childClient', function () {
+  describe('#childClient', function () {
     var server;
     var statsd;
 
