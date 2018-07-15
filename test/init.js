@@ -14,57 +14,59 @@ module.exports = function runInitTestSuite() {
   describe('#init', function () {
     ['main client', 'child client', 'child of child client'].forEach(function (description, index) {
       describe(description, function () {
-        xit('should set the proper values when specified', function () {
-          // cachedDns isn't tested here, hence the null
-          var statsd = createStatsdClient(
-            ['host', 1234, 'prefix', 'suffix', true, null, true, ['gtag'], 0, 60, false, 0.5, 'udp'],
-            index
-          );
-
-          assert.equal(statsd.host, 'host');
-          assert.equal(statsd.port, 1234);
-          assert.equal(statsd.prefix, 'prefix');
-          assert.equal(statsd.suffix, 'suffix');
-          assert.equal(statsd, global.statsd);
-          assert.equal(statsd.mock, true);
-          assert.deepEqual(statsd.globalTags, ['gtag']);
-          assert.equal(statsd.maxBufferSize, 0);
-          assert.equal(statsd.bufferFlushInterval, 60);
-          assert.equal(statsd.telegraf, false);
-          assert.equal(statsd.sampleRate, 0.5);
-          assert.equal(statsd.protocol, 'udp');
-        });
-
-        xit('should set the proper values with options hash format', function () {
-          // cachedDns isn't tested here, hence the null
-          var statsd = createStatsdClient({
-            host: 'host',
-            port: 1234,
-            prefix: 'prefix',
-            suffix: 'suffix',
-            globalize: true,
-            mock: true,
-            globalTags: ['gtag'],
-            sampleRate: 0.6,
-            maxBufferSize: 0,
-            bufferFlushInterval: 60,
-            telegraf: false,
-            protocol: 'tcp'
-          }, index);
-
-          assert.equal(statsd.host, 'host');
-          assert.equal(statsd.port, 1234);
-          assert.equal(statsd.prefix, 'prefix');
-          assert.equal(statsd.suffix, 'suffix');
-          assert.equal(statsd, global.statsd);
-          assert.equal(statsd.mock, true);
-          assert.equal(statsd.sampleRate, 0.6);
-          assert.deepEqual(statsd.globalTags, ['gtag']);
-          assert.equal(statsd.maxBufferSize, 0);
-          assert.equal(statsd.bufferFlushInterval, 60);
-          assert.deepEqual(statsd.telegraf, false);
-          assert.equal(statsd.protocol, 'tcp');
-        });
+        if (description === 'main client') { // childClient #init is tested in test/childClient.js
+          it('should set the proper values when specified', function () {
+            // cachedDns isn't tested here, hence the null
+            var statsd = createStatsdClient(
+              ['host', 1234, 'prefix', 'suffix', true, null, true, ['gtag'], 0, 60, false, 0.5, 'udp'],
+              index
+            );
+  
+            assert.equal(statsd.host, 'host');
+            assert.equal(statsd.port, 1234);
+            assert.equal(statsd.prefix, 'prefix');
+            assert.equal(statsd.suffix, 'suffix');
+            assert.equal(statsd, global.statsd);
+            assert.equal(statsd.mock, true);
+            assert.deepEqual(statsd.globalTags, ['gtag']);
+            assert.equal(statsd.maxBufferSize, 0);
+            assert.equal(statsd.bufferFlushInterval, 60);
+            assert.equal(statsd.telegraf, false);
+            assert.equal(statsd.sampleRate, 0.5);
+            assert.equal(statsd.protocol, 'udp');
+          });
+  
+          it('should set the proper values with options hash format', function () {
+            // cachedDns isn't tested here, hence the null
+            var statsd = createStatsdClient({
+              host: 'host',
+              port: 1234,
+              prefix: 'prefix',
+              suffix: 'suffix',
+              globalize: true,
+              mock: true,
+              globalTags: ['gtag'],
+              sampleRate: 0.6,
+              maxBufferSize: 0,
+              bufferFlushInterval: 60,
+              telegraf: false,
+              protocol: 'tcp'
+            }, index);
+  
+            assert.equal(statsd.host, 'host');
+            assert.equal(statsd.port, 1234);
+            assert.equal(statsd.prefix, 'prefix');
+            assert.equal(statsd.suffix, 'suffix');
+            assert.equal(statsd, global.statsd);
+            assert.equal(statsd.mock, true);
+            assert.equal(statsd.sampleRate, 0.6);
+            assert.deepEqual(statsd.globalTags, ['gtag']);
+            assert.equal(statsd.maxBufferSize, 0);
+            assert.equal(statsd.bufferFlushInterval, 60);
+            assert.deepEqual(statsd.telegraf, false);
+            assert.equal(statsd.protocol, 'tcp');
+          });
+        }
 
         it('should set default values when not specified', function () {
           var statsd = createStatsdClient();
