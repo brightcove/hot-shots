@@ -6,8 +6,7 @@
   "types": "./types.d.ts",
   "contributors": [
     "Russ Bradberry <rbradberry@gmail.com>",
-    "Brian Deitte <bdeitte@gmail.com>",
-    "Mikhail Mazurskiy <mikhail.mazursky@gmail.com>"
+    "Brian Deitte <bdeitte@gmail.com>"
   ],
   "keywords": [
     "statsd",
@@ -27,18 +26,18 @@
     "lib": "./lib/"
   },
   "engines": {
-    "node": ">=0.8.0"
+    "node": ">=6.0.0"
   },
   "scripts": {
-    "coverage": "nyc --reporter=lcov npm test",
-    "test": "mocha -R spec --timeout 5000 test/index.js",
+    "coverage": "nyc --reporter=lcov --reporter=text npm test",
+    "test": "mocha --exit -R spec --timeout 5000 test/*.js",
     "lint": "jshint lib/**.js test/**.js",
     "pretest": "npm run lint"
   },
   "dependencies": {},
   "devDependencies": {
     "jshint": "2.x",
-    "mocha": "2.x",
+    "mocha": "4.x",
     "nyc": "11.x"
   },
   "license": "MIT"

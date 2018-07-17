@@ -6,6 +6,7 @@
   "undef": true,
   "node": true,
   "nonstandard": true,
+  "esversion": 6,
   // Used by mocha
   "predef": [
     "callback",
