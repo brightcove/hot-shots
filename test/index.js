@@ -1,4 +1,4 @@
-'use strict'
+'use strict';
 
 var runBufferTestSuite = require('./buffer');
 var runChildClientTestSuite = require('./childClient');

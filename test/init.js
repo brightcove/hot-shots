@@ -115,7 +115,7 @@ module.exports = function runInitTestSuite() {
         });
 
         it('should not attempt to cache a dns record if dnsCache is not specified', function (done) {
-          var originalLookup = dns.lookup
+          var originalLookup = dns.lookup;
           var statsd;
 
           // Replace the dns lookup function with our mock dns lookup

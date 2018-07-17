@@ -28,7 +28,8 @@ module.exports = function runHistogramTestSuite() {
         ].forEach(function (statFunction) {
           describe('#' + statFunction.name, function () {
             describe('UDP', function () {
-              it('should send proper ' + statFunction.name + ' format without prefix, suffix, sampling and callback', function (done) {
+              it('should send proper ' + statFunction.name +
+                ' format without prefix, suffix, sampling and callback', function (done) {
                 server = createUDPServer(function (address) {
                   statsd = createStatsdClient({
                     host: address.address, 
@@ -58,7 +59,8 @@ module.exports = function runHistogramTestSuite() {
                 });
               });
     
-              it('should send proper ' + statFunction.name + ' format with prefix, suffix, sampling and callback', function (done) {
+              it('should send proper ' + statFunction.name +
+                ' format with prefix, suffix, sampling and callback', function (done) {
                 var called = false;
                 server = createUDPServer(function (address) {
                   statsd = createStatsdClient({
@@ -173,7 +175,8 @@ module.exports = function runHistogramTestSuite() {
             });
 
             describe('TCP', function () {
-              it('should send proper ' + statFunction.name + ' format without prefix, suffix, sampling and callback', function (done) {
+              it('should send proper ' + statFunction.name +
+                ' format without prefix, suffix, sampling and callback', function (done) {
                 server = createTCPServer(function (address) {
                   statsd = createStatsdClient({
                     host: address.address, 
@@ -205,7 +208,8 @@ module.exports = function runHistogramTestSuite() {
                 });
               });
     
-              it('should send proper ' + statFunction.name + ' format with prefix, suffix, sampling and callback', function (done) {
+              it('should send proper ' + statFunction.name +
+                ' format with prefix, suffix, sampling and callback', function (done) {
                 var called = false;
                 server = createTCPServer(function (address) {
                   statsd = createStatsdClient({

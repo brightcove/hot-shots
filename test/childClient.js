@@ -4,6 +4,7 @@ var assert = require('assert');
 
 var StatsD = require('../lib/statsd');
 
+var createStatsdClient = require('./helpers').createStatsdClient;
 var createTCPServer = require('./helpers').createTCPServer;
 var createUDPServer = require('./helpers').createUDPServer;
 
@@ -38,7 +39,7 @@ module.exports = function runChildClientTestSuite() {
 
     describe('#childClient', function () {
       describe('UDP', function () {
-        it('should add tags, prefix and suffix without parent values', function () {
+        it('should add tags, prefix and suffix without parent values', function (done) {
           server = createUDPServer(function (address) {
             statsd = createStatsdClient({
               host: address.host,
@@ -59,7 +60,7 @@ module.exports = function runChildClientTestSuite() {
           });
         });
 
-        it('should add tags, prefix and suffix with parent values', function () {
+        it('should add tags, prefix and suffix with parent values', function (done) {
           server = createUDPServer(function (address) {
             statsd = createStatsdClient({
               host: address.host,
@@ -77,7 +78,7 @@ module.exports = function runChildClientTestSuite() {
             statsd.increment('b', 2);
           });
           server.on('metrics', function (metrics) {
-            assert.equal(message, 'preff.p.a.s.suff:1|c|#xyz,awesomeness:' +
+            assert.equal(metrics, 'preff.p.a.s.suff:1|c|#xyz,awesomeness:' +
               'over9000\npreff.p.b.s.suff:2|c|#xyz,awesomeness:over9000\n'
             );
             server.close();
@@ -87,7 +88,7 @@ module.exports = function runChildClientTestSuite() {
       });
 
       describe('TCP', function () {
-        it('should add tags, prefix and suffix without parent values', function () {
+        it('should add tags, prefix and suffix without parent values', function (done) {
           server = createTCPServer(function (address) {
             statsd = createStatsdClient({
               host: address.host,
@@ -109,7 +110,7 @@ module.exports = function runChildClientTestSuite() {
           });
         });
 
-        it('should add tags, prefix and suffix with parent values', function () {
+        it('should add tags, prefix and suffix with parent values', function (done) {
           server = createTCPServer(function (address) {
             statsd = createStatsdClient({
               host: address.host,
@@ -128,7 +129,7 @@ module.exports = function runChildClientTestSuite() {
             statsd.increment('b', 2);
           });
           server.on('metrics', function (metrics) {
-            assert.equal(message, 'preff.p.a.s.suff:1|c|#xyz,awesomeness:' +
+            assert.equal(metrics, 'preff.p.a.s.suff:1|c|#xyz,awesomeness:' +
               'over9000\npreff.p.b.s.suff:2|c|#xyz,awesomeness:over9000\n'
             );
             server.close();
