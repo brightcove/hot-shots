@@ -1,6 +1,11 @@
 CHANGELOG
 =========
 
+## 5.8.0 (2018-7-17)
+* @michalholasek Clean up code formatting and split up tests
+* @michalholasek Add tcp protocol support
+* @remie Add tcp protocol support
+
 ## 5.7.0 (2018-7-4)
 * @Willyham Add support for recording buffers in mock mode
 
