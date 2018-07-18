@@ -31,7 +31,7 @@
   },
   "scripts": {
     "coverage": "nyc --reporter=lcov npm test",
-    "test": "mocha -R spec",
+    "test": "mocha -R spec --timeout 5000 test/index.js",
     "lint": "jshint lib/**.js test/**.js",
     "pretest": "npm run lint"
   },
