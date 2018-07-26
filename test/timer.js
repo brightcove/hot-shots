@@ -1,5 +1,6 @@
 'use strict';
-
+var execSync = require('child_process').execSync;
+var StatsD = require('../lib/statsd');
 var assert = require('assert');
 
 var createStatsdClient = require('./helpers').createStatsdClient;
@@ -105,5 +106,28 @@ module.exports = function runTimerTestSuite() {
         });
       });
     });
+
+
+    it('should record "real" time of function call', function () {
+      var statsd = new StatsD({mock:true});
+      var instrumented = statsd.timer(sleep(100), 'blah');
+
+      instrumented();
+
+      var timeFromStatLine = statsd.mockBuffer[0].match(/blah:(\d+\.\d+)\|/)[1];
+
+      assert.ok(timeFromStatLine >= 100);
+      assert.ok(timeFromStatLine < 120);
+    });
   });
+
+
 };
+
+
+
+
+
+function sleep(ms) {
+  return function () { execSync('sleep ' + (ms / 1000) ); };
+}
