@@ -1,6 +1,10 @@
 CHANGELOG
 =========
 
+## 5.9.0 (2018-7-27)
+* @chrismatheson: Fix timer to have duration in microseconds (was nanoseconds)
+* @chrismatheson: Add asyncTimer functionality
+
 ## 5.8.0 (2018-7-17)
 * @michalholasek Clean up code formatting and split up tests
 * @michalholasek Add tcp protocol support

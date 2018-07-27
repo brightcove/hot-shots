@@ -98,6 +98,14 @@ The check method has the following API:
   var fn = function(a, b) { return a + b };
   client.timer(fn, 'fn_execution_time')(2, 2);
 
+  // Async timer: Similar to timer above, but you instead pass in a funtion
+  // that returns a Promise.  And then it returns a Promise that will record the timing.
+  var fn = function () { return new Promise(function (resolve, reject) { setTimeout(resolve, n); }); };
+  var instrumented = statsd.asyncTimer(fn, 'fn_execution_time');
+  instrumented().then(function() {
+    console.log('Code run and metric sent');
+  });
+
   // Increment: Increments a stat by a value (default is 1)
   client.increment('my_counter');
 
