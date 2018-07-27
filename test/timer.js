@@ -1,4 +1,5 @@
 'use strict';
+
 var execSync = require('child_process').execSync;
 var StatsD = require('../lib/statsd');
 var assert = require('assert');
@@ -117,11 +118,36 @@ module.exports = function runTimerTestSuite() {
 
       assert.ok(timeFromStatLine >= 100);
       assert.ok(timeFromStatLine < 200);
+
+    it('should record "user time" of promise', function () {
+      /* globals Promise */
+      var statsd = new StatsD({mock:true});
+
+      var onehundredMsFunc = function () { return delay(100); };
+
+      var instrumented = statsd.asyncTimer(onehundredMsFunc, 'name-thingy');
+
+      return instrumented().then(function() {
+
+        var stat = statsd.mockBuffer[0];
+        var name = stat.split(/:|\|/)[0];
+        var time = stat.split(/:|\|/)[1];
+
+        assert.equal(name, 'name-thingy');
+        assert.ok(parseFloat(time) >= 100);
+        assert.ok(parseFloat(time) < 200);
+      });
     });
   });
 
 };
 
 function sleep(ms) {
-  return function () { execSync('sleep ' + (ms / 1000) ); };
+  return function () { execSync('sleep ' + (ms / 1000) ); 
+}
+
+function delay(n) {
+  return new Promise(function (resolve, reject) {
+    setTimeout(resolve, n);
+  });
 }
