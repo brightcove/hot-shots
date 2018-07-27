@@ -122,7 +122,7 @@ module.exports = function runTimerTestSuite() {
 
         assert.equal(name, 'name-thingy');
         assert.ok(parseFloat(time) >= 100);
-        assert.ok(parseFloat(time) < 110);
+        assert.ok(parseFloat(time) < 200);
       });
     });
   });
