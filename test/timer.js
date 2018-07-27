@@ -24,7 +24,7 @@ module.exports = function runTimerTestSuite() {
           it('should send stat and time to execute to timing function', function (done) {
             server = createUDPServer(function (address) {
               statsd = createStatsdClient({
-                host: address.address, 
+                host: address.address,
                 port: address.port
               }, index);
               var testFn = function (a, b) {
@@ -44,7 +44,7 @@ module.exports = function runTimerTestSuite() {
           it('should send data with tags to timing function', function (done) {
             server = createUDPServer(function (address) {
               statsd = createStatsdClient({
-                host: address.address, 
+                host: address.address,
                 port: address.port
               }, index);
               var testFn = function (a, b) {
@@ -66,7 +66,7 @@ module.exports = function runTimerTestSuite() {
           it('should send stat and time to execute to timing function', function (done) {
             server = createTCPServer(function (address) {
               statsd = createStatsdClient({
-                host: address.address, 
+                host: address.address,
                 port: address.port,
                 protocol: 'tcp'
               }, index);
@@ -87,7 +87,7 @@ module.exports = function runTimerTestSuite() {
           it('should send data with tags to timing function', function (done) {
             server = createTCPServer(function (address) {
               statsd = createStatsdClient({
-                host: address.address, 
+                host: address.address,
                 port: address.port,
                 protocol: 'tcp'
               }, index);
@@ -118,6 +118,7 @@ module.exports = function runTimerTestSuite() {
 
       assert.ok(timeFromStatLine >= 100);
       assert.ok(timeFromStatLine < 200);
+    });
 
     it('should record "user time" of promise', function () {
       /* globals Promise */
@@ -139,11 +140,12 @@ module.exports = function runTimerTestSuite() {
       });
     });
   });
-
 };
 
 function sleep(ms) {
-  return function () { execSync('sleep ' + (ms / 1000) ); 
+  return function () {
+    execSync('sleep ' + (ms / 1000));
+  };
 }
 
 function delay(n) {
