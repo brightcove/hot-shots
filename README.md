@@ -133,6 +133,9 @@ The check method has the following API:
 
   // Incrementing multiple items
   client.increment(['these', 'are', 'different', 'stats']);
+  
+  // Incrementing with tags
+  client.increment('my_counter', ['foo', 'bar']);
 
   // Sampling, this will sample 25% of the time the StatsD Daemon will compensate for sampling
   client.increment('my_counter', 1, 0.25);
