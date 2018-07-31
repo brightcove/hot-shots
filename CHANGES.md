@@ -1,6 +1,8 @@
 CHANGELOG
 =========
 
+* @blimmer: Add increment doc snippet
+
 ## 5.9.0 (2018-7-27)
 * @chrismatheson: Fix timer to have duration in microseconds (was nanoseconds)
 * @chrismatheson: Add asyncTimer functionality
