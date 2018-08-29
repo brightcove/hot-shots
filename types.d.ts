@@ -124,5 +124,4 @@ declare module "hot-shots" {
   }
 }
 
-declare const StatsDClient: StatsD;
-export default StatsDClient;
+export default StatsD;
