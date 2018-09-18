@@ -1,6 +1,8 @@
 CHANGELOG
 =========
 
+## 5.9.1 (2018-9-18)
+* @etaoins Add asyncTimer types
 * @blimmer: Add increment doc snippet
 
 ## 5.9.0 (2018-7-27)
