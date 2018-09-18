@@ -88,6 +88,11 @@ declare module "hot-shots" {
     timer(func: (...args: any[]) => any, stat: string | string[], value: number, callback?: StatsCb): (...args: any[]) => any;
     timer(func: (...args: any[]) => any, stat: string | string[], value: number, sampleRate?: number, callback?: StatsCb): (...args: any[]) => any;
 
+    asyncTimer<T>(func: (...args: any[]) => Promise<T>, stat: string | string[], sampleRate?: number, tags?: Tags, callback?: StatsCb): (...args: any[]) => Promise<T>;
+    asyncTimer<T>(func: (...args: any[]) => Promise<T>, stat: string | string[], tags?: Tags, callback?: StatsCb): (...args: any[]) => Promise<T>;
+    asyncTimer<T>(func: (...args: any[]) => Promise<T>, stat: string | string[], callback?: StatsCb): (...args: any[]) => Promise<T>;
+    asyncTimer<T>(func: (...args: any[]) => Promise<T>, stat: string | string[], sampleRate?: number, callback?: StatsCb): (...args: any[]) => Promise<T>;
+
     histogram(stat: string | string[], value: number, sampleRate?: number, tags?: Tags, callback?: StatsCb): void;
     histogram(stat: string | string[], value: number, tags?: Tags, callback?: StatsCb): void;
     histogram(stat: string | string[], value: number, callback?: StatsCb): void;
