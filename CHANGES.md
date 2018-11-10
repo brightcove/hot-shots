@@ -1,6 +1,9 @@
 CHANGELOG
 =========
 
+## 5.9.2 (2018-11-10)
+* @stieg Add mockBuffer to types
+
 ## 5.9.1 (2018-9-18)
 * @etaoins Add asyncTimer types
 * @blimmer: Add increment doc snippet
