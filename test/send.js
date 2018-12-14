@@ -1,31 +1,29 @@
-'use strict';
+const assert = require('assert');
+const helpers = require('./helpers/helpers.js');
 
-var assert = require('assert');
-var helpers = require('./helpers/helpers.js');
+const closeAll = helpers.closeAll;
+const testTypes = helpers.testTypes;
+const createServer = helpers.createServer;
+const createHotShotsClient = helpers.createHotShotsClient;
 
-var closeAll = helpers.closeAll;
-var testTypes = helpers.testTypes;
-var createServer = helpers.createServer;
-var createStatsdClient = helpers.createStatsdClient;
+describe('#send', () => {
+  let server;
+  let statsd;
 
-describe('#send', function () {
-  var server;
-  var statsd;
-
-  afterEach(function (done) {
+  afterEach(done => {
     closeAll(server, statsd, false, done);
   });
 
-  testTypes().forEach(function([description, serverType, clientType]) {
-    describe(description, function () {
-      it('should use errorHandler', function (done) {
-        server = createServer(serverType, function (address) {
-          var err = new Error('Boom!');
-          statsd = createStatsdClient({
+  testTypes().forEach(([description, serverType, clientType]) => {
+    describe(description, () => {
+      it('should use errorHandler', done => {
+        server = createServer(serverType, address => {
+          const err = new Error('Boom!');
+          statsd = createHotShotsClient({
             host: address.address,
             port: address.port,
             protocol: serverType,
-            errorHandler: function (e) {
+            errorHandler(e) {
               assert.equal(e, err);
               done();
             }
@@ -35,15 +33,15 @@ describe('#send', function () {
         });
       });
 
-      it('should record buffers when mocked', function (done) {
-        server = createServer(serverType, function (address) {
-          statsd = createStatsdClient({
+      it('should record buffers when mocked', done => {
+        server = createServer(serverType, address => {
+          statsd = createHotShotsClient({
             host: address.address,
             port: address.port,
             protocol: serverType,
             mock: true
           }, clientType);
-          statsd.send('test', {}, function() {
+          statsd.send('test', {}, () => {
             assert.deepEqual(statsd.mockBuffer, ['test']);
             done();
           });

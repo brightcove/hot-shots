@@ -1,47 +1,45 @@
-'use strict';
+const assert = require('assert');
+const helpers = require('./helpers/helpers.js');
 
-var assert = require('assert');
-var helpers = require('./helpers/helpers.js');
+const closeAll = helpers.closeAll;
+const testTypes = helpers.testTypes;
+const createServer = helpers.createServer;
+const createHotShotsClient = helpers.createHotShotsClient;
 
-var closeAll = helpers.closeAll;
-var testTypes = helpers.testTypes;
-var createServer = helpers.createServer;
-var createStatsdClient = helpers.createStatsdClient;
+describe('#errorHandling', () => {
+  let server;
+  let statsd;
 
-describe('#errorHandling', function () {
-  var server;
-  var statsd;
+  testTypes().forEach(([description, serverType, clientType]) => {
+    describe(description, () => {
 
-  testTypes().forEach(function([description, serverType, clientType]) {
-    describe(description, function () {
-
-      it('should use errorHandler for sendStat error', function (done) {
-        server = createServer(serverType, function (address) {
-          var err = new Error('Boom!');
-          statsd = createStatsdClient({
+      it('should use errorHandler for sendStat error', done => {
+        server = createServer(serverType, address => {
+          const err = new Error('Boom!');
+          statsd = createHotShotsClient({
             host: address.address,
             port: address.port,
             protocol: serverType,
-            errorHandler: function (e) {
+            errorHandler(e) {
               assert.equal(e, err);
               done();
             }
           }, clientType);
-          statsd.sendStat = function (item, value, type, sampleRate, tags, callback) {
+          statsd.sendStat = (item, value, type, sampleRate, tags, callback) => {
             callback(err);
           };
           statsd.sendAll(['test title'], 'another desc');
         });
       });
 
-      it('should use errorHandler', function (done) {
-        server = createServer(serverType, function (address) {
-          var err = new Error('Boom!');
-          statsd = createStatsdClient({
+      it('should use errorHandler', done => {
+        server = createServer(serverType, address => {
+          const err = new Error('Boom!');
+          statsd = createHotShotsClient({
             host: address.address,
             port: address.port,
             protocol: serverType,
-            errorHandler: function (e) {
+            errorHandler(e) {
               assert.equal(e, err);
               closeAll(server, statsd, true, done);
             }
@@ -51,19 +49,19 @@ describe('#errorHandling', function () {
         });
       });
 
-      it('should errback for an unresolvable host', function (done) {
+      it('should errback for an unresolvable host', done => {
         // this does not work for tcp, which throws an error during setup
         // that needs errorHandler or a socket.on('error') handler
         if (serverType === 'tcp') {
           return done();
         }
 
-       statsd = createStatsdClient({
+       statsd = createHotShotsClient({
           host: '...',
           protocol: serverType
         }, clientType);
 
-        statsd.send('test title', [], function (error) {
+        statsd.send('test title', [], error => {
           assert.ok(error);
           assert.equal(error.code, 'ENOTFOUND');
           // skip closing, because the unresolvable host hangs
@@ -71,11 +69,11 @@ describe('#errorHandling', function () {
         });
       });
 
-      it('should use errorHandler for an unresolvable host', function (done) {
-        statsd = createStatsdClient({
+      it('should use errorHandler for an unresolvable host', done => {
+        statsd = createHotShotsClient({
           host: '...',
           protocol: serverType,
-          errorHandler: function (e) {
+          errorHandler(e) {
             assert.ok(e);
             assert.equal(e.code, 'ENOTFOUND');
             // skip closing, because the unresolvable host hangs
@@ -85,13 +83,13 @@ describe('#errorHandling', function () {
         statsd.send('test title');
       });
 
-      it('should throw error on socket for an unresolvable host', function (done) {
-        statsd = createStatsdClient({
+      it('should throw error on socket for an unresolvable host', done => {
+        statsd = createHotShotsClient({
           host: '...',
           protocol: serverType
         }, clientType);
 
-        statsd.socket.on('error', function (error) {
+        statsd.socket.on('error', error => {
           assert.ok(error);
           assert.equal(error.code, 'ENOTFOUND');
           // skip closing, because the unresolvable host hangs
