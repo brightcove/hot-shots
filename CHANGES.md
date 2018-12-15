@@ -1,6 +1,25 @@
 CHANGELOG
 =========
 
+## 6.0.0 (2018-12-15)
+* @bdeitte Many updates, described in detail below.
+6.0.0 is a significant upgrade to the codebase to be more modern,
+overhaul tests, and many small tweaks.  Most of this is internal to
+the project, but there are a few changes to note for everyone:
+* Now requires Node 6 or above.
+* Update close() to handle errors better, not doubling up in error
+messages and not leaving uncaught errors
+Everything else done here should be internal facing.  Those changes
+include:
+* Use "lebab" to ES6-ify the project
+* Switch from jshint and eslint and make syntax updates based on this
+* Remove a lot of duplication in tests and many small fixups in tests
+* Start using Mocha 4
+* Stop using index.js for testing
+* Start using the code coverage report as part of the build
+* Remove the ignoring of errors on close of tests, and tear down tests in general better
+* Stop using "new Buffer", that is deprecated, and use Buffer.from() instead
+
 ## 5.9.2 (2018-11-10)
 * @stieg Add mockBuffer to types
 
