@@ -1,43 +1,41 @@
-'use strict';
+const helpers = require('./helpers/helpers.js');
 
-var helpers = require('./helpers/helpers.js');
+const testTypes = helpers.testTypes;
+const createServer = helpers.createServer;
+const createHotShotsClient = helpers.createHotShotsClient;
 
-var testTypes = helpers.testTypes;
-var createServer = helpers.createServer;
-var createStatsdClient = helpers.createStatsdClient;
+describe('#close', () => {
+  let server;
+  let statsd;
 
-describe('#close', function () {
-  var server;
-  var statsd;
-
-  testTypes().forEach(function([description, serverType, clientType, metricsEnd]) {
-    describe(description, function () {
-      it('should call callback after close call', function (done) {
-        server = createServer(serverType, function (address) {
-          statsd = createStatsdClient({
+  testTypes().forEach(([description, serverType, clientType]) => {
+    describe(description, () => {
+      it('should call callback after close call', done => {
+        server = createServer(serverType, address => {
+          statsd = createHotShotsClient({
             host: address.address,
             port: address.port,
             protocol: serverType
           }, clientType);
-          statsd.close(function () {
+          statsd.close(() => {
             server.close();
             done();
           });
         });
       });
 
-      it('should use errorHandler on close issue', function (done) {
-        server = createServer(serverType, function (address) {
-          statsd = createStatsdClient({
+      it('should use errorHandler on close issue', done => {
+        server = createServer(serverType, address => {
+          statsd = createHotShotsClient({
             host: address.address,
             port: address.port,
             protocol: serverType,
-            errorHandler: function (e) {
+            errorHandler() {
               server.close();
               done();
             }
           }, clientType);
-          statsd.socket.destroy = function () {
+          statsd.socket.destroy = () => {
             throw new Error('Boom!');
           };
           statsd.socket.close = statsd.socket.destroy;

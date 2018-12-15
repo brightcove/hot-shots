@@ -1,32 +1,30 @@
-'use strict';
+const assert = require('assert');
+const helpers = require('./helpers/helpers.js');
 
-var assert = require('assert');
-var helpers = require('./helpers/helpers.js');
+const StatsD = require('../lib/statsd');
 
-var StatsD = require('../lib/statsd');
+const closeAll = helpers.closeAll;
+const testProtocolTypes = helpers.testTypes;
+const createServer = helpers.createServer;
+const createHotShotsClient = helpers.createHotShotsClient;
 
-var closeAll = helpers.closeAll;
-var testProtocolTypes = helpers.testTypes;
-var createServer = helpers.createServer;
-var createStatsdClient = helpers.createStatsdClient;
+describe('#childClient', () => {
+  let server;
+  let statsd;
 
-describe('#childClient', function () {
-  var server;
-  var statsd;
-
-  afterEach(function(done) {
+  afterEach(done => {
     closeAll(server, statsd, false, done);
   });
 
-  testProtocolTypes().forEach(function([description, serverType, clientType]) {
+  testProtocolTypes().forEach(([description, serverType, clientType]) => {
 
-    describe(description, function () {
-      it('init should set the proper values when specified', function () {
+    describe(description, () => {
+      it('init should set the proper values when specified', () => {
         statsd = new StatsD(
           'host', 1234, 'prefix', 'suffix', true, null, true, ['gtag', 'tag1:234234']
         );
 
-        var child = statsd.childClient({
+        const child = statsd.childClient({
           prefix: 'preff.',
           suffix: '.suff',
           globalTags: ['awesomeness:over9000', 'tag1:xxx', 'bar', ':baz']
@@ -39,9 +37,9 @@ describe('#childClient', function () {
       });
     });
 
-    it('childClient should add tags, prefix and suffix without parent values', function (done) {
-      server = createServer(serverType, function (address) {
-          statsd = createStatsdClient({
+    it('childClient should add tags, prefix and suffix without parent values', done => {
+      server = createServer(serverType, address => {
+          statsd = createHotShotsClient({
             host: address.host,
             port: address.port,
             maxBufferSize: 500,
@@ -54,15 +52,15 @@ describe('#childClient', function () {
           statsd.increment('a', 1);
           statsd.increment('b', 2);
       });
-      server.on('metrics', function (metrics) {
+      server.on('metrics', metrics => {
         assert.equal(metrics, 'preff.a.suff:1|c|#awesomeness:over9000\npreff.b.suff:2|c|#awesomeness:over9000\n');
         done();
       });
     });
 
-    it('should add tags, prefix and suffix with parent values', function (done) {
-      server = createServer(serverType, function (address) {
-        statsd = createStatsdClient({
+    it('should add tags, prefix and suffix with parent values', done => {
+      server = createServer(serverType, address => {
+        statsd = createHotShotsClient({
           host: address.host,
           port: address.port,
           prefix: 'p.',
@@ -78,7 +76,7 @@ describe('#childClient', function () {
         statsd.increment('a', 1);
         statsd.increment('b', 2);
       });
-      server.on('metrics', function (metrics) {
+      server.on('metrics', metrics => {
         assert.equal(metrics, 'preff.p.a.s.suff:1|c|#xyz,awesomeness:' +
           'over9000\npreff.p.b.s.suff:2|c|#xyz,awesomeness:over9000\n'
         );
