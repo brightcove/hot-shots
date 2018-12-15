@@ -1,30 +1,30 @@
-'use strict';
+const assert = require('assert');
+const helpers = require('./helpers/helpers.js');
 
-var assert = require('assert');
+const StatsD = require('../lib/statsd');
 
-var StatsD = require('../lib/statsd');
+const closeAll = helpers.closeAll;
+const testProtocolTypes = helpers.testTypes;
+const createServer = helpers.createServer;
+const createHotShotsClient = helpers.createHotShotsClient;
 
-var createStatsdClient = require('./helpers').createStatsdClient;
-var createTCPServer = require('./helpers').createTCPServer;
-var createUDPServer = require('./helpers').createUDPServer;
+describe('#childClient', () => {
+  let server;
+  let statsd;
 
-module.exports = function runChildClientTestSuite() {
-  describe('#childClient', function () {
-    var server;
-    var statsd;
+  afterEach(done => {
+    closeAll(server, statsd, false, done);
+  });
 
-    afterEach(function () {
-      server = null;
-      statsd = null;
-    });
+  testProtocolTypes().forEach(([description, serverType, clientType]) => {
 
-    describe('#init', function () {
-      it('should set the proper values when specified', function () {
+    describe(description, () => {
+      it('init should set the proper values when specified', () => {
         statsd = new StatsD(
           'host', 1234, 'prefix', 'suffix', true, null, true, ['gtag', 'tag1:234234']
         );
 
-        var child = statsd.childClient({
+        const child = statsd.childClient({
           prefix: 'preff.',
           suffix: '.suff',
           globalTags: ['awesomeness:over9000', 'tag1:xxx', 'bar', ':baz']
@@ -37,106 +37,51 @@ module.exports = function runChildClientTestSuite() {
       });
     });
 
-    describe('#childClient', function () {
-      describe('UDP', function () {
-        it('should add tags, prefix and suffix without parent values', function (done) {
-          server = createUDPServer(function (address) {
-            statsd = createStatsdClient({
-              host: address.host,
-              port: address.port,
-              maxBufferSize: 500
-            }, 0).childClient({
-              prefix: 'preff.',
-              suffix: '.suff',
-              globalTags: ['awesomeness:over9000']
-            });
-            statsd.increment('a', 1);
-            statsd.increment('b', 2);
+    it('childClient should add tags, prefix and suffix without parent values', done => {
+      server = createServer(serverType, address => {
+          statsd = createHotShotsClient({
+            host: address.host,
+            port: address.port,
+            maxBufferSize: 500,
+            protocol: serverType
+          }, clientType).childClient({
+            prefix: 'preff.',
+            suffix: '.suff',
+            globalTags: ['awesomeness:over9000']
           });
-          server.on('metrics', function (metrics) {
-            assert.equal(metrics, 'preff.a.suff:1|c|#awesomeness:over9000\npreff.b.suff:2|c|#awesomeness:over9000\n');
-            server.close();
-            done();
-          });
-        });
-
-        it('should add tags, prefix and suffix with parent values', function (done) {
-          server = createUDPServer(function (address) {
-            statsd = createStatsdClient({
-              host: address.host,
-              port: address.port,
-              prefix: 'p.',
-              suffix: '.s',
-              globalTags: ['xyz'],
-              maxBufferSize: 500
-            }, 0).childClient({
-              prefix: 'preff.',
-              suffix: '.suff',
-              globalTags: ['awesomeness:over9000']
-            });
-            statsd.increment('a', 1);
-            statsd.increment('b', 2);
-          });
-          server.on('metrics', function (metrics) {
-            assert.equal(metrics, 'preff.p.a.s.suff:1|c|#xyz,awesomeness:' +
-              'over9000\npreff.p.b.s.suff:2|c|#xyz,awesomeness:over9000\n'
-            );
-            server.close();
-            done();
-          });
-        });
+          statsd.increment('a', 1);
+          statsd.increment('b', 2);
       });
+      server.on('metrics', metrics => {
+        assert.equal(metrics, 'preff.a.suff:1|c|#awesomeness:over9000\npreff.b.suff:2|c|#awesomeness:over9000\n');
+        done();
+      });
+    });
 
-      describe('TCP', function () {
-        it('should add tags, prefix and suffix without parent values', function (done) {
-          server = createTCPServer(function (address) {
-            statsd = createStatsdClient({
-              host: address.host,
-              port: address.port,
-              maxBufferSize: 500,
-              protocol: 'tcp'
-            }, 0).childClient({
-              prefix: 'preff.',
-              suffix: '.suff',
-              globalTags: ['awesomeness:over9000']
-            });
-            statsd.increment('a', 1);
-            statsd.increment('b', 2);
-          });
-          server.on('metrics', function (metrics) {
-            assert.equal(metrics, 'preff.a.suff:1|c|#awesomeness:over9000\npreff.b.suff:2|c|#awesomeness:over9000\n');
-            server.close();
-            done();
-          });
+    it('should add tags, prefix and suffix with parent values', done => {
+      server = createServer(serverType, address => {
+        statsd = createHotShotsClient({
+          host: address.host,
+          port: address.port,
+          prefix: 'p.',
+          suffix: '.s',
+          globalTags: ['xyz'],
+          maxBufferSize: 500,
+          protocol: serverType
+        }, clientType).childClient({
+          prefix: 'preff.',
+          suffix: '.suff',
+          globalTags: ['awesomeness:over9000']
         });
-
-        it('should add tags, prefix and suffix with parent values', function (done) {
-          server = createTCPServer(function (address) {
-            statsd = createStatsdClient({
-              host: address.host,
-              port: address.port,
-              prefix: 'p.',
-              suffix: '.s',
-              globalTags: ['xyz'],
-              maxBufferSize: 500,
-              protocol: 'tcp'
-            }, 0).childClient({
-              prefix: 'preff.',
-              suffix: '.suff',
-              globalTags: ['awesomeness:over9000']
-            });
-            statsd.increment('a', 1);
-            statsd.increment('b', 2);
-          });
-          server.on('metrics', function (metrics) {
-            assert.equal(metrics, 'preff.p.a.s.suff:1|c|#xyz,awesomeness:' +
-              'over9000\npreff.p.b.s.suff:2|c|#xyz,awesomeness:over9000\n'
-            );
-            server.close();
-            done();
-          });
-        });
+        statsd.increment('a', 1);
+        statsd.increment('b', 2);
+      });
+      server.on('metrics', metrics => {
+        assert.equal(metrics, 'preff.p.a.s.suff:1|c|#xyz,awesomeness:' +
+          'over9000\npreff.p.b.s.suff:2|c|#xyz,awesomeness:over9000\n'
+        );
+        done();
       });
     });
   });
-};
+});

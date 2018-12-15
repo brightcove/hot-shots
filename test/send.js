@@ -1,83 +1,52 @@
-'use strict';
+const assert = require('assert');
+const helpers = require('./helpers/helpers.js');
 
-var assert = require('assert');
+const closeAll = helpers.closeAll;
+const testTypes = helpers.testTypes;
+const createServer = helpers.createServer;
+const createHotShotsClient = helpers.createHotShotsClient;
 
-var createStatsdClient = require('./helpers').createStatsdClient;
-var createTCPServer = require('./helpers').createTCPServer;
-var createUDPServer = require('./helpers').createUDPServer;
+describe('#send', () => {
+  let server;
+  let statsd;
 
-module.exports = function runSendAllMethodTestSuite() {
-  describe('#send', function () {
-    var server;
-    var statsd;
+  afterEach(done => {
+    closeAll(server, statsd, false, done);
+  });
 
-    afterEach(function () {
-      server = null;
-      statsd = null;
-    });
-
-    ['main client', 'child client', 'child of child client'].forEach(function (description, index) {
-      describe(description, function () {
-        describe('UDP', function () {
-          it('should use errorHandler', function (done) {
-            server = createUDPServer(function () {
-              var err = new Error('Boom!');
-              statsd = createStatsdClient({
-                errorHandler: function (e) {
-                  assert.equal(e, err);
-                  server.close();
-                  done();
-                }
-              }, index);
-              statsd.dnsError = err;
-              statsd.send('test title');
-            });
-          });
-
-          it('should record buffers when mocked', function (done) {
-            var statsd = createStatsdClient({ mock: true });
-            statsd.send('test', {}, function() {
-              assert.deepEqual(statsd.mockBuffer, ['test']);
+  testTypes().forEach(([description, serverType, clientType]) => {
+    describe(description, () => {
+      it('should use errorHandler', done => {
+        server = createServer(serverType, address => {
+          const err = new Error('Boom!');
+          statsd = createHotShotsClient({
+            host: address.address,
+            port: address.port,
+            protocol: serverType,
+            errorHandler(e) {
+              assert.equal(e, err);
               done();
-            });
-          });
+            }
+          }, clientType);
+          statsd.dnsError = err;
+          statsd.send('test title');
         });
+      });
 
-        describe('TCP', function () {
-          it('should use errorHandler', function (done) {
-            server = createTCPServer(function (address) {
-              var err = new Error('Boom!');
-              statsd = createStatsdClient({
-                host: address.address,
-                port: address.port,
-                protocol: 'tcp',
-                errorHandler: function (e) {
-                  assert.equal(e, err);
-                  server.close();
-                  done();
-                }
-              }, index);
-              statsd.dnsError = err;
-              statsd.send('test title');
-            });
-          });
-
-          it('should record buffers when mocked', function (done) {
-            server = createTCPServer(function (address) {
-              statsd = createStatsdClient({
-                host: address.address,
-                port: address.port,
-                protocol: 'tcp',
-                mock: true
-              }, index);
-              statsd.send('test', {}, function() {
-                assert.deepEqual(statsd.mockBuffer, ['test']);
-                done();
-              });
-            });
+      it('should record buffers when mocked', done => {
+        server = createServer(serverType, address => {
+          statsd = createHotShotsClient({
+            host: address.address,
+            port: address.port,
+            protocol: serverType,
+            mock: true
+          }, clientType);
+          statsd.send('test', {}, () => {
+            assert.deepEqual(statsd.mockBuffer, ['test']);
+            done();
           });
         });
       });
     });
   });
-};
+});

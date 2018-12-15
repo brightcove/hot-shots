@@ -1,90 +1,47 @@
-'use strict';
+const helpers = require('./helpers/helpers.js');
 
-var assert = require('assert');
+const testTypes = helpers.testTypes;
+const createServer = helpers.createServer;
+const createHotShotsClient = helpers.createHotShotsClient;
 
-var createStatsdClient = require('./helpers').createStatsdClient;
-var createTCPServer = require('./helpers').createTCPServer;
-var createUDPServer = require('./helpers').createUDPServer;
+describe('#close', () => {
+  let server;
+  let statsd;
 
-module.exports = function runCloseMethodTestSuite() {
-  describe('#close', function () {
-    var server;
-    var statsd;
-
-    afterEach(function () {
-      server = null;
-      statsd = null;
-    });
-
-    ['main client', 'child client', 'child of child client'].forEach(function (description, index) {
-      describe(description, function () {
-        describe('UDP', function () {
-          it('should call callback after close call', function (done) {
-            server = createUDPServer(function (address) {
-              statsd = createStatsdClient({
-                host: address.address, 
-                port: address.port
-              }, index);
-              statsd.close(function () {
-                server.close();
-                done();
-              });
-            });
-          });
-
-          it('should use errorHandler', function (done) {
-            server = createUDPServer(function (address) {
-              statsd = createStatsdClient({
-                host: address.address, 
-                port: address.port,
-                errorHandler: function (e) {
-                  server.close();
-                  done();
-                }
-              }, index);
-              statsd.socket.close = function () {
-                throw new Error('Boom!');
-              };
-              statsd.close();
-            });
+  testTypes().forEach(([description, serverType, clientType]) => {
+    describe(description, () => {
+      it('should call callback after close call', done => {
+        server = createServer(serverType, address => {
+          statsd = createHotShotsClient({
+            host: address.address,
+            port: address.port,
+            protocol: serverType
+          }, clientType);
+          statsd.close(() => {
+            server.close();
+            done();
           });
         });
+      });
 
-        describe('TCP', function () {
-          it('should call callback after close call', function (done) {
-            server = createTCPServer(function (address) {
-              statsd = createStatsdClient({
-                host: address.address, 
-                port: address.port,
-                protocol: 'tcp'
-              }, index);
-              statsd.close(function () {
-                server.close();
-                done();
-              });
-            });
-          });
-
-          it('should use errorHandler', function (done) {
-            server = createTCPServer(function (address) {
-              statsd = createStatsdClient({
-                host: address.address, 
-                port: address.port,
-                protocol: 'tcp',
-                errorHandler: function (e) {
-                  server.close();
-                }
-              }, index);
-              statsd.socket.destroy = function () {
-                throw new Error('Boom!');
-              };
-              statsd.close(function () {
-                done();
-              });
-            });
-          });
+      it('should use errorHandler on close issue', done => {
+        server = createServer(serverType, address => {
+          statsd = createHotShotsClient({
+            host: address.address,
+            port: address.port,
+            protocol: serverType,
+            errorHandler() {
+              server.close();
+              done();
+            }
+          }, clientType);
+          statsd.socket.destroy = () => {
+            throw new Error('Boom!');
+          };
+          statsd.socket.close = statsd.socket.destroy;
+          statsd.close();
         });
       });
     });
   });
-};
+});

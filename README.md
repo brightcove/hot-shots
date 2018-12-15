@@ -2,15 +2,20 @@
 
 A Node.js client for [Etsy](http://etsy.com)'s [StatsD](https://github.com/etsy/statsd) server, Datadog's [DogStatsD](http://docs.datadoghq.com/guides/dogstatsd/) server, and [InfluxDB's](http://influxdb.com) [Telegraf](https://github.com/influxdb/telegraf) StatsD server.
 
-This project is a fork off of [node-statsd](https://github.com/sivy/node-statsd).  This project includes all changes in node-statsd, all open PRs to node-statsd when possible, and some additional goodies (like Telegraf support, child clients, TypeScript types, and more).
+This project was originally a fork off of [node-statsd](https://github.com/sivy/node-statsd).  This project
+includes all changes in the latest node-statsd and many additional changes, including:
+* TypeScript types
+* Telegraf support
+* events
+* child clients
+* tcp protocol support
+* mock mode
+* asyncTimer
+* much more, including many bug fixes
+
+hot-shots supports Node 6.x and higher.
 
 [![Build Status](https://secure.travis-ci.org/brightcove/hot-shots.png?branch=master)](http://travis-ci.org/brightcove/hot-shots)
-
-## Installation
-
-```
-$ npm install hot-shots
-```
 
 ## Migrating from node-statsd
 
@@ -133,7 +138,7 @@ The check method has the following API:
 
   // Incrementing multiple items
   client.increment(['these', 'are', 'different', 'stats']);
-  
+
   // Incrementing with tags
   client.increment('my_counter', ['foo', 'bar']);
 
