@@ -1,6 +1,10 @@
 CHANGELOG
 =========
 
+## 6.0.1 (2018-12-17)
+* @msmnc Fix regression when tag value is a number
+* @bdeitte Make non-options in constructor more deprecated
+
 ## 6.0.0 (2018-12-15)
 @bdeitte Major upgrade to the codebase to be more modern,
 overhaul tests, and many small tweaks.  Most of this is internal to
