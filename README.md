@@ -27,7 +27,7 @@ You may also want to use the Datadog events support in here instead of other lib
 
 All initialization parameters are optional.
 
-Parameters (specified as an options hash):
+Parameters (specified as one object passed into hot-shots):
 * `host`:        The host to send stats to `default: localhost`
 * `port`:        The port to send stats to `default: 8125`
 * `prefix`:      What to prefix each stat name with `default: ''`
@@ -84,7 +84,8 @@ The check method has the following API:
 
 ```javascript
   var StatsD = require('hot-shots'),
-      client = new StatsD();
+      client = new StatsD({ port: 8020, globalTags: { env:
+  process.env.NODE_ENV });
 
   // Catch socket errors so they don't go unhandled, as explained
   // in the Errors section below
