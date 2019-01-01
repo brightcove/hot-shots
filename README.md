@@ -200,9 +200,13 @@ Some of the functionality mentioned above is specific to DogStatsD or Telegraf. 
 
 As usual, callbacks will have an error as their first parameter.  You can have an error in both the message and close callbacks.
 
-If the optional callback is not given, an error is thrown in some cases and a console.log message is used in others.  An error will only be thrown when there is a missing callback if it is some potential configuration issue to be fixed.
+If the optional callback is not given, an error is thrown in some
+cases and a console.log message is used in others.  An error will only
+be explitly thrown when there is a missing callback or if it is some potential configuration issue to be fixed.
 
-In the event that there is a socket error, `hot-shots` will allow this error to bubble up unless an `errorHandler` is specified.  If you would like to catch the errors, either specify an `errorHandler` in your root client or just attach a listener to the socket property on the instance.
+If you would like ensure all errors are caught, specify an `errorHandler` in your root
+client. This will catch errors in socket setup, sending of messages,
+and closing of the socket.  If you specify an errorHandler and a callback, the callback will take precedence.
 
 ```javascript
 // Using errorHandler
@@ -211,13 +215,6 @@ var client = new StatsD({
     console.log("Socket errors caught here: ", error);
   }
 })
-```
-
-```javascript
-// Attaching an error handler to client's socket
-client.socket.on('error', function(error) {
-  console.error("Error in socket: ", error);
-});
 ```
 
 ## Submitting changes

@@ -92,7 +92,7 @@ describe('#errorHandling', () => {
         statsd.socket.on('error', error => {
           assert.ok(error);
           assert.equal(error.code, 'ENOTFOUND');
-          // skip closing, because the unresolvable host hangs
+          statsd.close();
           done();
         });
 
