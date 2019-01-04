@@ -1,5 +1,11 @@
 import dgram = require("dgram");
 
+export enum Protocol {
+  TCP = "tcp",
+  UDP = "udp",
+  UDS = "uds",
+}
+
 declare module "hot-shots" {
   export type Tags = { [key: string]: string } | string[];
   export interface ClientOptions {
@@ -13,8 +19,10 @@ declare module "hot-shots" {
     isChild?: boolean;
     maxBufferSize?: number;
     mock?: boolean;
+    path?: string;
     port?: number;
     prefix?: string;
+    protocol?: Protocol;
     sampleRate?: number;
     socket?: dgram.Socket;
     suffix?: string;
