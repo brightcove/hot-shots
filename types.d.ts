@@ -1,11 +1,5 @@
 import dgram = require("dgram");
 
-export enum Protocol {
-  TCP = "tcp",
-  UDP = "udp",
-  UDS = "uds",
-}
-
 declare module "hot-shots" {
   export type Tags = { [key: string]: string } | string[];
   export interface ClientOptions {
@@ -22,7 +16,7 @@ declare module "hot-shots" {
     path?: string;
     port?: number;
     prefix?: string;
-    protocol?: Protocol;
+    protocol?: string;
     sampleRate?: number;
     socket?: dgram.Socket;
     suffix?: string;
