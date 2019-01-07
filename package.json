@@ -34,7 +34,9 @@
     "lint": "eslint lib/**.js test/**.js",
     "pretest": "npm run lint"
   },
-  "dependencies": {},
+  "dependencies": {
+    "unix-dgram": "^2.0.2"
+  },
   "devDependencies": {
     "eslint": "5.9.x",
     "mocha": "4.x",
