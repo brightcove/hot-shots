@@ -88,7 +88,7 @@ module.exports = {
             "error",
             "unix"
         ],
-        "lines-around-comment": "error",
+        "lines-around-comment": "off",
         "lines-around-directive": "error",
         "lines-between-class-members": [
             "error",
@@ -104,7 +104,7 @@ module.exports = {
         "max-statements": "off",
         "max-statements-per-line": "off",
         "multiline-comment-style": [
-            "error",
+            "off",
             "separate-lines"
         ],
         "multiline-ternary": "off",
@@ -204,7 +204,7 @@ module.exports = {
         "no-useless-return": "error",
         "no-var": "error",
         "no-void": "error",
-        "no-warning-comments": "error",
+        "no-warning-comments": "off",
         "no-whitespace-before-property": "error",
         "no-with": "error",
         "nonblock-statement-body-position": "error",

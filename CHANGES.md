@@ -1,6 +1,12 @@
 CHANGELOG
 =========
 
+## 6.1.0 (2019-1-5)
+* @bdeitte Ensure close() call always sends data before closing
+* @bdeitte Recommend errorHandler over client.socket.on() for handling
+errors
+* @mbellerose Fix the timer function type definition
+
 ## 6.0.1 (2018-12-17)
 * @msmnc Fix regression when tag value is a number
 * @bdeitte Make non-options in constructor more deprecated
