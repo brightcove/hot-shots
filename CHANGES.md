@@ -1,6 +1,10 @@
 CHANGELOG
 =========
 
+## 6.1.1 (2019-1-8)
+* @bdeitte Fix errorHandler to only happen again on errors
+* @Ithildir Readme fixes
+
 ## 6.1.0 (2019-1-5)
 * @bdeitte Ensure close() call always sends data before closing
 * @bdeitte Recommend errorHandler over client.socket.on() for handling
