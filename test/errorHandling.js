@@ -13,24 +13,6 @@ describe('#errorHandling', () => {
   // we have some tests first outside of the normal testTypes() setup as we want to
   // test with a broken server, which is just set up with tcp
 
-  it('should use errorHandler when server is broken', done => {
-    server = createServer('tcp_broken', address => {
-      statsd = createHotShotsClient({
-        host: address.address,
-        port: address.port,
-        protocol: 'tcp',
-        errorHandler(err) {
-          assert.ok(err);
-          done();
-        }
-      }, 'client');
-      statsd.increment('a', 42, null);
-      server.on('metrics', () => {
-        assert.ok(false);
-      });
-    });
-  });
-
   it('should use errorHandler when server is broken and using buffers', done => {
     // sometimes two errors show up, one with the initial connection
     let seenError = false;
