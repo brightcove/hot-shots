@@ -20,7 +20,7 @@ describe('#errorHandling', () => {
         port: address.port,
         protocol: 'tcp',
         errorHandler(err) {
-          assert.equal(err.code, 'ECONNRESET');
+          assert.ok(err);
           done();
         }
       }, 'client');
@@ -32,6 +32,9 @@ describe('#errorHandling', () => {
   });
 
   it('should use errorHandler when server is broken and using buffers', done => {
+    // sometimes two errors show up, one with the initial connection
+    let seenError = false;
+
     server = createServer('tcp_broken', address => {
       statsd = createHotShotsClient({
         host: address.address,
@@ -39,8 +42,11 @@ describe('#errorHandling', () => {
         protocol: 'tcp',
         maxBufferSize: 1,
         errorHandler(err) {
-          assert.equal(err.code, 'ERR_ASSERTION');
-          done();
+          assert.ok(err);
+          if (! seenError) {
+            seenError = true;
+            done();
+          }
         }
       }, 'client');
       statsd.increment('a', 42, null);
