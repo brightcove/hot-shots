@@ -39,7 +39,7 @@ Parameters (specified as one object passed into hot-shots):
 * `maxBufferSize`: If larger than 0,  metrics will be buffered and only sent when the string length is greater than the size. `default: 0`
 * `bufferFlushInterval`: If buffering is in use, this is the time in ms to always flush any buffered metrics. `default: 1000`
 * `telegraf`:    Use Telegraf's StatsD line protocol, which is slightly different than the rest `default: false`
-* `sampleRate`:    Sends only a sample of data to StatsD for all StatsD methods.  Can be overriden at the method level. `default: 1`
+* `sampleRate`:    Sends only a sample of data to StatsD for all StatsD methods.  Can be overridden at the method level. `default: 1`
 * `errorHandler`: A function with one argument. It is called to handle various errors. `default: none`, errors are thrown/logger to console
 * `useDefaultRoute`: Use the default interface on a Linux system. Useful when running in containers
 * `protocol`: Use `tcp` option for TCP protocol. Defaults to UDP otherwise
@@ -195,9 +195,9 @@ As usual, callbacks will have an error as their first parameter.  You can have a
 
 If the optional callback is not given, an error is thrown in some
 cases and a console.log message is used in others.  An error will only
-be explitly thrown when there is a missing callback or if it is some potential configuration issue to be fixed.
+be explicitly thrown when there is a missing callback or if it is some potential configuration issue to be fixed.
 
-If you would like ensure all errors are caught, specify an `errorHandler` in your root
+If you would like to ensure all errors are caught, specify an `errorHandler` in your root
 client. This will catch errors in socket setup, sending of messages,
 and closing of the socket.  If you specify an errorHandler and a callback, the callback will take precedence.
 
