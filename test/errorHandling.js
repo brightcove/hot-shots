@@ -75,23 +75,6 @@ describe('#errorHandling', () => {
         });
       });
 
-      it('should not use errorHandler when there is an increment send error', done => {
-        server = createServer(serverType, address => {
-          statsd = createHotShotsClient({
-            host: address.address,
-            port: address.port,
-            protocol: serverType,
-            errorHandler() {
-              assert.ok(false);
-            }
-          }, clientType);
-          statsd.increment('a', 42, null);
-          server.on('metrics', () => {
-            done();
-          });
-        });
-      });
-
       it('should use errorHandler for sendStat error', done => {
         server = createServer(serverType, address => {
           const err = new Error('Boom!');
