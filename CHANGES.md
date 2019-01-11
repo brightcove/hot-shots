@@ -1,6 +1,8 @@
 CHANGELOG
 =========
 
+* @JamesMGreene Fix syntax in README example
+
 ## 6.1.1 (2019-1-8)
 * @bdeitte Fix errorHandler to only happen again on errors
 * @Ithildir Readme fixes
