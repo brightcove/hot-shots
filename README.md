@@ -84,7 +84,7 @@ The check method has the following API:
 
 ```javascript
   var StatsD = require('hot-shots'),
-      client = new StatsD({ port: 8020, globalTags: { env: process.env.NODE_ENV, errorHandler: errorHandler });
+      client = new StatsD({ port: 8020, globalTags: { env: process.env.NODE_ENV }, errorHandler: errorHandler });
 
   // Timing: sends a timing command with the specified milliseconds
   client.timing('response_time', 42);
