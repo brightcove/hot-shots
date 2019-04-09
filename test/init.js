@@ -25,6 +25,9 @@ describe('#init', () => {
     }
     global.statsd = undefined;
     skipClose = false;
+    delete process.env.DD_AGENT_HOST;
+    delete process.env.DD_DOGSTATSD_PORT;
+    delete process.env.DD_ENTITY_ID;
   });
 
   it('should set the proper values when specified', () => {
@@ -85,6 +88,27 @@ describe('#init', () => {
     dns.lookup = originalLookup;
   });
 
+  it('should get host and port values from env vars when not specified', () => {
+    // set the DD_AGENT_HOST and DD_DOGSTATSD_PORT env vars
+    process.env.DD_AGENT_HOST = 'envhost';
+    process.env.DD_DOGSTATSD_PORT = '1234';
+
+    statsd = createHotShotsClient({}, clientType);
+    assert.equal(statsd.host, 'envhost');
+    assert.equal(statsd.port, 1234);
+    assert.equal(statsd.prefix, '');
+    assert.equal(statsd.suffix, '');
+    assert.equal(global.statsd, undefined);
+    assert.equal(statsd.mock, undefined);
+    assert.deepEqual(statsd.globalTags, []);
+    assert.ok(!statsd.mock);
+    assert.equal(statsd.sampleRate, 1);
+    assert.equal(statsd.maxBufferSize, 0);
+    assert.equal(statsd.bufferFlushInterval, 1000);
+    assert.equal(statsd.telegraf, false);
+    assert.equal(statsd.protocol, undefined); // Defaults to UDP
+  });
+
   it('should set default values when not specified', () => {
     statsd = createHotShotsClient({}, clientType);
     assert.equal(statsd.host, 'localhost');
@@ -105,6 +129,22 @@ describe('#init', () => {
   it('should map global_tags to globalTags for backwards compatibility', () => {
     statsd = createHotShotsClient({ global_tags: ['gtag'] }, clientType);
     assert.deepEqual(statsd.globalTags, ['gtag']);
+  });
+
+  it('should get the dd.internal.entity_id tag from DD_ENTITY_ID env var', () => {
+    // set the DD_ENTITY_ID env var
+    process.env.DD_ENTITY_ID = '04652bb7-19b7-11e9-9cc6-42010a9c016d';
+
+    statsd = createHotShotsClient({}, clientType);
+    assert.deepEqual(statsd.globalTags, ['dd.internal.entity_id:04652bb7-19b7-11e9-9cc6-42010a9c016d']);
+  });
+
+  it('should get the dd.internal.entity_id tag from DD_ENTITY_ID env var and append it to existing tags', () => {
+    // set the DD_ENTITY_ID env var
+    process.env.DD_ENTITY_ID = '04652bb7-19b7-11e9-9cc6-42010a9c016d';
+
+    statsd = createHotShotsClient({ globalTags: ['gtag'] }, clientType);
+    assert.deepEqual(statsd.globalTags, ['gtag', 'dd.internal.entity_id:04652bb7-19b7-11e9-9cc6-42010a9c016d']);
   });
 
   it('should attempt to cache a dns record if dnsCache is specified', done => {
