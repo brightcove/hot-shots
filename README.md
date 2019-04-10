@@ -28,14 +28,14 @@ You may also want to use the Datadog events support in here instead of other lib
 All initialization parameters are optional.
 
 Parameters (specified as one object passed into hot-shots):
-* `host`:        The host to send stats to `default: localhost`
-* `port`:        The port to send stats to `default: 8125`
+* `host`:        The host to send stats to, if not set, the constructor tries to retrieve it from the `DD_AGENT_HOST` environment variable, `default: localhost`
+* `port`:        The port to send stats to, if not set, the constructor tries to retrieve it from the `DD_DOGSTATSD_PORT` environment variable, `default: 8125`
 * `prefix`:      What to prefix each stat name with `default: ''`
 * `suffix`:      What to suffix each stat name with `default: ''`
 * `globalize`:   Expose this StatsD instance globally? `default: false`
 * `cacheDns`:    Cache the initial dns lookup to *host* `default: false`
 * `mock`:        Create a mock StatsD instance, sending no stats to the server and allowing data to be read from mockBuffer? `default: false`
-* `globalTags`:  Tags that will be added to every metric. Can be either an object or list of tags. `default: {}`
+* `globalTags`:  Tags that will be added to every metric. Can be either an object or list of tags. The *Datadog* `dd.internal.entity_id` tag is appended to `globalTags` from the `DD_ENTITY_ID` environment variable if the latter is set. `default: {}`
 * `maxBufferSize`: If larger than 0,  metrics will be buffered and only sent when the string length is greater than the size. `default: 0`
 * `bufferFlushInterval`: If buffering is in use, this is the time in ms to always flush any buffered metrics. `default: 1000`
 * `telegraf`:    Use Telegraf's StatsD line protocol, which is slightly different than the rest `default: false`

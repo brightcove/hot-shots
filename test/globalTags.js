@@ -12,6 +12,7 @@ describe('#globalTags', () => {
 
   afterEach(done => {
     closeAll(server, statsd, false, done);
+    delete process.env.DD_ENTITY_ID;
   });
 
   testTypes().forEach(([description, serverType, clientType, metricEnd]) => {
@@ -43,6 +44,25 @@ describe('#globalTags', () => {
         });
         server.on('metrics', metrics => {
           assert.equal(metrics, `test:1|c|#gtag${metricEnd}`);
+          done();
+        });
+      });
+
+      it('should add dd.internal.entity_id tag from DD_ENTITY_ID env var', done => {
+        // set the DD_ENTITY_ID env var
+        process.env.DD_ENTITY_ID = '04652bb7-19b7-11e9-9cc6-42010a9c016d';
+
+        server = createServer(serverType, address => {
+          statsd = createHotShotsClient({
+            host: address.address,
+            port: address.port,
+            global_tags: ['gtag'],
+            protocol: serverType
+          }, clientType);
+          statsd.increment('test');
+        });
+        server.on('metrics', metrics => {
+          assert.equal(metrics, `test:1|c|#gtag,dd.internal.entity_id:04652bb7-19b7-11e9-9cc6-42010a9c016d${metricEnd}`);
           done();
         });
       });
