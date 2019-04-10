@@ -1,6 +1,9 @@
 CHANGELOG
 =========
 
+## 6.2.0 (2019-4-10)
+* @ahmed-mez Add support for env variables DD_AGENT_HOST,
+DD_DOGSTATSD_PORT, and DD_ENTITY_ID
 * @JamesMGreene Fix syntax in README example
 
 ## 6.1.1 (2019-1-8)
