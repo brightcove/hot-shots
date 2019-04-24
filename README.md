@@ -155,7 +155,7 @@ The check method has the following API:
 
   // Sampling, tags and callback are optional and could be used in any combination (DataDog and Telegraf only)
   client.histogram('my_histogram', 42, 0.25); // 25% Sample Rate
-  client.histogram('my_histogram', 42, { tag: 'value'}]); // User-defined tag
+  client.histogram('my_histogram', 42, { tag: 'value'}); // User-defined tag
   client.histogram('my_histogram', 42, ['tag:value']); // Tags as an array
   client.histogram('my_histogram', 42, next); // Callback
   client.histogram('my_histogram', 42, 0.25, ['tag']);
