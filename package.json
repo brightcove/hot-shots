@@ -35,12 +35,12 @@
     "pretest": "npm run lint"
   },
   "dependencies": {
-    "unix-dgram": "^2.0.2"
+    "unix-dgram": "2.0.x"
   },
   "devDependencies": {
     "eslint": "5.9.x",
     "mocha": "4.x",
-    "nyc": "^14.1.0"
+    "nyc": "14.x"
   },
   "license": "MIT"
 }
