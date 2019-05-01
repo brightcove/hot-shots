@@ -1,6 +1,9 @@
 CHANGELOG
 =========
 
+## Unreleased
+* @paguillama Fix user defined tag example on README optional parameters
+
 ## 6.2.0 (2019-4-10)
 * @ahmed-mez Add support for env variables DD_AGENT_HOST,
 DD_DOGSTATSD_PORT, and DD_ENTITY_ID
