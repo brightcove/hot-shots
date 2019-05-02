@@ -34,7 +34,7 @@
     "lint": "eslint lib/**.js test/**.js",
     "pretest": "npm run lint"
   },
-  "dependencies": {
+  "optionalDependencies": {
     "unix-dgram": "2.0.x"
   },
   "devDependencies": {
