@@ -10,8 +10,70 @@ describe('#errorHandling', () => {
   let server;
   let statsd;
 
+  // we have some tests first outside of the normal testTypes() setup as we want to
+  // test with a broken server, which is just set up with tcp
+
+  it('should use errorHandler when server is broken and using buffers', done => {
+    // sometimes two errors show up, one with the initial connection
+    let seenError = false;
+
+    server = createServer('tcp_broken', address => {
+      statsd = createHotShotsClient({
+        host: address.address,
+        port: address.port,
+        protocol: 'tcp',
+        maxBufferSize: 1,
+        errorHandler(err) {
+          assert.ok(err);
+          if (! seenError) {
+            seenError = true;
+            done();
+          }
+        }
+      }, 'client');
+      statsd.increment('a', 42, null);
+      server.on('metrics', () => {
+        assert.ok(false);
+      });
+    });
+  });
+
   testTypes().forEach(([description, serverType, clientType]) => {
     describe(description, () => {
+      it('should not use errorHandler when there is not an error', done => {
+        server = createServer(serverType, address => {
+          statsd = createHotShotsClient({
+            host: address.address,
+            port: address.port,
+            protocol: serverType,
+            errorHandler() {
+              assert.ok(false);
+            }
+          }, clientType);
+          statsd.increment('a', 42, null);
+          server.on('metrics', () => {
+            done();
+          });
+        });
+      });
+
+      it('should not use errorHandler when there is not an error and using buffers', done => {
+        server = createServer(serverType, address => {
+          statsd = createHotShotsClient({
+            host: address.address,
+            port: address.port,
+            protocol: serverType,
+            maxBufferSize: 1,
+            errorHandler() {
+              assert.ok(false);
+            }
+          }, clientType);
+          statsd.increment('a', 42, null);
+          server.on('metrics', () => {
+            done();
+          });
+        });
+      });
 
       it('should use errorHandler for sendStat error', done => {
         server = createServer(serverType, address => {

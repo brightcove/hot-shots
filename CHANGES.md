@@ -1,6 +1,18 @@
 CHANGELOG
 =========
 
+## Unreleased
+* @paguillama Fix user defined tag example on README optional parameters
+
+## 6.2.0 (2019-4-10)
+* @ahmed-mez Add support for env variables DD_AGENT_HOST,
+DD_DOGSTATSD_PORT, and DD_ENTITY_ID
+* @JamesMGreene Fix syntax in README example
+
+## 6.1.1 (2019-1-8)
+* @bdeitte Fix errorHandler to only happen again on errors
+* @Ithildir Readme fixes
+
 ## 6.1.0 (2019-1-5)
 * @bdeitte Ensure close() call always sends data before closing
 * @bdeitte Recommend errorHandler over client.socket.on() for handling

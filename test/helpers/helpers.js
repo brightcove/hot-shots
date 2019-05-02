@@ -8,6 +8,7 @@ const CHILD_CLIENT = 'child client';
 const CHILD_CHILD_CLIENT = 'child child client';
 const TCP = 'tcp';
 const UDP = 'udp';
+const TCP_BROKEN = 'tcp_broken';
 // tcp puts a newline at the end but udp does not
 const TCP_METRIC_END = '\n';
 const UDP_METRIC_END = '';
@@ -92,6 +93,22 @@ function createServer(serverType, onListening) {
       });
     });
     server.on('listening', () => {
+      onListening(server.address());
+    });
+
+    server.listen(0, '127.0.0.1');
+  }
+  else if (serverType === TCP_BROKEN) {
+    server = net.createServer(socket => {
+      socket.setEncoding('ascii');
+      socket.on('data', data => {
+        if (data) {
+          server.emit('metrics', data);
+        }
+      });
+      socket.destroy();
+    });
+    server.on('listening', (socket) => {
       onListening(server.address());
     });
 

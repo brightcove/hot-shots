@@ -28,18 +28,18 @@ You may also want to use the Datadog events support in here instead of other lib
 All initialization parameters are optional.
 
 Parameters (specified as one object passed into hot-shots):
-* `host`:        The host to send stats to `default: localhost`
-* `port`:        The port to send stats to `default: 8125`
+* `host`:        The host to send stats to, if not set, the constructor tries to retrieve it from the `DD_AGENT_HOST` environment variable, `default: localhost`
+* `port`:        The port to send stats to, if not set, the constructor tries to retrieve it from the `DD_DOGSTATSD_PORT` environment variable, `default: 8125`
 * `prefix`:      What to prefix each stat name with `default: ''`
 * `suffix`:      What to suffix each stat name with `default: ''`
 * `globalize`:   Expose this StatsD instance globally? `default: false`
 * `cacheDns`:    Cache the initial dns lookup to *host* `default: false`
 * `mock`:        Create a mock StatsD instance, sending no stats to the server and allowing data to be read from mockBuffer? `default: false`
-* `globalTags`:  Tags that will be added to every metric. Can be either an object or list of tags. `default: {}`
+* `globalTags`:  Tags that will be added to every metric. Can be either an object or list of tags. The *Datadog* `dd.internal.entity_id` tag is appended to `globalTags` from the `DD_ENTITY_ID` environment variable if the latter is set. `default: {}`
 * `maxBufferSize`: If larger than 0,  metrics will be buffered and only sent when the string length is greater than the size. `default: 0`
 * `bufferFlushInterval`: If buffering is in use, this is the time in ms to always flush any buffered metrics. `default: 1000`
 * `telegraf`:    Use Telegraf's StatsD line protocol, which is slightly different than the rest `default: false`
-* `sampleRate`:    Sends only a sample of data to StatsD for all StatsD methods.  Can be overriden at the method level. `default: 1`
+* `sampleRate`:    Sends only a sample of data to StatsD for all StatsD methods.  Can be overridden at the method level. `default: 1`
 * `errorHandler`: A function with one argument. It is called to handle various errors. `default: none`, errors are thrown/logger to console
 * `useDefaultRoute`: Use the default interface on a Linux system. Useful when running in containers
 * `protocol`: Use `tcp` option for TCP protocol. Defaults to UDP otherwise
@@ -84,7 +84,7 @@ The check method has the following API:
 
 ```javascript
   var StatsD = require('hot-shots'),
-      client = new StatsD({ port: 8020, globalTags: { env: process.env.NODE_ENV, errorHandler: errorHandler });
+      client = new StatsD({ port: 8020, globalTags: { env: process.env.NODE_ENV }, errorHandler: errorHandler });
 
   // Timing: sends a timing command with the specified milliseconds
   client.timing('response_time', 42);
@@ -155,7 +155,7 @@ The check method has the following API:
 
   // Sampling, tags and callback are optional and could be used in any combination (DataDog and Telegraf only)
   client.histogram('my_histogram', 42, 0.25); // 25% Sample Rate
-  client.histogram('my_histogram', 42, { tag: 'value'}]); // User-defined tag
+  client.histogram('my_histogram', 42, { tag: 'value'}); // User-defined tag
   client.histogram('my_histogram', 42, ['tag:value']); // Tags as an array
   client.histogram('my_histogram', 42, next); // Callback
   client.histogram('my_histogram', 42, 0.25, ['tag']);
@@ -195,9 +195,9 @@ As usual, callbacks will have an error as their first parameter.  You can have a
 
 If the optional callback is not given, an error is thrown in some
 cases and a console.log message is used in others.  An error will only
-be explitly thrown when there is a missing callback or if it is some potential configuration issue to be fixed.
+be explicitly thrown when there is a missing callback or if it is some potential configuration issue to be fixed.
 
-If you would like ensure all errors are caught, specify an `errorHandler` in your root
+If you would like to ensure all errors are caught, specify an `errorHandler` in your root
 client. This will catch errors in socket setup, sending of messages,
 and closing of the socket.  If you specify an errorHandler and a callback, the callback will take precedence.
 
