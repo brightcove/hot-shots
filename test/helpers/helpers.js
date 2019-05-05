@@ -79,8 +79,10 @@ function testTypes() {
     [`${UDP} ${CHILD_CHILD_CLIENT}`, UDP, CHILD_CHILD_CLIENT, UDP_METRIC_END],
     [`${TCP} ${CLIENT}`, TCP, CLIENT, TCP_METRIC_END],
     [`${TCP} ${CHILD_CLIENT}`, TCP, CHILD_CLIENT, TCP_METRIC_END]];
+  console.log('testTypes: ' + os.platform + ' : ' + process.version);
   // Not everywhere can run UDS, and we don't want to fail the tests in those places
-  if (os.platform !== 'win32' &&  ! process.version.startsWith('12.')) {
+  if (os.platform !== 'win32' &&  ! process.version.startsWith('v12.')) {
+    console.log('Adding UDS');
     testTypesArr.push([`${UDS} ${CLIENT}`, UDS, CLIENT, UDS_METRIC_END]);
     testTypesArr.push([`${UDS} ${CHILD_CLIENT}`, UDS, CLIENT, UDS_METRIC_END]);
   }
@@ -93,8 +95,10 @@ function testTypes() {
 function testProtocolTypes() {
   const protTypesArr = [[`${UDP} ${CLIENT}`, UDP, CLIENT, UDP_METRIC_END],
     [`${TCP} ${CLIENT}`, TCP, CLIENT, TCP_METRIC_END]];
+    console.log('testTypes: ' + os.platform + ' : ' + process.version);
   // Not everywhere can run UDS, and we don't want to fail the tests in those places
-  if (os.platform !== 'win32' &&  ! process.version.startsWith('12.')) {
+  if (os.platform !== 'win32' &&  ! process.version.startsWith('v12.')) {
+    console.log('Adding UDS');
     protTypesArr.push([`${UDS} ${CLIENT}`, UDS, CLIENT, UDS_METRIC_END]);
   }
   return protTypesArr;
