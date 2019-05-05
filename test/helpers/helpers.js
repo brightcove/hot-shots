@@ -45,11 +45,9 @@ function closeAll(server, statsd, allowErrors, done) {
     server = { close: () => {} }; // eslint-disable-line no-empty-function
   }
   try {
-//    console.log('statsd close');
     statsd.close(() => {
       try {
         if (statsd.hasOwnProperty('protocol') && statsd.protocol === UDS) {
-//          console.log('server close');
           server.close();
           // this one is synchronous
           done();
@@ -61,13 +59,11 @@ function closeAll(server, statsd, allowErrors, done) {
         }
       }
       catch (err) {
-        console.log('foo: ' + err);
         done(allowErrors ? null : err);
       }
     });
   }
   catch (err) {
-    console.log('foo: ' + err);
     done(allowErrors ? null : err);
   }
 }
@@ -77,7 +73,11 @@ function closeAll(server, statsd, allowErrors, done) {
  */
 function testTypes() {
   return [[`${UDS} ${CLIENT}`, UDS, CLIENT, UDS_METRIC_END]];
+
+  // TODO: reenable full suite when done testing
+
   // TODO: do not include UDS if on Node 12 or Windows
+
   /* return [[`${UDP} ${CLIENT}`, UDP, CLIENT, UDP_METRIC_END],
     [`${UDP} ${CHILD_CLIENT}`, UDP, CHILD_CLIENT, UDP_METRIC_END],
     [`${UDP} ${CHILD_CHILD_CLIENT}`, UDP, CHILD_CHILD_CLIENT, UDP_METRIC_END],
