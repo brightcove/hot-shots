@@ -2,9 +2,6 @@
 
 A Node.js client for [Etsy](http://etsy.com)'s [StatsD](https://github.com/etsy/statsd) server, Datadog's [DogStatsD](http://docs.datadoghq.com/guides/dogstatsd/) server, and [InfluxDB's](http://influxdb.com) [Telegraf](https://github.com/influxdb/telegraf) StatsD server.
 
-TODO: add info in start, parameters, usage
-TODO: add in changes, including limitations
-
 This project was originally a fork off of [node-statsd](https://github.com/sivy/node-statsd).  This project
 includes all changes in the latest node-statsd and many additional changes, including:
 * TypeScript types
