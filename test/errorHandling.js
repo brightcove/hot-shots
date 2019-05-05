@@ -37,6 +37,8 @@ describe('#errorHandling', () => {
           assert.ok(err);
           if (! seenError) {
             seenError = true;
+            // do not wait on closing the broken statsd connection
+            statsd = null;
             done();
           }
         }
@@ -60,8 +62,8 @@ describe('#errorHandling', () => {
               assert.ok(false);
             }
           }, clientType);
+          statsd.increment('a', 42, null);
         });
-        statsd.increment('a', 42, null);
         server.on('metrics', () => {
           done();
         });
@@ -78,8 +80,8 @@ describe('#errorHandling', () => {
               assert.ok(false);
             }
           }, clientType);
+          statsd.increment('a', 42, null);
         });
-        statsd.increment('a', 42, null);
         server.on('metrics', () => {
           done();
         });
@@ -136,8 +138,9 @@ describe('#errorHandling', () => {
 
         statsd.send('test title', [], error => {
           assert.ok(error);
-          assert.equal(error.code, 'ENOTFOUND');
+          assert.equal(error.code, serverType === 'uds' ? '-2' : 'ENOTFOUND');
           // skip closing, because the unresolvable host hangs
+          statsd = null;
           done();
         });
       });
@@ -146,10 +149,11 @@ describe('#errorHandling', () => {
         statsd = createHotShotsClient({
           host: '...',
           protocol: serverType,
-          errorHandler(e) {
-            assert.ok(e);
-            assert.equal(e.code, 'ENOTFOUND');
+          errorHandler(error) {
+            assert.ok(error);
+            assert.equal(error.code, serverType === 'uds' ? 'ERR_ASSERTION' : 'ENOTFOUND');
             // skip closing, because the unresolvable host hangs
+            statsd = null;
             done();
           }
         }, clientType);
@@ -164,8 +168,9 @@ describe('#errorHandling', () => {
 
         statsd.socket.on('error', error => {
           assert.ok(error);
-          assert.equal(error.code, 'ENOTFOUND');
-          statsd.close();
+          assert.equal(error.code, serverType === 'uds' ? 'ERR_ASSERTION' : 'ENOTFOUND');
+            // skip closing, because the unresolvable host hangs
+            statsd = null;
           done();
         });
 

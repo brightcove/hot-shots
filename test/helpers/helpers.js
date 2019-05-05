@@ -2,6 +2,8 @@ const dgram = require('dgram');
 const net = require('net');
 const path = require('path');
 const fs = require('fs');
+const os = require('os');
+const process = require('process');
 const StatsD = require('../../lib/statsd.js');
 
 let unixDgram;
@@ -72,29 +74,30 @@ function closeAll(server, statsd, allowErrors, done) {
  * Returns all permutations of test types to run through
  */
 function testTypes() {
-  return [[`${UDS} ${CLIENT}`, UDS, CLIENT, UDS_METRIC_END]];
-
-  // TODO: reenable full suite when done testing
-
-  // TODO: do not include UDS if on Node 12 or Windows
-
-  /* return [[`${UDP} ${CLIENT}`, UDP, CLIENT, UDP_METRIC_END],
+  const testTypesArr = [[`${UDP} ${CLIENT}`, UDP, CLIENT, UDP_METRIC_END],
     [`${UDP} ${CHILD_CLIENT}`, UDP, CHILD_CLIENT, UDP_METRIC_END],
     [`${UDP} ${CHILD_CHILD_CLIENT}`, UDP, CHILD_CHILD_CLIENT, UDP_METRIC_END],
     [`${TCP} ${CLIENT}`, TCP, CLIENT, TCP_METRIC_END],
-    [`${TCP} ${CHILD_CLIENT}`, TCP, CHILD_CLIENT, TCP_METRIC_END],
-    [`${UDS} ${CLIENT}`, UDS, CLIENT, UDS_METRIC_END],
-    [`${UDS} ${CHILD_CLIENT}`, UDS, CHILD_CLIENT, UDS_METRIC_END]]; */
+    [`${TCP} ${CHILD_CLIENT}`, TCP, CHILD_CLIENT, TCP_METRIC_END]];
+  // Not everywhere can run UDS, and we don't want to fail the tests in those places
+  if (os.platform !== 'win32' &&  ! process.version.startsWith('12.')) {
+    testTypesArr.push([`${UDS} ${CLIENT}`, UDS, CLIENT, UDS_METRIC_END]);
+    testTypesArr.push([`${UDS} ${CHILD_CLIENT}`, UDS, CLIENT, UDS_METRIC_END]);
+  }
+  return testTypesArr;
 }
 
 /**
  * Returns simple protocol types to test, ignoring child testing
  */
 function testProtocolTypes() {
-  // TODO: do not include UDS if on Node 12 or Windows
-  return [[`${UDP} ${CLIENT}`, UDP, CLIENT, UDP_METRIC_END],
-    [`${TCP} ${CLIENT}`, TCP, CLIENT, TCP_METRIC_END],
-    [`${UDS} ${CLIENT}`, UDS, CLIENT, UDS_METRIC_END]];
+  const protTypesArr = [[`${UDP} ${CLIENT}`, UDP, CLIENT, UDP_METRIC_END],
+    [`${TCP} ${CLIENT}`, TCP, CLIENT, TCP_METRIC_END]];
+  // Not everywhere can run UDS, and we don't want to fail the tests in those places
+  if (os.platform !== 'win32' &&  ! process.version.startsWith('12.')) {
+    protTypesArr.push([`${UDS} ${CLIENT}`, UDS, CLIENT, UDS_METRIC_END]);
+  }
+  return protTypesArr;
 }
 
 /**
