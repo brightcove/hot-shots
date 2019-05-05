@@ -132,23 +132,6 @@ describe('#event', () => {
         });
       });
 
-      it('should throw an exception when using telegraf format', done => {
-        server = createServer(serverType, address => {
-          statsd = createHotShotsClient({
-            host: address.address,
-            port: address.port,
-            telegraf: true,
-            protocol: serverType
-          }, clientType);
-          assert.throws(() => {
-            statsd.event('test title', 'another desc', null, ['foo', 'bar']);
-          }, err => {
-            assert.ok(err);
-            done();
-          });
-        });
-      });
-
       it('should use errorHandler', done => {
         server = createServer(serverType, address => {
           statsd = createHotShotsClient({

@@ -132,6 +132,9 @@ describe('#check', () => {
       });
 
       it('should throw an exception when using telegraf format', done => {
+        // if we don't null out the server first, and try to close it agian, we get an uncatchable error when using uds
+        server = null;
+
         server = createServer(serverType, address => {
           statsd = createHotShotsClient({
             host: address.address,

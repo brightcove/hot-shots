@@ -39,20 +39,20 @@ Math.random = () => {
  */
 function closeAll(server, statsd, allowErrors, done) {
   if (! statsd) {
-    statsd = { close(func) { func(); } };
+    statsd = { close: () => {} }; // eslint-disable-line no-empty-function
   }
   if (! server) {
-    server = { close(func) { func(); } };
+    server = { close: () => {} }; // eslint-disable-line no-empty-function
   }
   try {
+//    console.log('statsd close');
     statsd.close(() => {
       try {
         if (statsd.hasOwnProperty('protocol') && statsd.protocol === UDS) {
+//          console.log('server close');
           server.close();
-          // this one is synchronous, but we (FIXME comment)
-          setTimeout(() => {
-            done();
-          }, 500);
+          // this one is synchronous
+          done();
         }
         else {
           server.close(() => {
@@ -61,11 +61,13 @@ function closeAll(server, statsd, allowErrors, done) {
         }
       }
       catch (err) {
+        console.log('foo: ' + err);
         done(allowErrors ? null : err);
       }
     });
   }
   catch (err) {
+    console.log('foo: ' + err);
     done(allowErrors ? null : err);
   }
 }

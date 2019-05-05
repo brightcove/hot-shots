@@ -20,6 +20,9 @@ describe('#childClient', () => {
 
     describe(description, () => {
       it('init should set the proper values when specified', () => {
+        // if we don't null out the server first, and try to close it again, we get an uncatchable error when using uds
+        server = null;
+
         statsd = new StatsD(
           'host', 1234, 'prefix', 'suffix', true, null, true, ['gtag', 'tag1:234234']
         );
