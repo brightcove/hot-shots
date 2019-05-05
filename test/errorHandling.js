@@ -151,7 +151,9 @@ describe('#errorHandling', () => {
           protocol: serverType,
           errorHandler(error) {
             assert.ok(error);
-            assert.equal(error.code, serverType === 'uds' ? 'ERR_ASSERTION' : 'ENOTFOUND');
+            if (serverType !== 'uds') {
+              assert.equal(error.code, 'ENOTFOUND');
+            }
             // skip closing, because the unresolvable host hangs
             statsd = null;
             done();
@@ -168,9 +170,11 @@ describe('#errorHandling', () => {
 
         statsd.socket.on('error', error => {
           assert.ok(error);
-          assert.equal(error.code, serverType === 'uds' ? 'ERR_ASSERTION' : 'ENOTFOUND');
-            // skip closing, because the unresolvable host hangs
-            statsd = null;
+          if (serverType !== 'uds') {
+            assert.equal(error.code, 'ENOTFOUND');
+          }
+          // skip closing, because the unresolvable host hangs
+          statsd = null;
           done();
         });
 
