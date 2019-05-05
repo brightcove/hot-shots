@@ -3,6 +3,7 @@
 A Node.js client for [Etsy](http://etsy.com)'s [StatsD](https://github.com/etsy/statsd) server, Datadog's [DogStatsD](http://docs.datadoghq.com/guides/dogstatsd/) server, and [InfluxDB's](http://influxdb.com) [Telegraf](https://github.com/influxdb/telegraf) StatsD server.
 
 TODO: add info in start, parameters, usage
+TODO: add in changes, including limitations
 
 This project was originally a fork off of [node-statsd](https://github.com/sivy/node-statsd).  This project
 includes all changes in the latest node-statsd and many additional changes, including:
@@ -11,6 +12,7 @@ includes all changes in the latest node-statsd and many additional changes, incl
 * events
 * child clients
 * tcp protocol support
+* udp (Unix domain socket) protocol support
 * mock mode
 * asyncTimer
 * much more, including many bug fixes
@@ -23,7 +25,7 @@ hot-shots supports Node 6.x and higher.
 
 You should only need to do one thing: change node-statsd to hot-shots in all requires.
 
-You may also want to use the Datadog events support in here instead of other libraries.  You can also check the detailed [change log](https://github.com/brightcove/hot-shots/blob/master/CHANGES.md) for what has changed since the last release of node-statsd.
+You can check the detailed [change log](https://github.com/brightcove/hot-shots/blob/master/CHANGES.md) for what has changed since the last release of node-statsd.
 
 ## Usage
 
@@ -44,7 +46,7 @@ Parameters (specified as one object passed into hot-shots):
 * `sampleRate`:    Sends only a sample of data to StatsD for all StatsD methods.  Can be overridden at the method level. `default: 1`
 * `errorHandler`: A function with one argument. It is called to handle various errors. `default: none`, errors are thrown/logger to console
 * `useDefaultRoute`: Use the default interface on a Linux system. Useful when running in containers
-* `protocol`: Use `tcp` option for TCP protocol. Defaults to UDP otherwise
+* `protocol`: Use `tcp` option for TCP protocol, or 'uds' for the Unix Domain Socket protocol. Defaults to UDP otherwise
 
 All StatsD methods other than event and close have the same API:
 * `name`:       Stat name `required`
@@ -187,6 +189,7 @@ Some of the functionality mentioned above is specific to DogStatsD or Telegraf. 
 * globalTags parameter- DogStatsD or Telegraf
 * tags parameter- DogStatsD or Telegraf.
 * telegraf parameter- Telegraf
+* uds option in protocol parameter- DogStatsD
 * histogram method- DogStatsD or Telegraf
 * event method- DogStatsD
 * check method- DogStatsD
@@ -211,6 +214,13 @@ var client = new StatsD({
   }
 })
 ```
+
+## Unix domain socket support
+
+The 'uds' option as the protocol is to support [Unix Domain Sockets for Datadog](https://docs.datadoghq.com/developers/dogstatsd/unix_socket/).  It has the following limitations on where it will work:
+- Does not work on Windows
+- Does not currently work on Node 12
+Both cause the underlying library that is used, unix-dgram, to not install properly.  Given it is listed as an optionalDependency, this install failure will not cause any other problems.  It just means that you can't use this feature.
 
 ## Submitting changes
 
