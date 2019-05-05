@@ -16,7 +16,7 @@ declare module "hot-shots" {
     path?: string;
     port?: number;
     prefix?: string;
-    protocol?: string;
+    protocol?: 'tcp' | 'udp' | 'unix_dgram';
     sampleRate?: number;
     socket?: dgram.Socket;
     suffix?: string;
