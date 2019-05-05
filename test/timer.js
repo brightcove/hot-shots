@@ -8,7 +8,7 @@ const testTypes = helpers.testTypes;
 const createServer = helpers.createServer;
 const createHotShotsClient = helpers.createHotShotsClient;
 
-const TIMER_BUFFER = 200;
+const TIMER_BUFFER = 300;
 
 describe('#timer', () => {
   let server;
