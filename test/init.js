@@ -17,7 +17,7 @@ describe('#init', () => {
   const clientType = 'client';
 
   afterEach(done => {
-    if (! skipClose) {
+    if (skipClose) {
       done();
     }
     else {
