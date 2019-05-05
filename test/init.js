@@ -17,12 +17,14 @@ describe('#init', () => {
   const clientType = 'client';
 
   afterEach(done => {
-    if (skipClose) {
+    if (! skipClose) {
       done();
     }
     else {
       closeAll(server, statsd, false, done);
     }
+    server = null;
+    statsd = null;
     global.statsd = undefined;
     skipClose = false;
     delete process.env.DD_AGENT_HOST;

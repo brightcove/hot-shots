@@ -9,6 +9,16 @@ const createHotShotsClient = helpers.createHotShotsClient;
 describe('#errorHandling', () => {
   let server;
   let statsd;
+  let ignoreErrors;
+
+  afterEach(done => {
+    closeAll(server, statsd, ignoreErrors, () => {
+      ignoreErrors = false;
+      server = null;
+      statsd = null;
+      done();
+    });
+  });
 
   // we have some tests first outside of the normal testTypes() setup as we want to
   // test with a broken server, which is just set up with tcp
@@ -50,10 +60,10 @@ describe('#errorHandling', () => {
               assert.ok(false);
             }
           }, clientType);
-          statsd.increment('a', 42, null);
-          server.on('metrics', () => {
-            done();
-          });
+        });
+        statsd.increment('a', 42, null);
+        server.on('metrics', () => {
+          done();
         });
       });
 
@@ -68,10 +78,10 @@ describe('#errorHandling', () => {
               assert.ok(false);
             }
           }, clientType);
-          statsd.increment('a', 42, null);
-          server.on('metrics', () => {
-            done();
-          });
+        });
+        statsd.increment('a', 42, null);
+        server.on('metrics', () => {
+          done();
         });
       });
 
@@ -103,7 +113,8 @@ describe('#errorHandling', () => {
             protocol: serverType,
             errorHandler(e) {
               assert.equal(e, err);
-              closeAll(server, statsd, true, done);
+              ignoreErrors = true;
+              done();
             }
           }, clientType);
           statsd.dnsError = err;

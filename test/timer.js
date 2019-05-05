@@ -16,6 +16,8 @@ describe('#timer', () => {
 
   afterEach(done => {
     closeAll(server, statsd, false, done);
+    server = null;
+    statsd = null;
   });
 
   testTypes().forEach(([description, serverType, clientType]) => {

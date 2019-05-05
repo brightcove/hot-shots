@@ -12,6 +12,8 @@ describe('#check', () => {
 
   afterEach(done => {
     closeAll(server, statsd, false, done);
+    server = null;
+    statsd = null;
   });
 
   testTypes().forEach(([description, serverType, clientType, metricEnd]) => {
@@ -132,7 +134,7 @@ describe('#check', () => {
       });
 
       it('should throw an exception when using telegraf format', done => {
-        // if we don't null out the server first, and try to close it agian, we get an uncatchable error when using uds
+        // if we don't null out the server first, and try to close it again, we get an uncatchable error when using uds
         server = null;
 
         server = createServer(serverType, address => {

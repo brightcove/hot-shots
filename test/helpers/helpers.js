@@ -39,16 +39,16 @@ Math.random = () => {
  */
 function closeAll(server, statsd, allowErrors, done) {
   if (! statsd) {
-    statsd = { close: () => {} }; // eslint-disable-line no-empty-function
+    statsd = { close: (func) => { func(); } };
   }
   if (! server) {
-    server = { close: () => {} }; // eslint-disable-line no-empty-function
+    server = { close: (func) => { func(); } };
   }
   try {
     statsd.close(() => {
       try {
         if (statsd.hasOwnProperty('protocol') && statsd.protocol === UDS) {
-          server.close();
+          server.close(() => { }); // eslint-disable-line no-empty-function
           // this one is synchronous
           done();
         }

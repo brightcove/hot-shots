@@ -14,6 +14,8 @@ describe('#childClient', () => {
 
   afterEach(done => {
     closeAll(server, statsd, false, done);
+    server = null;
+    statsd = null;
   });
 
   testProtocolTypes().forEach(([description, serverType, clientType]) => {
