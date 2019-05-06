@@ -9,7 +9,7 @@ includes all changes in the latest node-statsd and many additional changes, incl
 * events
 * child clients
 * tcp protocol support
-* udp (Unix domain socket) protocol support
+* uds (Unix domain socket) protocol support
 * mock mode
 * asyncTimer
 * much more, including many bug fixes
