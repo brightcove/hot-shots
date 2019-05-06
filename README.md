@@ -43,7 +43,8 @@ Parameters (specified as one object passed into hot-shots):
 * `sampleRate`:    Sends only a sample of data to StatsD for all StatsD methods.  Can be overridden at the method level. `default: 1`
 * `errorHandler`: A function with one argument. It is called to handle various errors. `default: none`, errors are thrown/logger to console
 * `useDefaultRoute`: Use the default interface on a Linux system. Useful when running in containers
-* `protocol`: Use `tcp` option for TCP protocol, or 'uds' for the Unix Domain Socket protocol. Defaults to UDP otherwise
+* `protocol`: Use `tcp` option for TCP protocol, or `uds` for the Unix Domain Socket protocol. Defaults to UDP otherwise
+* `path`: Used only when the protocol is `uds`. Defaults to `/var/run/datadog/dsd.socket`.
 
 All StatsD methods other than event and close have the same API:
 * `name`:       Stat name `required`
@@ -217,7 +218,8 @@ var client = new StatsD({
 The 'uds' option as the protocol is to support [Unix Domain Sockets for Datadog](https://docs.datadoghq.com/developers/dogstatsd/unix_socket/).  It has the following limitations on where it will work:
 - Does not work on Windows
 - Does not currently work on Node 12
-Both cause the underlying library that is used, unix-dgram, to not install properly.  Given it is listed as an optionalDependency, this install failure will not cause any other problems.  It just means that you can't use this feature.
+
+Both of the above cause the underlying library that is used, unix-dgram, to not install properly.  Given it is listed as an optionalDependency, and how it's used in the codebase, this install failure will not cause any problems.  It just means that you can't use this feature.
 
 ## Submitting changes
 
