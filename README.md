@@ -222,7 +222,11 @@ The 'uds' option as the protocol is to support [Unix Domain Sockets for Datadog]
 is probably fine for you. If you had an troubles with libraries that
 you 'node-gyp' before, you will have problems here as well.
 
-Both of the above cause the underlying library that is used, unix-dgram, to not install properly.  Given it is listed as an optionalDependency, and how it's used in the codebase, this install failure will not cause any problems.  It just means that you can't use this feature.
+The above will cause the underlying library that is used, unix-dgram,
+to not install properly.  Given the library is listed as an
+optionalDependency, and how it's used in the codebase, this install
+failure will not cause any problems.  It only means that you can't use
+the uds feature.
 
 ## Submitting changes
 
