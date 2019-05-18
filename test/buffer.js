@@ -12,6 +12,8 @@ describe('#buffer', () => {
 
   afterEach(done => {
     closeAll(server, statsd, false, done);
+    server = null;
+    statsd = null;
   });
 
   testTypes().forEach(([description, serverType, clientType]) => {
@@ -49,7 +51,7 @@ describe('#buffer', () => {
         const expected = ['a:1|c', 'b:2|c'];
         server.on('metrics', metrics => {
           // one of the few places we have an actual test difference based on server type
-          if (serverType === 'udp') {
+          if (serverType === 'udp' || serverType === 'uds') {
             const index = expected.indexOf(metrics);
             assert.equal(index >= 0, true);
             expected.splice(index, 1);

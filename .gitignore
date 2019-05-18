@@ -3,3 +3,4 @@ node_modules
 *.iml
 .nyc_output
 coverage
+test/helpers/test.sock

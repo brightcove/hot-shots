@@ -13,8 +13,10 @@ declare module "hot-shots" {
     isChild?: boolean;
     maxBufferSize?: number;
     mock?: boolean;
+    path?: string;
     port?: number;
     prefix?: string;
+    protocol?: 'tcp' | 'udp' | 'uds';
     sampleRate?: number;
     socket?: dgram.Socket;
     suffix?: string;

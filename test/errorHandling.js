@@ -9,6 +9,16 @@ const createHotShotsClient = helpers.createHotShotsClient;
 describe('#errorHandling', () => {
   let server;
   let statsd;
+  let ignoreErrors;
+
+  afterEach(done => {
+    closeAll(server, statsd, ignoreErrors, () => {
+      ignoreErrors = false;
+      server = null;
+      statsd = null;
+      done();
+    });
+  });
 
   // we have some tests first outside of the normal testTypes() setup as we want to
   // test with a broken server, which is just set up with tcp
@@ -27,6 +37,8 @@ describe('#errorHandling', () => {
           assert.ok(err);
           if (! seenError) {
             seenError = true;
+            // do not wait on closing the broken statsd connection
+            statsd = null;
             done();
           }
         }
@@ -51,9 +63,9 @@ describe('#errorHandling', () => {
             }
           }, clientType);
           statsd.increment('a', 42, null);
-          server.on('metrics', () => {
-            done();
-          });
+        });
+        server.on('metrics', () => {
+          done();
         });
       });
 
@@ -69,9 +81,9 @@ describe('#errorHandling', () => {
             }
           }, clientType);
           statsd.increment('a', 42, null);
-          server.on('metrics', () => {
-            done();
-          });
+        });
+        server.on('metrics', () => {
+          done();
         });
       });
 
@@ -103,7 +115,8 @@ describe('#errorHandling', () => {
             protocol: serverType,
             errorHandler(e) {
               assert.equal(e, err);
-              closeAll(server, statsd, true, done);
+              ignoreErrors = true;
+              done();
             }
           }, clientType);
           statsd.dnsError = err;
@@ -125,8 +138,9 @@ describe('#errorHandling', () => {
 
         statsd.send('test title', [], error => {
           assert.ok(error);
-          assert.equal(error.code, 'ENOTFOUND');
+          assert.equal(error.code, serverType === 'uds' ? '-2' : 'ENOTFOUND');
           // skip closing, because the unresolvable host hangs
+          statsd = null;
           done();
         });
       });
@@ -135,10 +149,13 @@ describe('#errorHandling', () => {
         statsd = createHotShotsClient({
           host: '...',
           protocol: serverType,
-          errorHandler(e) {
-            assert.ok(e);
-            assert.equal(e.code, 'ENOTFOUND');
+          errorHandler(error) {
+            assert.ok(error);
+            if (serverType !== 'uds') {
+              assert.equal(error.code, 'ENOTFOUND');
+            }
             // skip closing, because the unresolvable host hangs
+            statsd = null;
             done();
           }
         }, clientType);
@@ -153,8 +170,11 @@ describe('#errorHandling', () => {
 
         statsd.socket.on('error', error => {
           assert.ok(error);
-          assert.equal(error.code, 'ENOTFOUND');
-          statsd.close();
+          if (serverType !== 'uds') {
+            assert.equal(error.code, 'ENOTFOUND');
+          }
+          // skip closing, because the unresolvable host hangs
+          statsd = null;
           done();
         });
 

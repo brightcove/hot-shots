@@ -23,6 +23,8 @@ describe('#init', () => {
     else {
       closeAll(server, statsd, false, done);
     }
+    server = null;
+    statsd = null;
     global.statsd = undefined;
     skipClose = false;
     delete process.env.DD_AGENT_HOST;

@@ -8,7 +8,7 @@ const testTypes = helpers.testTypes;
 const createServer = helpers.createServer;
 const createHotShotsClient = helpers.createHotShotsClient;
 
-const TIMER_BUFFER = 200;
+const TIMER_BUFFER = 1000;
 
 describe('#timer', () => {
   let server;
@@ -16,6 +16,8 @@ describe('#timer', () => {
 
   afterEach(done => {
     closeAll(server, statsd, false, done);
+    server = null;
+    statsd = null;
   });
 
   testTypes().forEach(([description, serverType, clientType]) => {
