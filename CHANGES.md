@@ -1,8 +1,10 @@
 CHANGELOG
 =========
 
-## Unreleased
+## 6.3.0 (2019-5-18)
 * @paguillama Fix user defined tag example on README optional parameters
+* @gabsn Initial support for uds protocol
+* @bdeitte Updated and fixed up uds protcol support
 
 ## 6.2.0 (2019-4-10)
 * @ahmed-mez Add support for env variables DD_AGENT_HOST,
