@@ -90,7 +90,11 @@ The check method has the following API:
 
 ```javascript
   var StatsD = require('hot-shots'),
-      client = new StatsD({ port: 8020, globalTags: { env: process.env.NODE_ENV }, errorHandler: errorHandler });
+      client = new StatsD({
+          port: 8020,
+          globalTags: { env: process.env.NODE_ENV },
+          errorHandler: errorHandler,
+      });
 
   // Timing: sends a timing command with the specified milliseconds
   client.timing('response_time', 42);
@@ -120,7 +124,8 @@ The check method has the following API:
   // Histogram: send data for histogram stat (DataDog and Telegraf only)
   client.histogram('my_histogram', 42);
 
-  // Distribution: Tracks the statistical distribution of a set of values across your infrastructure. (DataDog v6)
+  // Distribution: Tracks the statistical distribution of a set of values across your infrastructure.
+  // (DataDog v6)
   client.distribution('my_distribution', 42);
 
   // Gauge: Gauge a stat by a specified amount
@@ -145,7 +150,8 @@ The check method has the following API:
   // Sampling, this will sample 25% of the time the StatsD Daemon will compensate for sampling
   client.increment('my_counter', 1, 0.25);
 
-  // Tags, this will add user-defined tags to the data (DataDog and Telegraf only)
+  // Tags, this will add user-defined tags to the data
+  // (DataDog and Telegraf only)
   client.histogram('my_histogram', 42, ['foo', 'bar']);
 
   // Using the callback.  This is the same format for the callback
