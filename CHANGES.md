@@ -1,6 +1,8 @@
 CHANGELOG
 =========
 
+* @jhoch README clarifications
+
 ## 6.3.0 (2019-5-18)
 * @paguillama Fix user defined tag example on README optional parameters
 * @gabsn Initial support for uds protocol
