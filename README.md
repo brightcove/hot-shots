@@ -46,7 +46,8 @@ Parameters (specified as one object passed into hot-shots):
 * `protocol`: Use `tcp` option for TCP protocol, or `uds` for the Unix Domain Socket protocol. Defaults to UDP otherwise
 * `path`: Used only when the protocol is `uds`. Defaults to `/var/run/datadog/dsd.socket`.
 
-All StatsD methods other than event and close have the same API:
+### StatsD methods
+All StatsD methods other than `event`, `close`, and `check` have the same API:
 * `name`:       Stat name `required`
 * `value`:      Stat value `required except in increment/decrement where it defaults to 1/-1 respectively`
 * `sampleRate`: Sends only a sample of data to StatsD `default: 1`
@@ -55,10 +56,12 @@ All StatsD methods other than event and close have the same API:
 
 If an array is specified as the `name` parameter each item in that array will be sent along with the specified value.
 
+#### `close`
 The close method has the following API:
 
 * `callback`:   The callback to execute once close is complete.  All other calls to statsd will fail once this is called.
 
+#### `event`
 The event method has the following API:
 
 * `title`:       Event title `required`
@@ -73,6 +76,7 @@ The event method has the following API:
 * `tags`:       The tags to add to metrics. Can be either an object `{ tag: "value"}` or an array of tags. `default: []`
 * `callback`:   The callback to execute once the metric has been sent.
 
+#### `check`
 The check method has the following API:
 
 * `name`:        Check name `required`
@@ -86,7 +90,11 @@ The check method has the following API:
 
 ```javascript
   var StatsD = require('hot-shots'),
-      client = new StatsD({ port: 8020, globalTags: { env: process.env.NODE_ENV }, errorHandler: errorHandler });
+      client = new StatsD({
+          port: 8020,
+          globalTags: { env: process.env.NODE_ENV },
+          errorHandler: errorHandler,
+      });
 
   // Timing: sends a timing command with the specified milliseconds
   client.timing('response_time', 42);
@@ -116,7 +124,8 @@ The check method has the following API:
   // Histogram: send data for histogram stat (DataDog and Telegraf only)
   client.histogram('my_histogram', 42);
 
-  // Distribution: Tracks the statistical distribution of a set of values across your infrastructure. (DataDog v6)
+  // Distribution: Tracks the statistical distribution of a set of values across your infrastructure.
+  // (DataDog v6)
   client.distribution('my_distribution', 42);
 
   // Gauge: Gauge a stat by a specified amount
@@ -141,7 +150,8 @@ The check method has the following API:
   // Sampling, this will sample 25% of the time the StatsD Daemon will compensate for sampling
   client.increment('my_counter', 1, 0.25);
 
-  // Tags, this will add user-defined tags to the data (DataDog and Telegraf only)
+  // Tags, this will add user-defined tags to the data
+  // (DataDog and Telegraf only)
   client.histogram('my_histogram', 42, ['foo', 'bar']);
 
   // Using the callback.  This is the same format for the callback
@@ -215,12 +225,12 @@ var client = new StatsD({
 
 ## Unix domain socket support
 
-The 'uds' option as the protocol is to support [Unix Domain Sockets for Datadog](https://docs.datadoghq.com/developers/dogstatsd/unix_socket/).  It has the following limitations on where it will work:
-- Does not work on Windows
-- Does not currently work on Node 12
-- Systems where 'node-gyp' works. If you don't know what this is, this
+The 'uds' option as the protocol is to support [Unix Domain Sockets for Datadog](https://docs.datadoghq.com/developers/dogstatsd/unix_socket/).  It has the following limitations:
+- It only works where 'node-gyp' works. If you don't know what this is, this
 is probably fine for you. If you had an troubles with libraries that
 you 'node-gyp' before, you will have problems here as well.
+- It does not work on Windows
+- It does not currently work on Node 12
 
 The above will cause the underlying library that is used, unix-dgram,
 to not install properly.  Given the library is listed as an
