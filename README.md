@@ -230,7 +230,6 @@ The 'uds' option as the protocol is to support [Unix Domain Sockets for Datadog]
 is probably fine for you. If you had an troubles with libraries that
 you 'node-gyp' before, you will have problems here as well.
 - It does not work on Windows
-- It does not currently work on Node 12
 
 The above will cause the underlying library that is used, unix-dgram,
 to not install properly.  Given the library is listed as an
