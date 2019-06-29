@@ -81,7 +81,7 @@ function testTypes() {
     [`${TCP} ${CHILD_CLIENT}`, TCP, CHILD_CLIENT, TCP_METRIC_END]];
 
   // Not everywhere can run UDS, and we don't want to fail the tests in those places
-  if (os.platform() !== 'win32' &&  ! process.version.startsWith('v12.')) {
+  if (os.platform() !== 'win32') {
     testTypesArr.push([`${UDS} ${CLIENT}`, UDS, CLIENT, UDS_METRIC_END]);
     testTypesArr.push([`${UDS} ${CHILD_CLIENT}`, UDS, CLIENT, UDS_METRIC_END]);
   }
@@ -95,7 +95,7 @@ function testProtocolTypes() {
   const protTypesArr = [[`${UDP} ${CLIENT}`, UDP, CLIENT, UDP_METRIC_END],
     [`${TCP} ${CLIENT}`, TCP, CLIENT, TCP_METRIC_END]];
   // Not everywhere can run UDS, and we don't want to fail the tests in those places
-  if (os.platform() !== 'win32' &&  ! process.version.startsWith('v12.')) {
+  if (os.platform() !== 'win32') {
     protTypesArr.push([`${UDS} ${CLIENT}`, UDS, CLIENT, UDS_METRIC_END]);
   }
   return protTypesArr;
