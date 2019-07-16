@@ -185,7 +185,6 @@ describe('#errorHandling', () => {
         it('should re-create the socket on 111 error for type uds', (done) => {
           const code = 111;
           const realDateNow = Date.now;
-          console.log(Date.now, realDateNow);
           Date.now = () => '4857394578';
           // emit an error, like a socket would
           // 111 is connection refused
