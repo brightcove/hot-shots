@@ -50,6 +50,123 @@ describe('#errorHandling', () => {
     });
   });
 
+  it('should re-create the socket on 111 error for type uds', (done) => {
+    const code = 111;
+    const realDateNow = Date.now;
+    console.log(Date.now, realDateNow);
+    Date.now = () => '4857394578';
+    // emit an error, like a socket would
+    // 111 is connection refused
+    server = createServer('uds_broken', address => {
+      const client = statsd = createHotShotsClient({
+        host: address.address,
+        port: address.port,
+        protocol: 'uds',
+        udsGracefulErrorHandling: true,
+        errorHandler(error) {
+          assert.ok(error);
+          assert.equal(error.code, code);
+        }
+      }, 'client');
+      const initialSocket = client.socket;
+      setTimeout(() => {
+        initialSocket.emit('error', { code });
+        assert.ok(Object.is(initialSocket, client.socket));
+        // it should not create the socket if it breaks too quickly
+        // change time and make another error
+        Date.now = () => 4857394578 + 1000; // 1 second later
+        initialSocket.emit('error', { code });
+        setTimeout(() => {
+          // make sure the socket was re-created
+          assert.notEqual(initialSocket, client.socket);
+          // put things back
+          Date.now = realDateNow;
+          done();
+        }, 5);
+      }, 5);
+    });
+  });
+
+  it('should re-create the socket on 107 error for type uds', (done) => {
+    const code = 107;
+    const realDateNow = Date.now;
+    Date.now = () => '4857394578';
+    // emit an error, like a socket would
+    // 111 is connection refused
+    server = createServer('uds_broken', address => {
+      const client = statsd = createHotShotsClient({
+        host: address.address,
+        port: address.port,
+        protocol: 'uds',
+        udsGracefulErrorHandling: true,
+        errorHandler(error) {
+          assert.ok(error);
+          assert.equal(error.code, code);
+        }
+      }, 'client');
+      const initialSocket = client.socket;
+      setTimeout(() => {
+        initialSocket.emit('error', { code });
+        assert.ok(Object.is(initialSocket, client.socket));
+        // it should not create the socket if it breaks too quickly
+        // change time and make another error
+        Date.now = () => 4857394578 + 1000; // 1 second later
+        initialSocket.emit('error', { code });
+        setTimeout(() => {
+          // make sure the socket was re-created
+          assert.notEqual(initialSocket, client.socket);
+          // put things back
+          Date.now = realDateNow;
+          done();
+        }, 5);
+      }, 5);
+    });
+  });
+
+  it('should re-create the socket on error for type uds with the configurable limit', (done) => {
+    const code = 111;
+    const limit = 4000;
+    const realDateNow = Date.now;
+    Date.now = () => '4857394578';
+    // emit an error, like a socket would
+    // 111 is connection refused
+    server = createServer('uds_broken', address => {
+      const client = statsd = createHotShotsClient({
+        host: address.address,
+        port: address.port,
+        protocol: 'uds',
+        udsGracefulErrorHandling: true,
+        udsGracefulRestartRateLimit: limit,
+        errorHandler(error) {
+          assert.ok(error);
+          assert.equal(error.code, code);
+        }
+      }, 'client');
+      const initialSocket = client.socket;
+      setTimeout(() => {
+        initialSocket.emit('error', { code });
+        assert.ok(Object.is(initialSocket, client.socket));
+        // it should not create the socket if it breaks too quickly
+        // change time and make another error
+        Date.now = () => 4857394578 + 1000; // 1 second later
+        initialSocket.emit('error', { code });
+        setTimeout(() => {
+          // make sure the socket was NOT re-created
+          assert.equal(initialSocket, client.socket);
+          Date.now = () => 4857394578 + limit; // 1 second later
+          initialSocket.emit('error', { code });
+          setTimeout(() => {
+            // make sure the socket was re-created
+            assert.notEqual(initialSocket, client.socket);
+            // put things back
+            Date.now = realDateNow;
+            done();
+          }, 5);
+        }, 5);
+      }, 5);
+    });
+  });
+
   testTypes().forEach(([description, serverType, clientType]) => {
     describe(description, () => {
       it('should not use errorHandler when there is not an error', done => {
