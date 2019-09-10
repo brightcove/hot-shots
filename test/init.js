@@ -166,6 +166,24 @@ describe('#init', () => {
     statsd = createHotShotsClient({ host: 'localhost', cacheDns: true }, clientType);
   });
 
+  it('should attempt to cache a dns record if dnsCache is specified and DD_AGENT_HOST is set', done => {
+    const originalLookup = dns.lookup;
+
+    // Replace the dns lookup function with our mock dns lookup
+    dns.lookup = (host, callback) => {
+      process.nextTick(() => {
+        dns.lookup = originalLookup;
+        assert.equal(statsd.host, host);
+        callback(null, '127.0.0.1', 4);
+        assert.equal(statsd.host, '127.0.0.1');
+        done();
+      });
+    };
+
+    process.env.DD_AGENT_HOST = 'localhost';
+    statsd = createHotShotsClient({ cacheDns: true }, clientType);
+  });
+
   it('should not attempt to cache a dns record if dnsCache is not specified', done => {
     const originalLookup = dns.lookup;
 
