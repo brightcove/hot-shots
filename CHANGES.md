@@ -1,6 +1,9 @@
 CHANGELOG
 =========
 
+## 6.4.1 (2019-9-19)
+* @jfirebaugh Fix cacheDns option when obtaining host from DD_AGENT_HOST
+
 ## 6.4.0 (2019-6-28)
 * @tghaas Add Node 12 support to uds protocol support
 * @jhoch README clarifications
