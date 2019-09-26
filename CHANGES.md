@@ -1,6 +1,15 @@
 CHANGELOG
 =========
 
+## 6.5.0 (2019-9-19)
+* @bdeitte Update decrement to handle missing arguments the same way
+that increment does
+* @bdeitte Document that memory may grow unbounded in mock mode
+* @bdeitte Only load in unix-dgram library when uds protocol in use
+
+## 6.4.1 (2019-9-19)
+* @jfirebaugh Fix cacheDns option when obtaining host from DD_AGENT_HOST
+
 ## 6.4.0 (2019-6-28)
 * @tghaas Add Node 12 support to uds protocol support
 * @jhoch README clarifications

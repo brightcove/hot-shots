@@ -267,6 +267,36 @@ describe('#statsFunctions', () => {
           });
         });
 
+        it('should send default count -1 with tags', done => {
+          server = createServer(serverType, address => {
+            statsd = createHotShotsClient({
+              host: address.address,
+              port: address.port,
+              protocol: serverType
+            }, clientType);
+            statsd.decrement('test', ['foo', 'bar']);
+          });
+          server.on('metrics', metrics => {
+            assert.equal(metrics, `test:-1|c|#foo,bar${metricsEnd}`);
+            done();
+          });
+        });
+
+        it('should send tags when sampleRate is omitted', done => {
+          server = createServer(serverType, address => {
+            statsd = createHotShotsClient({
+              host: address.address,
+              port: address.port,
+              protocol: serverType
+            }, clientType);
+            statsd.decrement('test', 23, ['foo', 'bar']);
+          });
+          server.on('metrics', metrics => {
+            assert.equal(metrics, `test:-23|c|#foo,bar${metricsEnd}`);
+            done();
+          });
+        });
+
         it('should send proper count format with tags', done => {
           server = createServer(serverType, address => {
             statsd = createHotShotsClient({

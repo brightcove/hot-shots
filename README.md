@@ -33,9 +33,11 @@ Parameters (specified as one object passed into hot-shots):
 * `port`:        The port to send stats to, if not set, the constructor tries to retrieve it from the `DD_DOGSTATSD_PORT` environment variable, `default: 8125`
 * `prefix`:      What to prefix each stat name with `default: ''`
 * `suffix`:      What to suffix each stat name with `default: ''`
-* `globalize`:   Expose this StatsD instance globally? `default: false`
+* `globalize`:   Expose this StatsD instance globally. `default: false`
 * `cacheDns`:    Cache the initial dns lookup to *host* `default: false`
-* `mock`:        Create a mock StatsD instance, sending no stats to the server and allowing data to be read from mockBuffer? `default: false`
+* `mock`:        Create a mock StatsD instance, sending no stats to
+  the server and allowing data to be read from mockBuffer.  Note that
+  mockBuffer will keep growing, so only use for testing or clear out periodically. `default: false`
 * `globalTags`:  Tags that will be added to every metric. Can be either an object or list of tags. The *Datadog* `dd.internal.entity_id` tag is appended to `globalTags` from the `DD_ENTITY_ID` environment variable if the latter is set. `default: {}`
 * `maxBufferSize`: If larger than 0,  metrics will be buffered and only sent when the string length is greater than the size. `default: 0`
 * `bufferFlushInterval`: If buffering is in use, this is the time in ms to always flush any buffered metrics. `default: 1000`
