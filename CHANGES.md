@@ -2,7 +2,7 @@ CHANGELOG
 =========
 
 ## 6.5.1 (2019-9-28)
-@msiebuhr Fix crasher when closing Unix Datagram Sockets without callback
+* @msiebuhr Fix crasher when closing Unix Datagram Sockets without callback
 
 ## 6.5.0 (2019-9-22)
 * @bdeitte Update decrement to handle missing arguments the same way
