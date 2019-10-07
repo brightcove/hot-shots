@@ -1,7 +1,7 @@
 CHANGELOG
 =========
 
-## 6.6.0 (2019-10-7
+## 6.6.0 (2019-10-7)
 * @NinjaBanjo @msiebuhr Add udsGracefulErrorHandling, ensuring uds
   handles socket errors gracefully
 
