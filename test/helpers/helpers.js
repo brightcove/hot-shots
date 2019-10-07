@@ -22,6 +22,7 @@ const TCP = 'tcp';
 const UDP = 'udp';
 const UDS = 'uds';
 const TCP_BROKEN = 'tcp_broken';
+const UDS_BROKEN = 'uds_broken';
 
 // tcp puts a newline at the end but udp/uds do not
 const TCP_METRIC_END = '\n';
@@ -127,6 +128,26 @@ function createServer(serverType, onListening) {
     server = unixDgram.createSocket('unix_dgram', buf => {
       const metrics = buf.toString();
       server.emit('metrics', metrics);
+    });
+    server.on('listening', () => {
+      onListening('127.0.0.1');
+    });
+    server.on('error', (err) => {
+      console.log('uds connection failed', err);
+      onListening('127.0.0.1');
+    });
+    server.bind(UDS_TEST_PATH);
+  }
+  else if (serverType === UDS_BROKEN) {
+    // we always have to manually unlink the test socket
+    if (fs.existsSync(UDS_TEST_PATH)) { // eslint-disable-line no-sync
+      fs.unlinkSync(UDS_TEST_PATH); // eslint-disable-line no-sync
+    }
+
+    server = unixDgram.createSocket('unix_dgram', buf => {
+      const metrics = buf.toString();
+      server.emit('metrics', metrics);
+      server.close();
     });
     server.on('listening', () => {
       onListening('127.0.0.1');

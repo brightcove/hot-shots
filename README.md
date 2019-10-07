@@ -47,6 +47,8 @@ Parameters (specified as one object passed into hot-shots):
 * `useDefaultRoute`: Use the default interface on a Linux system. Useful when running in containers
 * `protocol`: Use `tcp` option for TCP protocol, or `uds` for the Unix Domain Socket protocol. Defaults to UDP otherwise
 * `path`: Used only when the protocol is `uds`. Defaults to `/var/run/datadog/dsd.socket`.
+* `udsGracefulErrorHandling`: Used only when the protocol is `uds`. Boolean indicating whether to handle socket errors gracefully. Defaults to true.
+* `udsGracefulRestartRateLimit`: Used only when the protocol is `uds`. Time (ms) between re-creating the socket. Defaults to `1000`.
 
 ### StatsD methods
 All StatsD methods other than `event`, `close`, and `check` have the same API:
