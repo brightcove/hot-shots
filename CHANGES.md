@@ -1,6 +1,10 @@
 CHANGELOG
 =========
 
+## 6.6.0 (2019-10-7
+* @NinjaBanjo @msiebuhr Add udsGracefulErrorHandling, ensuring uds
+  handles socket errors gracefully
+
 ## 6.5.1 (2019-9-28)
 * @msiebuhr Fix crasher when closing Unix Datagram Sockets without callback
 
