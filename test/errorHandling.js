@@ -6,7 +6,7 @@ const testTypes = helpers.testTypes;
 const createServer = helpers.createServer;
 const createHotShotsClient = helpers.createHotShotsClient;
 
-describe('#errorHandling', () => {
+describe.only('#errorHandling', () => {
   let server;
   let statsd;
   let ignoreErrors;
@@ -138,7 +138,8 @@ describe('#errorHandling', () => {
 
         statsd.send('test title', [], error => {
           assert.ok(error);
-          assert.equal(error.code, serverType === 'uds' ? '-2' : 'ENOTFOUND');
+          console.log('>>>', error.code, error);
+          assert.equal(error.code, serverType === 'uds' ? -61 : 'ENOTFOUND');
           // skip closing, because the unresolvable host hangs
           statsd = null;
           done();
