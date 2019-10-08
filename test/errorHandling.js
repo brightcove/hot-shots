@@ -127,19 +127,18 @@ describe.only('#errorHandling', () => {
       it('should errback for an unresolvable host', done => {
         // this does not work for tcp, which throws an error during setup
         // that needs errorHandler or a socket.on('error') handler
-        if (serverType === 'tcp') {
+        if (serverType !== 'udp') {
           return done();
         }
 
-       statsd = createHotShotsClient({
+        statsd = createHotShotsClient({
           host: '...',
           protocol: serverType
         }, clientType);
 
         statsd.send('test title', [], error => {
           assert.ok(error);
-          console.log('>>>', error.code, error);
-          assert.equal(error.code, serverType === 'uds' ? -61 : 'ENOTFOUND');
+          assert.equal(error.code, 'ENOTFOUND');
           // skip closing, because the unresolvable host hangs
           statsd = null;
           done();
@@ -147,6 +146,10 @@ describe.only('#errorHandling', () => {
       });
 
       it('should use errorHandler for an unresolvable host', done => {
+        // Test is not applicable for udf/stream transports
+        if (!['tcp', 'udp'].includes(serverType)) {
+          return done();
+        }
         statsd = createHotShotsClient({
           host: '...',
           protocol: serverType,
@@ -164,6 +167,10 @@ describe.only('#errorHandling', () => {
       });
 
       it('should throw error on socket for an unresolvable host', done => {
+        // Test is not applicable for udf/stream transports
+        if (!['tcp', 'udp'].includes(serverType)) {
+          return done();
+        }
         statsd = createHotShotsClient({
           host: '...',
           protocol: serverType
