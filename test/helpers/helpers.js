@@ -120,7 +120,7 @@ function createServer(serverType, onListening) {
     server.bind(0, '127.0.0.1');
   }
   else if (serverType === UDS) {
-    // we always have to manually unlink the test socket
+    // We always have to manually unlink the test socket
     if (fs.existsSync(UDS_TEST_PATH)) { // eslint-disable-line no-sync
       fs.unlinkSync(UDS_TEST_PATH); // eslint-disable-line no-sync
     }
@@ -133,7 +133,7 @@ function createServer(serverType, onListening) {
       onListening('127.0.0.1');
     });
     server.on('error', (err) => {
-      console.log('uds connection failed', err);
+      console.error('Error: uds connection failed', err);
       onListening('127.0.0.1');
     });
     server.bind(UDS_TEST_PATH);
@@ -203,6 +203,8 @@ function createServer(serverType, onListening) {
  * @param {*} clientType
  */
 function createHotShotsClient(args, clientType) {
+  // FIXME: This is inconsistent with the rest.
+  // Fn `createServer` should be returning the path instead.
   if (args.protocol === UDS) {
     args.path = UDS_TEST_PATH;
   }
