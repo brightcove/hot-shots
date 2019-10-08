@@ -146,7 +146,7 @@ describe('#errorHandling', () => {
       });
 
       it('should use errorHandler for an unresolvable host', done => {
-        // Test is not applicable for udf/stream transports
+        // Test is not applicable for uds/stream transports
         if (!['tcp', 'udp'].includes(serverType)) {
           return done();
         }
@@ -167,7 +167,7 @@ describe('#errorHandling', () => {
       });
 
       it('should throw error on socket for an unresolvable host', done => {
-        // Test is not applicable for udf/stream transports
+        // Test is not applicable for uds/stream transports
         if (!['tcp', 'udp'].includes(serverType)) {
           return done();
         }

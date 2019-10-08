@@ -5,7 +5,7 @@ const fs = require('fs');
 const os = require('os');
 const process = require('process');
 const StatsD = require('../../lib/statsd.js');
-
+const { PROTOCOL: { TCP, UDP, UDS } } = require('../../lib/constants');
 let unixDgram;
 try {
   // this will not always be available
@@ -18,9 +18,6 @@ catch (err) {
 const CLIENT = 'client';
 const CHILD_CLIENT = 'child client';
 const CHILD_CHILD_CLIENT = 'child child client';
-const TCP = 'tcp';
-const UDP = 'udp';
-const UDS = 'uds';
 const TCP_BROKEN = 'tcp_broken';
 const UDS_BROKEN = 'uds_broken';
 
