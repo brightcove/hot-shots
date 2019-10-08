@@ -6,7 +6,7 @@ const testTypes = helpers.testTypes;
 const createServer = helpers.createServer;
 const createHotShotsClient = helpers.createHotShotsClient;
 
-describe.only('#errorHandling', () => {
+describe('#errorHandling', () => {
   let server;
   let statsd;
   let ignoreErrors;
