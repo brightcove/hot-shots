@@ -1,6 +1,9 @@
 CHANGELOG
 =========
 
+## 6.7.0 (2019-10-9)
+* @runk Code refactoring to have abstract transports
+
 ## 6.6.0 (2019-10-7)
 * @NinjaBanjo @msiebuhr Add udsGracefulErrorHandling, ensuring uds
   handles socket errors gracefully
