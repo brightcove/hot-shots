@@ -5,7 +5,7 @@ const fs = require('fs');
 const os = require('os');
 const process = require('process');
 const StatsD = require('../../lib/statsd.js');
-const { PROTOCOL: { TCP, UDP, UDS } } = require('../../lib/constants');
+const { TCP, UDP, UDS } = require('../../lib/constants').PROTOCOL;
 let unixDgram;
 try {
   // this will not always be available

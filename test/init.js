@@ -5,6 +5,7 @@ const StatsD = require('../lib/statsd');
 const helpers = require('./helpers/helpers.js');
 
 const closeAll = helpers.closeAll;
+const createServer = helpers.createServer;
 const createHotShotsClient = helpers.createHotShotsClient;
 
 describe('#init', () => {
@@ -227,5 +228,23 @@ describe('#init', () => {
   it('should create a mock Client when mock variable is specified', () => {
     statsd = createHotShotsClient(['host', 1234, 'prefix', 'suffix', false, false, true], clientType);
     assert.ok(statsd.mock);
+  });
+
+  it('should create a socket variable that is an instance of dgram.Socket', () => {
+    statsd = createHotShotsClient({}, clientType);
+    assert.equal(statsd.socket.type, 'udp');
+    skipClose = true;
+  });
+
+  it('should create a socket variable that is an instance of net.Socket if set to TCP', done => {
+    server = createServer('tcp', address => {
+      statsd = createHotShotsClient({
+        host: address.address,
+        port: address.port,
+        protocol: 'tcp'
+      }, clientType);
+      assert.equal(statsd.socket.type, 'tcp');
+      done();
+    });
   });
 });
