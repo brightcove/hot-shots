@@ -1,7 +1,5 @@
 const assert = require('assert');
-const dgram = require('dgram');
 const dns = require('dns');
-const net = require('net');
 
 const StatsD = require('../lib/statsd');
 const helpers = require('./helpers/helpers.js');
@@ -234,7 +232,7 @@ describe('#init', () => {
 
   it('should create a socket variable that is an instance of dgram.Socket', () => {
     statsd = createHotShotsClient({}, clientType);
-    assert.ok(statsd.socket instanceof dgram.Socket);
+    assert.equal(statsd.socket.type, 'udp');
     skipClose = true;
   });
 
@@ -245,7 +243,7 @@ describe('#init', () => {
         port: address.port,
         protocol: 'tcp'
       }, clientType);
-      assert.ok(statsd.socket instanceof net.Socket);
+      assert.equal(statsd.socket.type, 'tcp');
       done();
     });
   });

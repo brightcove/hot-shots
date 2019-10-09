@@ -5,7 +5,7 @@ const fs = require('fs');
 const os = require('os');
 const process = require('process');
 const StatsD = require('../../lib/statsd.js');
-
+const { TCP, UDP, UDS } = require('../../lib/constants').PROTOCOL;
 let unixDgram;
 try {
   // this will not always be available
@@ -18,9 +18,6 @@ catch (err) {
 const CLIENT = 'client';
 const CHILD_CLIENT = 'child client';
 const CHILD_CHILD_CLIENT = 'child child client';
-const TCP = 'tcp';
-const UDP = 'udp';
-const UDS = 'uds';
 const TCP_BROKEN = 'tcp_broken';
 const UDS_BROKEN = 'uds_broken';
 
@@ -120,7 +117,7 @@ function createServer(serverType, onListening) {
     server.bind(0, '127.0.0.1');
   }
   else if (serverType === UDS) {
-    // we always have to manually unlink the test socket
+    // We always have to manually unlink the test socket
     if (fs.existsSync(UDS_TEST_PATH)) { // eslint-disable-line no-sync
       fs.unlinkSync(UDS_TEST_PATH); // eslint-disable-line no-sync
     }
@@ -133,7 +130,7 @@ function createServer(serverType, onListening) {
       onListening('127.0.0.1');
     });
     server.on('error', (err) => {
-      console.log('uds connection failed', err);
+      console.error('Error: uds connection failed', err);
       onListening('127.0.0.1');
     });
     server.bind(UDS_TEST_PATH);
@@ -203,6 +200,8 @@ function createServer(serverType, onListening) {
  * @param {*} clientType
  */
 function createHotShotsClient(args, clientType) {
+  // FIXME: This is inconsistent with the rest.
+  // Fn `createServer` should be returning the path instead.
   if (args.protocol === UDS) {
     args.path = UDS_TEST_PATH;
   }
