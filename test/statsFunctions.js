@@ -83,7 +83,7 @@ describe('#statsFunctions', () => {
                 port: address.port,
                 protocol: serverType,
                 maxBufferSize: 1000,
-                bufferFlushInterval: 200
+                bufferFlushInterval: 5
               }, clientType);
               statsd[statFunction.name](['a', 'b'], 42, null, (error) => {
                 called += 1;
@@ -235,7 +235,7 @@ describe('#statsFunctions', () => {
               port: address.port,
               protocol: serverType,
               maxBufferSize: 1000,
-              bufferFlushInterval: 200
+              bufferFlushInterval: 5
             }, clientType);
             statsd.increment(['a', 'b'], 42, null, (error, bytes) => {
               called += 1;
@@ -341,7 +341,7 @@ describe('#statsFunctions', () => {
               port: address.port,
               protocol: serverType,
               maxBufferSize: 1000,
-              bufferFlushInterval: 200
+              bufferFlushInterval: 5
             }, clientType);
             statsd.decrement(['a', 'b'], 42, null, (error, bytes) => {
               called += 1;
