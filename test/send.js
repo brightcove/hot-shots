@@ -17,30 +17,24 @@ describe('#send', () => {
   testTypes().forEach(([description, serverType, clientType]) => {
     describe(description, () => {
       it('should use errorHandler', done => {
-        server = createServer(serverType, address => {
+        server = createServer(serverType, opts => {
           const err = new Error('Boom!');
-          statsd = createHotShotsClient({
-            host: address.address,
-            port: address.port,
-            protocol: serverType,
+          statsd = createHotShotsClient(Object.assign(opts, {
             errorHandler(e) {
               assert.equal(e, err);
               done();
             }
-          }, clientType);
+          }), clientType);
           statsd.dnsError = err;
           statsd.send('test title');
         });
       });
 
       it('should record buffers when mocked', done => {
-        server = createServer(serverType, address => {
-          statsd = createHotShotsClient({
-            host: address.address,
-            port: address.port,
-            protocol: serverType,
+        server = createServer(serverType, opts => {
+          statsd = createHotShotsClient(Object.assign(opts, {
             mock: true
-          }, clientType);
+          }), clientType);
           statsd.send('test', {}, () => {
             assert.deepEqual(statsd.mockBuffer, ['test']);
             done();

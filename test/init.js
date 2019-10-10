@@ -237,12 +237,8 @@ describe('#init', () => {
   });
 
   it('should create a socket variable that is an instance of net.Socket if set to TCP', done => {
-    server = createServer('tcp', address => {
-      statsd = createHotShotsClient({
-        host: address.address,
-        port: address.port,
-        protocol: 'tcp'
-      }, clientType);
+    server = createServer('tcp', opts => {
+      statsd = createHotShotsClient(opts, clientType);
       assert.equal(statsd.socket.type, 'tcp');
       done();
     });

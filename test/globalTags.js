@@ -18,12 +18,8 @@ describe('#globalTags', () => {
   testTypes().forEach(([description, serverType, clientType, metricEnd]) => {
     describe(description, () => {
       it('should not add global tags if they are not specified', done => {
-        server = createServer(serverType, address => {
-          statsd = createHotShotsClient({
-            host: address.address,
-            port: address.port,
-            protocol: serverType
-          }, clientType);
+        server = createServer(serverType, opts => {
+          statsd = createHotShotsClient(opts, clientType);
           statsd.increment('test');
         });
         server.on('metrics', metrics => {
@@ -33,13 +29,10 @@ describe('#globalTags', () => {
       });
 
       it('should add global tags if they are specified', done => {
-        server = createServer(serverType, address => {
-          statsd = createHotShotsClient({
-            host: address.address,
-            port: address.port,
+        server = createServer(serverType, opts => {
+          statsd = createHotShotsClient(Object.assign(opts, {
             global_tags: ['gtag'],
-            protocol: serverType
-          }, clientType);
+          }), clientType);
           statsd.increment('test');
         });
         server.on('metrics', metrics => {
@@ -52,13 +45,10 @@ describe('#globalTags', () => {
         // set the DD_ENTITY_ID env var
         process.env.DD_ENTITY_ID = '04652bb7-19b7-11e9-9cc6-42010a9c016d';
 
-        server = createServer(serverType, address => {
-          statsd = createHotShotsClient({
-            host: address.address,
-            port: address.port,
+        server = createServer(serverType, opts => {
+          statsd = createHotShotsClient(Object.assign(opts, {
             global_tags: ['gtag'],
-            protocol: serverType
-          }, clientType);
+          }), clientType);
           statsd.increment('test');
         });
         server.on('metrics', metrics => {
@@ -68,13 +58,10 @@ describe('#globalTags', () => {
       });
 
       it('should combine global tags and metric tags', done => {
-        server = createServer(serverType, address => {
-          statsd = createHotShotsClient({
-            host: address.address,
-            port: address.port,
+        server = createServer(serverType, opts => {
+          statsd = createHotShotsClient(Object.assign(opts, {
             global_tags: ['gtag'],
-            protocol: serverType
-          }, clientType);
+          }), clientType);
           statsd.increment('test', 1337, ['foo']);
         });
         server.on('metrics', metrics => {
@@ -84,13 +71,10 @@ describe('#globalTags', () => {
       });
 
       it('should override global tags with metric tags', done => {
-        server = createServer(serverType, address => {
-          statsd = createHotShotsClient({
-            host: address.address,
-            port: address.port,
+        server = createServer(serverType, opts => {
+          statsd = createHotShotsClient(Object.assign(opts, {
             global_tags: ['foo', 'gtag:123'],
-            protocol: serverType
-          }, clientType);
+          }), clientType);
           statsd.increment('test', 1337, ['gtag:234', 'bar']);
         });
         server.on('metrics', metrics => {
@@ -100,13 +84,10 @@ describe('#globalTags', () => {
       });
 
       it('should format global tags', done => {
-        server = createServer(serverType, address => {
-          statsd = createHotShotsClient({
-            host: address.address,
-            port: address.port,
+        server = createServer(serverType, opts => {
+          statsd = createHotShotsClient(Object.assign(opts, {
             globalTags: { gtag: '123', foo: 'bar' },
-            protocol: serverType
-          }, clientType);
+          }), clientType);
           statsd.increment('test', 1337, { gtag: '234' });
         });
         server.on('metrics', metrics => {
@@ -116,13 +97,10 @@ describe('#globalTags', () => {
       });
 
       it('should replace reserved characters with underscores in tags', done => {
-        server = createServer(serverType, address => {
-          statsd = createHotShotsClient({
-            host: address.address,
-            port: address.port,
+        server = createServer(serverType, opts => {
+          statsd = createHotShotsClient(Object.assign(opts, {
             globalTags: { foo: 'b,a,r' },
-            protocol: serverType
-          }, clientType);
+          }), clientType);
           statsd.increment('test', 1337, { 'reserved:character': 'is@replaced@' });
         });
         server.on('metrics', metrics => {
@@ -132,14 +110,11 @@ describe('#globalTags', () => {
       });
 
       it('should add global tags using telegraf format when enabled', done => {
-        server = createServer(serverType, address => {
-          statsd = createHotShotsClient({
-            host: address.address,
-            port: address.port,
+        server = createServer(serverType, opts => {
+          statsd = createHotShotsClient(Object.assign(opts, {
             globalTags: ['gtag:gvalue', 'gtag2:gvalue2'],
             telegraf: true,
-            protocol: serverType
-          }, clientType);
+          }), clientType);
           statsd.increment('test');
         });
         server.on('metrics', metrics => {
@@ -149,14 +124,11 @@ describe('#globalTags', () => {
       });
 
       it('should combine global tags and metric tags using telegraf format when enabled', done => {
-        server = createServer(serverType, address => {
-          statsd = createHotShotsClient({
-            host: address.address,
-            port: address.port,
+        server = createServer(serverType, opts => {
+          statsd = createHotShotsClient(Object.assign(opts, {
             globalTags: ['gtag=gvalue'],
             telegraf: true,
-            protocol: serverType
-          }, clientType);
+          }), clientType);
           statsd.increment('test', 1337, ['foo:bar']);
         });
         server.on('metrics', metrics => {
@@ -166,14 +138,11 @@ describe('#globalTags', () => {
       });
 
       it('should format global key-value tags using telegraf format when enabled', done => {
-        server = createServer(serverType, address => {
-          statsd = createHotShotsClient({
-            host: address.address,
-            port: address.port,
+        server = createServer(serverType, opts => {
+          statsd = createHotShotsClient(Object.assign(opts, {
             globalTags: { gtag: 'gvalue' },
             telegraf: true,
-            protocol: serverType
-          }, clientType);
+          }), clientType);
           statsd.increment('test', 1337, { foo: 'bar' });
         });
         server.on('metrics', metrics => {

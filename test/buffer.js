@@ -19,13 +19,10 @@ describe('#buffer', () => {
   testTypes().forEach(([description, serverType, clientType]) => {
     describe(description, () => {
       it('should aggregate packets when maxBufferSize is set to non-zero', done => {
-        server = createServer(serverType, address => {
-          statsd = createHotShotsClient({
-            host: address.address,
-            port: address.port,
+        server = createServer(serverType, opts => {
+          statsd = createHotShotsClient(Object.assign(opts, {
             maxBufferSize: 12,
-            protocol: serverType
-          }, clientType);
+          }), clientType);
           statsd.increment('a', 1);
           statsd.increment('b', 2);
         });
@@ -36,13 +33,10 @@ describe('#buffer', () => {
       });
 
       it('should behave correctly when maxBufferSize is set to zero', done => {
-        server = createServer(serverType, address => {
-          statsd = createHotShotsClient({
-            host: address.address,
-            port: address.port,
+        server = createServer(serverType, opts => {
+          statsd = createHotShotsClient(Object.assign(opts, {
             maxBufferSize: 0,
-            protocol: serverType
-          }, clientType);
+          }), clientType);
           statsd.increment('a', 1);
           statsd.increment('b', 2);
         });
@@ -51,8 +45,8 @@ describe('#buffer', () => {
         const expected = ['a:1|c', 'b:2|c'];
         server.on('metrics', metrics => {
           // one of the few places we have an actual test difference based on server type
-          if (serverType === 'udp' || serverType === 'uds') {
-            const index = expected.indexOf(metrics);
+          if (serverType === 'udp' || serverType === 'uds' || serverType === 'stream') {
+            const index = expected.indexOf(metrics.trim());
             assert.equal(index >= 0, true);
             expected.splice(index, 1);
             noOfMessages++;
@@ -69,13 +63,10 @@ describe('#buffer', () => {
       });
 
       it('should not send batches larger then maxBufferSize', done => {
-        server = createServer(serverType, address => {
-          statsd = createHotShotsClient({
-            host: address.address,
-            port: address.port,
+        server = createServer(serverType, opts => {
+          statsd = createHotShotsClient(Object.assign(opts, {
             maxBufferSize: 8,
-            protocol: serverType
-          }, clientType);
+          }), clientType);
           statsd.increment('a', 1);
           statsd.increment('b', 2);
         });
@@ -87,14 +78,11 @@ describe('#buffer', () => {
 
       it('should flush the buffer when timeout value elapsed', done => {
         let start;
-        server = createServer(serverType, address => {
-          statsd = createHotShotsClient({
-            host: address.address,
-            port: address.port,
+        server = createServer(serverType, opts => {
+          statsd = createHotShotsClient(Object.assign(opts, {
             maxBufferSize: 1220,
             bufferFlushInterval: 1100,
-            protocol: serverType
-          }, clientType);
+          }), clientType);
           start = new Date();
           statsd.increment('a', 1);
         });

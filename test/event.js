@@ -17,12 +17,8 @@ describe('#event', () => {
   testTypes().forEach(([description, serverType, clientType, metricEnd]) => {
     describe(description, () => {
       it('should send proper event format for title and text', done => {
-        server = createServer(serverType, address => {
-          statsd = createHotShotsClient({
-            host: address.address,
-            port: address.port,
-            protocol: serverType
-          }, clientType);
+        server = createServer(serverType, opts => {
+          statsd = createHotShotsClient(opts, clientType);
           statsd.event('test', 'description');
         });
         server.on('metrics', event => {
@@ -32,12 +28,8 @@ describe('#event', () => {
       });
 
       it('should reuse the title when when text is missing', done => {
-        server = createServer(serverType, address => {
-          statsd = createHotShotsClient({
-            host: address.address,
-            port: address.port,
-            protocol: serverType
-          }, clientType);
+        server = createServer(serverType, opts => {
+          statsd = createHotShotsClient(opts, clientType);
           statsd.event('test');
         });
         server.on('metrics', event => {
@@ -48,12 +40,8 @@ describe('#event', () => {
 
       it('should send proper event format for title, text, and options', done => {
         const date = new Date();
-        server = createServer(serverType, address => {
-          statsd = createHotShotsClient({
-            host: address.address,
-            port: address.port,
-            protocol: serverType
-          }, clientType);
+        server = createServer(serverType, opts => {
+          statsd = createHotShotsClient(opts, clientType);
           const options = {
             date_happened: date,
             hostname: 'host',
@@ -72,12 +60,8 @@ describe('#event', () => {
       });
 
       it('should send proper event format for title, text, some options, and tags', done => {
-        server = createServer(serverType, address => {
-          statsd = createHotShotsClient({
-            host: address.address,
-            port: address.port,
-            protocol: serverType
-          }, clientType);
+        server = createServer(serverType, opts => {
+          statsd = createHotShotsClient(opts, clientType);
           const options = {
             hostname: 'host'
           };
@@ -91,12 +75,8 @@ describe('#event', () => {
 
       it('should send proper event format for title, text, tags, and a callback', done => {
         let called = false;
-        server = createServer(serverType, address => {
-          statsd = createHotShotsClient({
-            host: address.address,
-            port: address.port,
-            protocol: serverType
-          }, clientType);
+        server = createServer(serverType, opts => {
+          statsd = createHotShotsClient(opts, clientType);
           statsd.event('test title', 'another desc', null, ['foo', 'bar'], () => {
             called = true;
           });
@@ -109,15 +89,12 @@ describe('#event', () => {
       });
 
       it('should send no event stat when a mock Client is used', done => {
-        server = createServer(serverType, address => {
-          statsd = createHotShotsClient({
-            host: address.address,
-            port: address.port,
+        server = createServer(serverType, opts => {
+          statsd = createHotShotsClient(Object.assign(opts, {
             prefix: 'prefix',
             suffix: 'suffix',
             mock: true,
-            protocol: serverType
-          }, clientType);
+          }), clientType);
 
           // Regression test for "undefined is not a function" with missing
           // callback on mock instance
@@ -133,16 +110,13 @@ describe('#event', () => {
       });
 
       it('should use errorHandler', done => {
-        server = createServer(serverType, address => {
-          statsd = createHotShotsClient({
-            host: address.address,
-            port: address.port,
+        server = createServer(serverType, opts => {
+          statsd = createHotShotsClient(Object.assign(opts, {
             telegraf: true,
-            protocol: serverType,
             errorHandler() {
               done();
             }
-          }, clientType);
+          }), clientType);
           statsd.event('test title', 'another desc');
         });
       });

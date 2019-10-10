@@ -3,9 +3,9 @@ const net = require('net');
 const path = require('path');
 const fs = require('fs');
 const os = require('os');
-const process = require('process');
 const StatsD = require('../../lib/statsd.js');
-const { TCP, UDP, UDS } = require('../../lib/constants').PROTOCOL;
+const EventEmitter = require('events');
+const { STREAM, TCP, UDP, UDS } = require('../../lib/constants').PROTOCOL;
 let unixDgram;
 try {
   // this will not always be available
@@ -23,10 +23,12 @@ const UDS_BROKEN = 'uds_broken';
 
 // tcp puts a newline at the end but udp/uds do not
 const TCP_METRIC_END = '\n';
+const STREAM_METRIC_END = '\n';
 const UDP_METRIC_END = '';
 const UDS_METRIC_END = '';
 
 const UDS_TEST_PATH = path.join(__dirname, 'test.sock');
+const STREAM_TEST_PATH = path.join(__dirname, 'dummy');
 
 // Since sampling uses random, we need to patch Math.random() to always give
 // a consistent result
@@ -83,6 +85,9 @@ function testTypes() {
     testTypesArr.push([`${UDS} ${CLIENT}`, UDS, CLIENT, UDS_METRIC_END]);
     testTypesArr.push([`${UDS} ${CHILD_CLIENT}`, UDS, CLIENT, UDS_METRIC_END]);
   }
+
+  testTypesArr.push([`${STREAM} ${CLIENT}`, STREAM, CLIENT, STREAM_METRIC_END]);
+  testTypesArr.push([`${STREAM} ${CHILD_CLIENT}`, STREAM, CLIENT, STREAM_METRIC_END]);
   return testTypesArr;
 }
 
@@ -102,7 +107,9 @@ function testProtocolTypes() {
 /**
  * Create statsd server to send messages to for testing
  */
-function createServer(serverType, onListening) {
+function createServer(serverType, callback) {
+  const onListening = (opts) => callback(Object.assign(opts, { protocol: serverType }));
+
   let server;
   if (serverType === UDP) {
     server = dgram.createSocket('udp4');
@@ -127,11 +134,11 @@ function createServer(serverType, onListening) {
       server.emit('metrics', metrics);
     });
     server.on('listening', () => {
-      onListening('127.0.0.1');
+      onListening({ path: UDS_TEST_PATH });
     });
     server.on('error', (err) => {
       console.error('Error: uds connection failed', err);
-      onListening('127.0.0.1');
+      onListening({ path: UDS_TEST_PATH });
     });
     server.bind(UDS_TEST_PATH);
   }
@@ -147,11 +154,11 @@ function createServer(serverType, onListening) {
       server.close();
     });
     server.on('listening', () => {
-      onListening('127.0.0.1');
+      onListening({ path: UDS_TEST_PATH });
     });
     server.on('error', (err) => {
       console.log('uds connection failed', err);
-      onListening('127.0.0.1');
+      onListening({ path: UDS_TEST_PATH });
     });
     server.bind(UDS_TEST_PATH);
   }
@@ -186,6 +193,31 @@ function createServer(serverType, onListening) {
 
     server.listen(0, '127.0.0.1');
   }
+  else if (serverType === STREAM) {
+    fs.writeFileSync(STREAM_TEST_PATH, '', 'utf8'); // eslint-disable-line no-sync
+
+    const notify = (data) => {
+      // Streams are too fast, adding timeout to make it behave
+      // consistently with rest of the transports.
+      setTimeout(() => server.emit('metrics', data), 2);
+    };
+    let lastPoint = 0;
+    const watcher = fs.watch(STREAM_TEST_PATH, { encoding: 'utf8' }, () => {
+      const contents = fs.readFileSync(STREAM_TEST_PATH, 'utf8'); // eslint-disable-line no-sync
+      if (contents.length === 0) { return; }
+      notify(contents.substr(lastPoint));
+      lastPoint = contents.length;
+    });
+
+    server = new EventEmitter();
+    server.close = (onClose) => {
+      watcher.close();
+      if (onClose) { onClose(); }
+    };
+
+    const stream = fs.createWriteStream(STREAM_TEST_PATH, { emitClose: true });
+    onListening({ stream });
+  }
   else {
     throw new Error(`Unknown server type: ${serverType}`);
   }
@@ -200,11 +232,6 @@ function createServer(serverType, onListening) {
  * @param {*} clientType
  */
 function createHotShotsClient(args, clientType) {
-  // FIXME: This is inconsistent with the rest.
-  // Fn `createServer` should be returning the path instead.
-  if (args.protocol === UDS) {
-    args.path = UDS_TEST_PATH;
-  }
    /* eslint-disable require-jsdoc */
   function construct(ctor, constructArgs) {
     function F() {
