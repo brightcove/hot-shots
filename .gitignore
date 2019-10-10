@@ -4,4 +4,3 @@ node_modules
 .nyc_output
 coverage
 test/helpers/test.sock
-test/helpers/dummy

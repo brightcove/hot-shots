@@ -5,6 +5,7 @@ const fs = require('fs');
 const os = require('os');
 const StatsD = require('../../lib/statsd.js');
 const EventEmitter = require('events');
+const { Writable } = require('stream');
 const { STREAM, TCP, UDP, UDS } = require('../../lib/constants').PROTOCOL;
 let unixDgram;
 try {
@@ -28,7 +29,6 @@ const UDP_METRIC_END = '';
 const UDS_METRIC_END = '';
 
 const UDS_TEST_PATH = path.join(__dirname, 'test.sock');
-const STREAM_TEST_PATH = path.join(__dirname, 'dummy');
 
 // Since sampling uses random, we need to patch Math.random() to always give
 // a consistent result
@@ -194,28 +194,19 @@ function createServer(serverType, callback) {
     server.listen(0, '127.0.0.1');
   }
   else if (serverType === STREAM) {
-    fs.writeFileSync(STREAM_TEST_PATH, '', 'utf8'); // eslint-disable-line no-sync
-
-    const notify = (data) => {
-      // Streams are too fast, adding timeout to make it behave
-      // consistently with rest of the transports.
-      setTimeout(() => server.emit('metrics', data), 2);
-    };
-    let lastPoint = 0;
-    const watcher = fs.watch(STREAM_TEST_PATH, { encoding: 'utf8' }, () => {
-      const contents = fs.readFileSync(STREAM_TEST_PATH, 'utf8'); // eslint-disable-line no-sync
-      if (contents.length === 0) { return; }
-      notify(contents.substr(lastPoint));
-      lastPoint = contents.length;
-    });
-
     server = new EventEmitter();
     server.close = (onClose) => {
-      watcher.close();
       if (onClose) { onClose(); }
     };
 
-    const stream = fs.createWriteStream(STREAM_TEST_PATH, { emitClose: true });
+    class WritableMock extends Writable {
+      _write(chunk, encoding, onFinish) { // eslint-disable-line class-methods-use-this
+        onFinish();
+        setTimeout(() => server.emit('metrics', chunk.toString()), 10);
+      }
+    }
+
+    const stream = new WritableMock();
     onListening({ stream });
   }
   else {
