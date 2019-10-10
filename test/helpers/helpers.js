@@ -108,7 +108,9 @@ function testProtocolTypes() {
  * Create statsd server to send messages to for testing
  */
 function createServer(serverType, callback) {
-  const onListening = (opts) => callback(Object.assign(opts, { protocol: serverType }));
+  const onListening = (opts) => {
+    callback(Object.assign(opts, { protocol: serverType, bufferFlushInterval: 10 }));
+  };
 
   let server;
   if (serverType === UDP) {

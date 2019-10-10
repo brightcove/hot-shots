@@ -104,7 +104,7 @@ describe('#init', () => {
     assert.ok(!statsd.mock);
     assert.equal(statsd.sampleRate, 1);
     assert.equal(statsd.maxBufferSize, 0);
-    assert.equal(statsd.bufferFlushInterval, 10);
+    assert.equal(statsd.bufferFlushInterval, 1000);
     assert.equal(statsd.telegraf, false);
     assert.equal(statsd.protocol, undefined); // Defaults to UDP
   });
@@ -121,7 +121,7 @@ describe('#init', () => {
     assert.ok(!statsd.mock);
     assert.equal(statsd.sampleRate, 1);
     assert.equal(statsd.maxBufferSize, 0);
-    assert.equal(statsd.bufferFlushInterval, 10);
+    assert.equal(statsd.bufferFlushInterval, 1000);
     assert.equal(statsd.telegraf, false);
     assert.equal(statsd.protocol, undefined); // Defaults to UDP
   });
