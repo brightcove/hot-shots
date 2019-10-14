@@ -3,9 +3,10 @@ const net = require('net');
 const path = require('path');
 const fs = require('fs');
 const os = require('os');
-const process = require('process');
 const StatsD = require('../../lib/statsd.js');
-const { TCP, UDP, UDS } = require('../../lib/constants').PROTOCOL;
+const EventEmitter = require('events');
+const { Writable } = require('stream');
+const { STREAM, TCP, UDP, UDS } = require('../../lib/constants').PROTOCOL;
 let unixDgram;
 try {
   // this will not always be available
@@ -23,6 +24,7 @@ const UDS_BROKEN = 'uds_broken';
 
 // tcp puts a newline at the end but udp/uds do not
 const TCP_METRIC_END = '\n';
+const STREAM_METRIC_END = '\n';
 const UDP_METRIC_END = '';
 const UDS_METRIC_END = '';
 
@@ -83,6 +85,9 @@ function testTypes() {
     testTypesArr.push([`${UDS} ${CLIENT}`, UDS, CLIENT, UDS_METRIC_END]);
     testTypesArr.push([`${UDS} ${CHILD_CLIENT}`, UDS, CLIENT, UDS_METRIC_END]);
   }
+
+  testTypesArr.push([`${STREAM} ${CLIENT}`, STREAM, CLIENT, STREAM_METRIC_END]);
+  testTypesArr.push([`${STREAM} ${CHILD_CLIENT}`, STREAM, CLIENT, STREAM_METRIC_END]);
   return testTypesArr;
 }
 
@@ -102,7 +107,11 @@ function testProtocolTypes() {
 /**
  * Create statsd server to send messages to for testing
  */
-function createServer(serverType, onListening) {
+function createServer(serverType, callback) {
+  const onListening = (opts) => {
+    callback(Object.assign(opts, { protocol: serverType, bufferFlushInterval: 10 }));
+  };
+
   let server;
   if (serverType === UDP) {
     server = dgram.createSocket('udp4');
@@ -127,11 +136,11 @@ function createServer(serverType, onListening) {
       server.emit('metrics', metrics);
     });
     server.on('listening', () => {
-      onListening('127.0.0.1');
+      onListening({ path: UDS_TEST_PATH });
     });
     server.on('error', (err) => {
       console.error('Error: uds connection failed', err);
-      onListening('127.0.0.1');
+      onListening({ path: UDS_TEST_PATH });
     });
     server.bind(UDS_TEST_PATH);
   }
@@ -147,11 +156,11 @@ function createServer(serverType, onListening) {
       server.close();
     });
     server.on('listening', () => {
-      onListening('127.0.0.1');
+      onListening({ path: UDS_TEST_PATH });
     });
     server.on('error', (err) => {
       console.log('uds connection failed', err);
-      onListening('127.0.0.1');
+      onListening({ path: UDS_TEST_PATH });
     });
     server.bind(UDS_TEST_PATH);
   }
@@ -186,6 +195,22 @@ function createServer(serverType, onListening) {
 
     server.listen(0, '127.0.0.1');
   }
+  else if (serverType === STREAM) {
+    server = new EventEmitter();
+    server.close = (onClose) => {
+      if (onClose) { onClose(); }
+    };
+
+    class WritableMock extends Writable {
+      _write(chunk, encoding, onFinish) { // eslint-disable-line class-methods-use-this
+        onFinish();
+        setTimeout(() => server.emit('metrics', chunk.toString()), 10);
+      }
+    }
+
+    const stream = new WritableMock();
+    onListening({ stream });
+  }
   else {
     throw new Error(`Unknown server type: ${serverType}`);
   }
@@ -200,11 +225,6 @@ function createServer(serverType, onListening) {
  * @param {*} clientType
  */
 function createHotShotsClient(args, clientType) {
-  // FIXME: This is inconsistent with the rest.
-  // Fn `createServer` should be returning the path instead.
-  if (args.protocol === UDS) {
-    args.path = UDS_TEST_PATH;
-  }
    /* eslint-disable require-jsdoc */
   function construct(ctor, constructArgs) {
     function F() {

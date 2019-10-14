@@ -24,12 +24,8 @@ describe('#timer', () => {
     describe(description, () => {
 
       it('should send stat and time to execute to timing function', done => {
-        server = createServer(serverType, address => {
-          statsd = createHotShotsClient({
-            host: address.address,
-            port: address.port,
-            protocol: serverType
-          }, clientType);
+        server = createServer(serverType, opts => {
+          statsd = createHotShotsClient(opts, clientType);
           const testFn = (a, b) => {
             return a + b;
           };
@@ -44,12 +40,8 @@ describe('#timer', () => {
       });
 
       it('should send data with tags to timing function', done => {
-        server = createServer(serverType, address => {
-          statsd = createHotShotsClient({
-            host: address.address,
-            port: address.port,
-            protocol: serverType
-          }, clientType);
+        server = createServer(serverType, opts => {
+          statsd = createHotShotsClient(opts, clientType);
           const testFn = (a, b) => {
             return a + b;
           };

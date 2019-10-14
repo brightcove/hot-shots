@@ -19,12 +19,8 @@ describe('#check', () => {
   testTypes().forEach(([description, serverType, clientType, metricEnd]) => {
     describe(description, () => {
       it('should send proper check format for name and status', done => {
-        server = createServer(serverType, address => {
-          statsd = createHotShotsClient({
-            host: address.address,
-            port: address.port,
-            protocol: serverType
-          }, clientType);
+        server = createServer(serverType, opts => {
+          statsd = createHotShotsClient(opts, clientType);
           statsd.check('check.name', statsd.CHECKS.OK);
         });
         server.on('metrics', event => {
@@ -34,14 +30,11 @@ describe('#check', () => {
       });
 
       it('should send proper check format for name and status with global prefix and suffix', done => {
-        server = createServer(serverType, address => {
-          statsd = createHotShotsClient({
-            host: address.address,
-            port: address.port,
+        server = createServer(serverType, opts => {
+          statsd = createHotShotsClient(Object.assign(opts, {
             prefix: 'prefix.',
             suffix: '.suffix',
-            protocol: serverType
-          }, clientType);
+          }), clientType);
           statsd.check('check.name', statsd.CHECKS.OK);
         });
         server.on('metrics', event => {
@@ -52,12 +45,8 @@ describe('#check', () => {
 
       it('should send proper check format for name, status, and options', done => {
         const date = new Date();
-        server = createServer(serverType, address => {
-          statsd = createHotShotsClient({
-            host: address.address,
-            port: address.port,
-            protocol: serverType
-          }, clientType);
+        server = createServer(serverType, opts => {
+          statsd = createHotShotsClient(opts, clientType);
           const options = {
             date_happened: date,
             hostname: 'host',
@@ -73,12 +62,8 @@ describe('#check', () => {
       });
 
       it('should send proper check format for title, text, some options, and tags', done => {
-        server = createServer(serverType, address => {
-          statsd = createHotShotsClient({
-            host: address.address,
-            port: address.port,
-            protocol: serverType
-          }, clientType);
+        server = createServer(serverType, opts => {
+          statsd = createHotShotsClient(opts, clientType);
           const options = {
             hostname: 'host'
           };
@@ -92,12 +77,8 @@ describe('#check', () => {
 
       it('should send proper check format for title, text, tags, and a callback', done => {
         let called = false;
-        server = createServer(serverType, address => {
-          statsd = createHotShotsClient({
-            host: address.address,
-            port: address.port,
-            protocol: serverType
-          }, clientType);
+        server = createServer(serverType, opts => {
+          statsd = createHotShotsClient(opts, clientType);
           statsd.check('check.name', statsd.CHECKS.OK, null, ['foo', 'bar'], () => {
             called = true;
           });
@@ -110,15 +91,12 @@ describe('#check', () => {
       });
 
       it('should send no event stat when a mock Client is used', done => {
-        server = createServer(serverType, address => {
-          statsd = createHotShotsClient({
-            host: address.address,
-            port: address.port,
+        server = createServer(serverType, opts => {
+          statsd = createHotShotsClient(Object.assign(opts, {
             prefix: 'prefix',
             suffix: 'suffix',
             mock: true,
-            protocol: serverType
-          }, clientType);
+          }), clientType);
 
           // Regression test for "undefined is not a function" with missing
           // callback on mock instance
@@ -137,13 +115,10 @@ describe('#check', () => {
         // if we don't null out the server first, and try to close it again, we get an uncatchable error when using uds
         server = null;
 
-        server = createServer(serverType, address => {
-          statsd = createHotShotsClient({
-            host: address.address,
-            port: address.port,
+        server = createServer(serverType, opts => {
+          statsd = createHotShotsClient(Object.assign(opts, {
             telegraf: true,
-            protocol: serverType
-          }, clientType);
+          }), clientType);
           assert.throws(() => {
             statsd.check('check.name', statsd.CHECKS.OK, null, ['foo', 'bar']);
           }, err => {
@@ -155,19 +130,16 @@ describe('#check', () => {
 
       it('should use errorHandler', done => {
         let calledDone = false;
-        server = createServer(serverType, address => {
-          statsd = createHotShotsClient({
-            host: address.address,
-            port: address.port,
+        server = createServer(serverType, opts => {
+          statsd = createHotShotsClient(Object.assign(opts, {
             telegraf: true,
-            protocol: serverType,
             errorHandler() {
               if (! calledDone) {
                 calledDone = true;
                 done();
               }
             }
-          }, clientType);
+          }), clientType);
           statsd.check('check.name', statsd.CHECKS.OK);
         });
       });

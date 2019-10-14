@@ -43,13 +43,10 @@ describe('#childClient', () => {
     });
 
     it('childClient should add tags, prefix and suffix without parent values', done => {
-      server = createServer(serverType, address => {
-          statsd = createHotShotsClient({
-            host: address.host,
-            port: address.port,
+      server = createServer(serverType, opts => {
+          statsd = createHotShotsClient(Object.assign(opts, {
             maxBufferSize: 500,
-            protocol: serverType
-          }, clientType).childClient({
+          }), clientType).childClient({
             prefix: 'preff.',
             suffix: '.suff',
             globalTags: ['awesomeness:over9000']
@@ -64,16 +61,13 @@ describe('#childClient', () => {
     });
 
     it('should add tags, prefix and suffix with parent values', done => {
-      server = createServer(serverType, address => {
-        statsd = createHotShotsClient({
-          host: address.host,
-          port: address.port,
+      server = createServer(serverType, opts => {
+        statsd = createHotShotsClient(Object.assign(opts, {
           prefix: 'p.',
           suffix: '.s',
           globalTags: ['xyz'],
           maxBufferSize: 500,
-          protocol: serverType
-        }, clientType).childClient({
+        }), clientType).childClient({
           prefix: 'preff.',
           suffix: '.suff',
           globalTags: ['awesomeness:over9000']

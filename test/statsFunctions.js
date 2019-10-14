@@ -25,12 +25,8 @@ describe('#statsFunctions', () => {
 
       describe(`#${statFunction.name}`, () => {
           it(`should send proper ${statFunction.name} format without prefix, suffix, sampling and callback`, done => {
-            server = createServer(serverType, address => {
-              statsd = createHotShotsClient({
-                host: address.address,
-                port: address.port,
-                protocol: serverType
-              }, clientType);
+            server = createServer(serverType, opts => {
+              statsd = createHotShotsClient(opts, clientType);
               statsd[statFunction.name]('test', 42);
             });
             server.on('metrics', metrics => {
@@ -40,12 +36,8 @@ describe('#statsFunctions', () => {
           });
 
           it(`should send proper ${statFunction.name} format with tags`, done => {
-            server = createServer(serverType, address => {
-              statsd = createHotShotsClient({
-                host: address.address,
-                port: address.port,
-                protocol: serverType
-              }, clientType);
+            server = createServer(serverType, opts => {
+              statsd = createHotShotsClient(opts, clientType);
               statsd[statFunction.name]('test', 42, ['foo', 'bar']);
             });
             server.on('metrics', metrics => {
@@ -56,14 +48,11 @@ describe('#statsFunctions', () => {
 
           it(`should send proper ${statFunction.name} format with prefix, suffix, sampling and callback`, done => {
             let called = false;
-            server = createServer(serverType, address => {
-              statsd = createHotShotsClient({
-                host: address.address,
-                port: address.port,
+            server = createServer(serverType, opts => {
+              statsd = createHotShotsClient(Object.assign(opts, {
                 prefix: 'foo.',
                 suffix: '.bar',
-                protocol: serverType
-              }, clientType);
+              }), clientType);
               statsd[statFunction.name]('test', 42, 0.5, () => {
                 called = true;
               });
@@ -77,14 +66,11 @@ describe('#statsFunctions', () => {
 
           it('should properly send a and b with the same value', done => {
             let called = 0;
-            server = createServer(serverType, address => {
-              statsd = createHotShotsClient({
-                host: address.address,
-                port: address.port,
-                protocol: serverType,
+            server = createServer(serverType, opts => {
+              statsd = createHotShotsClient(Object.assign(opts, {
                 maxBufferSize: 1000,
-                bufferFlushInterval: 200
-              }, clientType);
+                bufferFlushInterval: 5
+              }), clientType);
               statsd[statFunction.name](['a', 'b'], 42, null, (error) => {
                 called += 1;
                 assert.ok(called === 1); // Ensure it only gets called once
@@ -98,12 +84,8 @@ describe('#statsFunctions', () => {
           });
 
           it('should format tags to datadog format by default', done => {
-            server = createServer(serverType, address => {
-              statsd = createHotShotsClient({
-                host: address.address,
-                port: address.port,
-                protocol: serverType
-              }, clientType);
+            server = createServer(serverType, opts => {
+              statsd = createHotShotsClient(opts, clientType);
               statsd[statFunction.name]('test', 42, { foo: 'bar' });
             });
             server.on('metrics', metrics => {
@@ -113,13 +95,10 @@ describe('#statsFunctions', () => {
           });
 
           it('should format tags when using telegraf format', done => {
-            server = createServer(serverType, address => {
-              statsd = createHotShotsClient({
-                host: address.address,
-                port: address.port,
+            server = createServer(serverType, opts => {
+              statsd = createHotShotsClient(Object.assign(opts, {
                 telegraf: true,
-                protocol: serverType
-              }, clientType);
+              }), clientType);
               statsd[statFunction.name]('test', 42, { foo: 'bar' });
             });
             server.on('metrics', metrics => {
@@ -132,12 +111,8 @@ describe('#statsFunctions', () => {
 
       describe('#increment', () => {
         it('should send count by 1 when no params are specified', done => {
-          server = createServer(serverType, address => {
-            statsd = createHotShotsClient({
-              host: address.address,
-              port: address.port,
-              protocol: serverType
-            }, clientType);
+          server = createServer(serverType, opts => {
+            statsd = createHotShotsClient(opts, clientType);
             statsd.increment('test');
           });
           server.on('metrics', metrics => {
@@ -147,12 +122,8 @@ describe('#statsFunctions', () => {
         });
 
         it('should use when increment is 0', done => {
-          server = createServer(serverType, address => {
-            statsd = createHotShotsClient({
-              host: address.address,
-              port: address.port,
-              protocol: serverType
-            }, clientType);
+          server = createServer(serverType, opts => {
+            statsd = createHotShotsClient(opts, clientType);
             statsd.increment('test', 0);
           });
           server.on('metrics', metrics => {
@@ -162,12 +133,8 @@ describe('#statsFunctions', () => {
         });
 
         it('should send proper count format with tags', done => {
-          server = createServer(serverType, address => {
-            statsd = createHotShotsClient({
-              host: address.address,
-              port: address.port,
-              protocol: serverType
-            }, clientType);
+          server = createServer(serverType, opts => {
+            statsd = createHotShotsClient(opts, clientType);
             statsd.increment('test', 42, ['foo', 'bar']);
           });
           server.on('metrics', metrics => {
@@ -177,12 +144,8 @@ describe('#statsFunctions', () => {
         });
 
         it('should send default count 1 with tags', done => {
-          server = createServer(serverType, address => {
-            statsd = createHotShotsClient({
-              host: address.address,
-              port: address.port,
-              protocol: serverType
-            }, clientType);
+          server = createServer(serverType, opts => {
+            statsd = createHotShotsClient(opts, clientType);
             statsd.increment('test', ['foo', 'bar']);
           });
           server.on('metrics', metrics => {
@@ -192,12 +155,8 @@ describe('#statsFunctions', () => {
         });
 
         it('should send tags when sampleRate is omitted', done => {
-          server = createServer(serverType, address => {
-            statsd = createHotShotsClient({
-              host: address.address,
-              port: address.port,
-              protocol: serverType
-            }, clientType);
+          server = createServer(serverType, opts => {
+            statsd = createHotShotsClient(opts, clientType);
             statsd.increment('test', 23, ['foo', 'bar']);
           });
           server.on('metrics', metrics => {
@@ -208,14 +167,11 @@ describe('#statsFunctions', () => {
 
         it('should send proper count format with prefix, suffix, sampling and callback', done => {
           let called = false;
-          server = createServer(serverType, address => {
-            statsd = createHotShotsClient({
-              host: address.address,
-              port: address.port,
+          server = createServer(serverType, opts => {
+            statsd = createHotShotsClient(Object.assign(opts, {
               prefix: 'foo.',
               suffix: '.bar',
-              protocol: serverType
-            }, clientType);
+            }), clientType);
             statsd.increment('test', 42, 0.5, () => {
               called = true;
             });
@@ -229,14 +185,11 @@ describe('#statsFunctions', () => {
 
         it('should properly send a and b with the same value', done => {
           let called = 0;
-          server = createServer(serverType, address => {
-            statsd = createHotShotsClient({
-              host: address.address,
-              port: address.port,
-              protocol: serverType,
+          server = createServer(serverType, opts => {
+            statsd = createHotShotsClient(Object.assign(opts, {
               maxBufferSize: 1000,
-              bufferFlushInterval: 200
-            }, clientType);
+              bufferFlushInterval: 5
+            }), clientType);
             statsd.increment(['a', 'b'], 42, null, (error, bytes) => {
               called += 1;
               assert.ok(called === 1); // Ensure it only gets called once
@@ -253,12 +206,8 @@ describe('#statsFunctions', () => {
 
       describe('#decrement', () => {
         it('should send count by -1 when no params are specified', done => {
-          server = createServer(serverType, address => {
-            statsd = createHotShotsClient({
-              host: address.address,
-              port: address.port,
-              protocol: serverType
-            }, clientType);
+          server = createServer(serverType, opts => {
+            statsd = createHotShotsClient(opts, clientType);
             statsd.decrement('test');
           });
           server.on('metrics', metrics => {
@@ -268,12 +217,8 @@ describe('#statsFunctions', () => {
         });
 
         it('should send default count -1 with tags', done => {
-          server = createServer(serverType, address => {
-            statsd = createHotShotsClient({
-              host: address.address,
-              port: address.port,
-              protocol: serverType
-            }, clientType);
+          server = createServer(serverType, opts => {
+            statsd = createHotShotsClient(opts, clientType);
             statsd.decrement('test', ['foo', 'bar']);
           });
           server.on('metrics', metrics => {
@@ -283,12 +228,8 @@ describe('#statsFunctions', () => {
         });
 
         it('should send tags when sampleRate is omitted', done => {
-          server = createServer(serverType, address => {
-            statsd = createHotShotsClient({
-              host: address.address,
-              port: address.port,
-              protocol: serverType
-            }, clientType);
+          server = createServer(serverType, opts => {
+            statsd = createHotShotsClient(opts, clientType);
             statsd.decrement('test', 23, ['foo', 'bar']);
           });
           server.on('metrics', metrics => {
@@ -298,12 +239,8 @@ describe('#statsFunctions', () => {
         });
 
         it('should send proper count format with tags', done => {
-          server = createServer(serverType, address => {
-            statsd = createHotShotsClient({
-              host: address.address,
-              port: address.port,
-              protocol: serverType
-            }, clientType);
+          server = createServer(serverType, opts => {
+            statsd = createHotShotsClient(opts, clientType);
             statsd.decrement('test', 42, ['foo', 'bar']);
           });
           server.on('metrics', metrics => {
@@ -314,14 +251,11 @@ describe('#statsFunctions', () => {
 
         it('should send proper count format with prefix, suffix, sampling and callback', done => {
           let called = false;
-          server = createServer(serverType, address => {
-            statsd = createHotShotsClient({
-              host: address.address,
-              port: address.port,
+          server = createServer(serverType, opts => {
+            statsd = createHotShotsClient(Object.assign(opts, {
               prefix: 'foo.',
               suffix: '.bar',
-              protocol: serverType
-            }, clientType);
+            }), clientType);
             statsd.decrement('test', 42, 0.5, () => {
               called = true;
             });
@@ -335,14 +269,11 @@ describe('#statsFunctions', () => {
 
         it('should properly send a and b with the same value', done => {
           let called = 0;
-          server = createServer(serverType, address => {
-            statsd = createHotShotsClient({
-              host: address.address,
-              port: address.port,
-              protocol: serverType,
+          server = createServer(serverType, opts => {
+            statsd = createHotShotsClient(Object.assign(opts, {
               maxBufferSize: 1000,
-              bufferFlushInterval: 200
-            }, clientType);
+              bufferFlushInterval: 5
+            }), clientType);
             statsd.decrement(['a', 'b'], 42, null, (error, bytes) => {
               called += 1;
               assert.ok(called === 1); // Ensure it only gets called once

@@ -12,12 +12,8 @@ describe('#close', () => {
   testTypes().forEach(([description, serverType, clientType, metricsEnd]) => {
     describe(description, () => {
       it('should call callback after close call', done => {
-        server = createServer(serverType, address => {
-          statsd = createHotShotsClient({
-            host: address.address,
-            port: address.port,
-            protocol: serverType
-          }, clientType);
+        server = createServer(serverType, opts => {
+          statsd = createHotShotsClient(opts, clientType);
           statsd.close(() => {
             server.close();
             done();
@@ -27,12 +23,8 @@ describe('#close', () => {
 
       it('should send metrics before close call', done => {
         let metricSeen = false;
-        server = createServer(serverType, address => {
-          statsd = createHotShotsClient({
-            host: address.address,
-            port: address.port,
-            protocol: serverType
-          }, clientType);
+        server = createServer(serverType, opts => {
+          statsd = createHotShotsClient(opts, clientType);
           statsd.set('test', 42);
           statsd.close(() => {
             // give the metric a bit of time to get handled by the server
@@ -52,13 +44,10 @@ describe('#close', () => {
 
       it('should send metric before close call when buffering enabled', done => {
         let metricSeen = false;
-        server = createServer(serverType, address => {
-          statsd = createHotShotsClient({
-            host: address.address,
-            port: address.port,
-            protocol: serverType,
+        server = createServer(serverType, opts => {
+          statsd = createHotShotsClient(Object.assign(opts, {
             maxBufferSize: 1
-          }, clientType);
+          }), clientType);
           statsd.set('test', 42);
           statsd.close(() => {
             // give the metric a bit of time to get handled by the server
@@ -80,13 +69,10 @@ describe('#close', () => {
 
       it('should send metric before close call when buffered', done => {
         let metricSeen = false;
-        server = createServer(serverType, address => {
-          statsd = createHotShotsClient({
-            host: address.address,
-            port: address.port,
-            protocol: serverType,
+        server = createServer(serverType, opts => {
+          statsd = createHotShotsClient(Object.assign(opts, {
             maxBufferSize: 5000
-          }, clientType);
+          }), clientType);
           statsd.set('test', 42);
           statsd.close(() => {
             // give the metric a bit of time to get handled by the server
@@ -107,16 +93,13 @@ describe('#close', () => {
       });
 
       it('should use errorHandler on close issue', done => {
-        server = createServer(serverType, address => {
-          statsd = createHotShotsClient({
-            host: address.address,
-            port: address.port,
-            protocol: serverType,
+        server = createServer(serverType, opts => {
+          statsd = createHotShotsClient(Object.assign(opts, {
             errorHandler() {
               server.close();
               done();
             }
-          }, clientType);
+          }), clientType);
           statsd.socket.destroy = () => {
             throw new Error('Boom!');
           };

@@ -45,8 +45,9 @@ Parameters (specified as one object passed into hot-shots):
 * `sampleRate`:    Sends only a sample of data to StatsD for all StatsD methods.  Can be overridden at the method level. `default: 1`
 * `errorHandler`: A function with one argument. It is called to handle various errors. `default: none`, errors are thrown/logger to console
 * `useDefaultRoute`: Use the default interface on a Linux system. Useful when running in containers
-* `protocol`: Use `tcp` option for TCP protocol, or `uds` for the Unix Domain Socket protocol. Defaults to UDP otherwise
+* `protocol`: Use `tcp` option for TCP protocol, or `uds` for the Unix Domain Socket protocol or `stream` for the raw stream. Defaults to `udp` otherwise.
 * `path`: Used only when the protocol is `uds`. Defaults to `/var/run/datadog/dsd.socket`.
+* `stream`: Reference to a stream instance. Used only when the protocol is `stream`.
 * `udsGracefulErrorHandling`: Used only when the protocol is `uds`. Boolean indicating whether to handle socket errors gracefully. Defaults to true.
 * `udsGracefulRestartRateLimit`: Used only when the protocol is `uds`. Time (ms) between re-creating the socket. Defaults to `1000`.
 

@@ -27,10 +27,8 @@ describe('#errorHandling', () => {
     // sometimes two errors show up, one with the initial connection
     let seenError = false;
 
-    server = createServer('tcp_broken', address => {
-      statsd = createHotShotsClient({
-        host: address.address,
-        port: address.port,
+    server = createServer('tcp_broken', opts => {
+      statsd = createHotShotsClient(Object.assign(opts, {
         protocol: 'tcp',
         maxBufferSize: 1,
         errorHandler(err) {
@@ -42,7 +40,7 @@ describe('#errorHandling', () => {
             done();
           }
         }
-      }, 'client');
+      }), 'client');
       statsd.increment('a', 42, null);
       server.on('metrics', () => {
         assert.ok(false);
@@ -53,33 +51,28 @@ describe('#errorHandling', () => {
   testTypes().forEach(([description, serverType, clientType]) => {
     describe(description, () => {
       it('should not use errorHandler when there is not an error', done => {
-        server = createServer(serverType, address => {
-          statsd = createHotShotsClient({
-            host: address.address,
-            port: address.port,
-            protocol: serverType,
+        server = createServer(serverType, (opts) => {
+          statsd = createHotShotsClient(Object.assign(opts, {
             errorHandler() {
               assert.ok(false);
             }
-          }, clientType);
+          }), clientType);
           statsd.increment('a', 42, null);
         });
+
         server.on('metrics', () => {
           done();
         });
       });
 
       it('should not use errorHandler when there is not an error and using buffers', done => {
-        server = createServer(serverType, address => {
-          statsd = createHotShotsClient({
-            host: address.address,
-            port: address.port,
-            protocol: serverType,
+        server = createServer(serverType, opts => {
+          statsd = createHotShotsClient(Object.assign(opts, {
             maxBufferSize: 1,
             errorHandler() {
               assert.ok(false);
             }
-          }, clientType);
+          }), clientType);
           statsd.increment('a', 42, null);
         });
         server.on('metrics', () => {
@@ -88,17 +81,14 @@ describe('#errorHandling', () => {
       });
 
       it('should use errorHandler for sendStat error', done => {
-        server = createServer(serverType, address => {
+        server = createServer(serverType, opts => {
           const err = new Error('Boom!');
-          statsd = createHotShotsClient({
-            host: address.address,
-            port: address.port,
-            protocol: serverType,
+          statsd = createHotShotsClient(Object.assign(opts, {
             errorHandler(e) {
               assert.equal(e, err);
               done();
             }
-          }, clientType);
+          }), clientType);
           statsd.sendStat = (item, value, type, sampleRate, tags, callback) => {
             callback(err);
           };
@@ -107,18 +97,15 @@ describe('#errorHandling', () => {
       });
 
       it('should use errorHandler', done => {
-        server = createServer(serverType, address => {
+        server = createServer(serverType, opts => {
           const err = new Error('Boom!');
-          statsd = createHotShotsClient({
-            host: address.address,
-            port: address.port,
-            protocol: serverType,
+          statsd = createHotShotsClient(Object.assign(opts, {
             errorHandler(e) {
               assert.equal(e, err);
               ignoreErrors = true;
               done();
             }
-          }, clientType);
+          }), clientType);
           statsd.dnsError = err;
           statsd.send('test title');
         });
@@ -196,17 +183,15 @@ describe('#errorHandling', () => {
           Date.now = () => '4857394578';
           // emit an error, like a socket would
           // 111 is connection refused
-          server = createServer('uds_broken', address => {
-            const client = statsd = createHotShotsClient({
-              host: address.address,
-              port: address.port,
+          server = createServer('uds_broken', opts => {
+            const client = statsd = createHotShotsClient(Object.assign(opts, {
               protocol: 'uds',
               udsGracefulErrorHandling: true,
               errorHandler(error) {
                 assert.ok(error);
                 assert.equal(error.code, code);
               }
-            }, 'client');
+            }), 'client');
             const initialSocket = client.socket;
             setTimeout(() => {
               initialSocket.emit('error', { code });
@@ -232,17 +217,15 @@ describe('#errorHandling', () => {
           Date.now = () => '4857394578';
           // emit an error, like a socket would
           // 111 is connection refused
-          server = createServer('uds_broken', address => {
-            const client = statsd = createHotShotsClient({
-              host: address.address,
-              port: address.port,
+          server = createServer('uds_broken', opts => {
+            const client = statsd = createHotShotsClient(Object.assign(opts, {
               protocol: 'uds',
               udsGracefulErrorHandling: true,
               errorHandler(error) {
                 assert.ok(error);
                 assert.equal(error.code, code);
               }
-            }, 'client');
+            }), 'client');
             const initialSocket = client.socket;
             setTimeout(() => {
               initialSocket.emit('error', { code });
@@ -269,10 +252,8 @@ describe('#errorHandling', () => {
           Date.now = () => '4857394578';
           // emit an error, like a socket would
           // 111 is connection refused
-          server = createServer('uds_broken', address => {
-            const client = statsd = createHotShotsClient({
-              host: address.address,
-              port: address.port,
+          server = createServer('uds_broken', opts => {
+            const client = statsd = createHotShotsClient(Object.assign(opts, {
               protocol: 'uds',
               udsGracefulErrorHandling: true,
               udsGracefulRestartRateLimit: limit,
@@ -280,7 +261,7 @@ describe('#errorHandling', () => {
                 assert.ok(error);
                 assert.equal(error.code, code);
               }
-            }, 'client');
+            }), 'client');
             const initialSocket = client.socket;
             setTimeout(() => {
               initialSocket.emit('error', { code });
