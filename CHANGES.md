@@ -1,6 +1,10 @@
 CHANGELOG
 =========
 
+## 6.8.0 (2019-10-14)
+* @runk Add new protocol, stream, and a stream parameter for
+  specifying it.
+
 ## 6.7.0 (2019-10-9)
 * @runk Code refactoring to have abstract transports
 
