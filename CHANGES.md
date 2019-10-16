@@ -1,6 +1,9 @@
 CHANGELOG
 =========
 
+## 6.8.1 (2019-10-16)
+* @hayes Add unref method to transport interface
+
 ## 6.8.0 (2019-10-14)
 * @runk Add new protocol, stream, and a stream parameter for
   specifying it.

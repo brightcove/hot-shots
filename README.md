@@ -10,6 +10,7 @@ includes all changes in the latest node-statsd and many additional changes, incl
 * child clients
 * tcp protocol support
 * uds (Unix domain socket) protocol support
+* raw stream protocol support
 * mock mode
 * asyncTimer
 * much more, including many bug fixes
