@@ -1,6 +1,9 @@
 CHANGELOG
 =========
 
+## 6.8.2 (2019-11-12)
+* @almandsky Fix useDefaultRoute to work again after abstract transports
+
 ## 6.8.1 (2019-10-16)
 * @hayes Add unref method to transport interface
 
