@@ -1,6 +1,9 @@
 CHANGELOG
 =========
 
+## 6.8.4 (2019-12-18)
+* @bdeitte Fix cacheDns with udp
+
 ## 6.8.3 (2019-12-15)
 * @gleb-rudenko Fix StatsD constructor typing
 
