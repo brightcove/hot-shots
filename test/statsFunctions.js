@@ -46,6 +46,19 @@ describe('#statsFunctions', () => {
             });
           });
 
+          it(`should send proper ${statFunction.name} format with cacheDns`, done => {
+            server = createServer(serverType, opts => {
+              statsd = createHotShotsClient(Object.assign(opts, {
+                cacheDns: true
+              }), clientType);
+              statsd[statFunction.name]('test', 42, ['foo', 'bar']);
+            });
+            server.on('metrics', metrics => {
+              assert.equal(metrics, `test:42|${statFunction.unit}|#foo,bar${metricsEnd}`);
+              done();
+            });
+          });
+
           it(`should send proper ${statFunction.name} format with prefix, suffix, sampling and callback`, done => {
             let called = false;
             server = createServer(serverType, opts => {
