@@ -1,6 +1,9 @@
 CHANGELOG
 =========
 
+## 6.8.5 (2019-12-19)
+* @bdeitte Fix for socket on reading when cacheDns and udp in use
+
 ## 6.8.4 (2019-12-18)
 * @bdeitte Fix cacheDns with udp
 
