@@ -106,7 +106,7 @@ describe('#init', () => {
     assert.equal(statsd.maxBufferSize, 0);
     assert.equal(statsd.bufferFlushInterval, 1000);
     assert.equal(statsd.telegraf, false);
-    assert.equal(statsd.protocol, undefined); // Defaults to UDP
+    assert.equal(statsd.protocol, 'udp');
   });
 
   it('should set default values when not specified', () => {
@@ -123,7 +123,7 @@ describe('#init', () => {
     assert.equal(statsd.maxBufferSize, 0);
     assert.equal(statsd.bufferFlushInterval, 1000);
     assert.equal(statsd.telegraf, false);
-    assert.equal(statsd.protocol, undefined); // Defaults to UDP
+    assert.equal(statsd.protocol, 'udp');
   });
 
   it('should map global_tags to globalTags for backwards compatibility', () => {
