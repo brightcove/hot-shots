@@ -257,6 +257,12 @@ Thanks for considering making any updates to this project!  Here are the steps t
 
 When you've done all this we're happy to try to get this merged in right away.
 
+## Package versioning and security
+
+Versions will attempt to follow semantic versioning, with major changes only coming in major versions.
+
+npm publishing is possible by one person, [bdeitte](https://github.com/bdeitte), who has two-factor authentication enabled for publishes.  Publishes only contain one additional library, unix-dgram.
+
 ## Name
 
 Why is this project named hot-shots?  Because:
