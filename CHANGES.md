@@ -1,7 +1,7 @@
 CHANGELOG
 =========
 
-## 6.8.6 (2019-1-28)
+## 6.8.6 (2020-1-28)
 * @ericmustin callback is not properly passed bytes argument
 
 ## 6.8.5 (2019-12-19)
