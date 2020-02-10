@@ -15,7 +15,7 @@ includes all changes in the latest node-statsd and many additional changes, incl
 * asyncTimer
 * much more, including many bug fixes
 
-hot-shots supports Node 6.x and higher.
+hot-shots supports Node 8.x and higher.
 
 [![Build Status](https://secure.travis-ci.org/brightcove/hot-shots.png?branch=master)](http://travis-ci.org/brightcove/hot-shots)
 
