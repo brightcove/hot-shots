@@ -106,7 +106,7 @@ describe('#init', () => {
     assert.equal(statsd.maxBufferSize, 0);
     assert.equal(statsd.bufferFlushInterval, 1000);
     assert.equal(statsd.telegraf, false);
-    assert.equal(statsd.protocol, undefined); // Defaults to UDP
+    assert.equal(statsd.protocol, 'udp');
   });
 
   it('should set default values when not specified', () => {
@@ -123,7 +123,7 @@ describe('#init', () => {
     assert.equal(statsd.maxBufferSize, 0);
     assert.equal(statsd.bufferFlushInterval, 1000);
     assert.equal(statsd.telegraf, false);
-    assert.equal(statsd.protocol, undefined); // Defaults to UDP
+    assert.equal(statsd.protocol, 'udp');
   });
 
   it('should map global_tags to globalTags for backwards compatibility', () => {
@@ -147,7 +147,7 @@ describe('#init', () => {
     assert.deepEqual(statsd.globalTags, ['gtag', 'dd.internal.entity_id:04652bb7-19b7-11e9-9cc6-42010a9c016d']);
   });
 
-  it('should attempt to cache a dns record if dnsCache is specified', done => {
+  it('should lookup a dns record if dnsCache is specified', done => {
     const originalLookup = dns.lookup;
 
     // Replace the dns lookup function with our mock dns lookup
@@ -164,7 +164,7 @@ describe('#init', () => {
     statsd = createHotShotsClient({ host: 'localhost', cacheDns: true }, clientType);
   });
 
-  it('should attempt to cache a dns record if dnsCache is specified and DD_AGENT_HOST is set', done => {
+  it('should lookup a dns record if dnsCache is specified and DD_AGENT_HOST is set', done => {
     const originalLookup = dns.lookup;
 
     // Replace the dns lookup function with our mock dns lookup
@@ -182,7 +182,7 @@ describe('#init', () => {
     statsd = createHotShotsClient({ cacheDns: true }, clientType);
   });
 
-  it('should not attempt to cache a dns record if dnsCache is not specified', done => {
+  it('should not lookup a dns record if dnsCache is not specified', done => {
     const originalLookup = dns.lookup;
 
     // Replace the dns lookup function with our mock dns lookup

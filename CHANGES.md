@@ -1,6 +1,18 @@
 CHANGELOG
 =========
 
+## 6.8.6 (2020-1-28)
+* @ericmustin callback is not properly passed bytes argument
+
+## 6.8.5 (2019-12-19)
+* @bdeitte Fix for socket on reading when cacheDns and udp in use
+
+## 6.8.4 (2019-12-18)
+* @bdeitte Fix cacheDns with udp
+
+## 6.8.3 (2019-12-15)
+* @gleb-rudenko Fix StatsD constructor typing
+
 ## 6.8.2 (2019-11-12)
 * @almandsky Fix useDefaultRoute to work again after abstract transports
 

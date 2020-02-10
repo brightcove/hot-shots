@@ -35,7 +35,8 @@ Parameters (specified as one object passed into hot-shots):
 * `prefix`:      What to prefix each stat name with `default: ''`
 * `suffix`:      What to suffix each stat name with `default: ''`
 * `globalize`:   Expose this StatsD instance globally. `default: false`
-* `cacheDns`:    Cache the initial dns lookup to *host* `default: false`
+* `cacheDns`:    Cache the initial dns lookup to *host* , only used
+  when protocol is `uds`, `default: false`
 * `mock`:        Create a mock StatsD instance, sending no stats to
   the server and allowing data to be read from mockBuffer.  Note that
   mockBuffer will keep growing, so only use for testing or clear out periodically. `default: false`
@@ -255,6 +256,12 @@ Thanks for considering making any updates to this project!  Here are the steps t
 6. Push your changes and create the PR
 
 When you've done all this we're happy to try to get this merged in right away.
+
+## Package versioning and security
+
+Versions will attempt to follow semantic versioning, with major changes only coming in major versions.
+
+npm publishing is possible by one person, [bdeitte](https://github.com/bdeitte), who has two-factor authentication enabled for publishes.  Publishes only contain one additional library, unix-dgram.
 
 ## Name
 

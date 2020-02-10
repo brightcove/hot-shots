@@ -132,5 +132,5 @@ declare module "hot-shots" {
   }
 }
 
-declare const StatsDClient: StatsD;
+declare const StatsDClient: new (options?: ClientOptions) => StatsD;
 export default StatsDClient;
