@@ -1,6 +1,9 @@
 CHANGELOG
 =========
 
+## 6.8.7 (2020-2-10)
+* @mrknmc Fix TyperError when increment call without a callback argument
+
 ## 6.8.6 (2020-1-28)
 * @ericmustin callback is not properly passed bytes argument
 
