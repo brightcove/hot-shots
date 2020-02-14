@@ -119,12 +119,14 @@ describe('#check', () => {
           statsd = createHotShotsClient(Object.assign(opts, {
             telegraf: true,
           }), clientType);
+
           assert.throws(() => {
             statsd.check('check.name', statsd.CHECKS.OK, null, ['foo', 'bar']);
-          }, err => {
-            assert.ok(err);
-            done();
+          }, {
+            name: 'Error',
+            message: 'Not supported by Telegraf / InfluxDB'
           });
+          done();
         });
       });
 
