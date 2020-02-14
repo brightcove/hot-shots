@@ -1,6 +1,11 @@
 CHANGELOG
 =========
 
+## 7.0.0 (2020-2-13)
+* @tomruggs Remove support for Node 6- now supporting Node 8.x or
+higher
+* @tomruggs Update to the latest mocha version to get rid of a security warning
+
 ## 6.8.7 (2020-2-10)
 * @mrknmc Fix TypeError when increment called without a callback argument
 
