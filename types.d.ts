@@ -85,15 +85,15 @@ declare module "hot-shots" {
     timing(stat: string | string[], value: number, callback?: StatsCb): void;
     timing(stat: string | string[], value: number, sampleRate?: number, callback?: StatsCb): void;
 
-    timer(func: (...args: any[]) => any, stat: string | string[], sampleRate?: number, tags?: Tags, callback?: StatsCb): (...args: any[]) => any;
-    timer(func: (...args: any[]) => any, stat: string | string[], tags?: Tags, callback?: StatsCb): (...args: any[]) => any;
-    timer(func: (...args: any[]) => any, stat: string | string[], callback?: StatsCb): (...args: any[]) => any;
-    timer(func: (...args: any[]) => any, stat: string | string[], sampleRate?: number, callback?: StatsCb): (...args: any[]) => any;
+    timer<P extends any[], R>(func: (...args: P) => R, stat: string | string[], sampleRate?: number, tags?: Tags, callback?: StatsCb): (...args: P) => R;
+    timer<P extends any[], R>(func: (...args: P) => R, stat: string | string[], tags?: Tags, callback?: StatsCb): (...args: P) => R;
+    timer<P extends any[], R>(func: (...args: P) => R, stat: string | string[], callback?: StatsCb): (...args: P) => R;
+    timer<P extends any[], R>(func: (...args: P) => R, stat: string | string[], sampleRate?: number, callback?: StatsCb): (...args: P) => R;
 
-    asyncTimer<T>(func: (...args: any[]) => Promise<T>, stat: string | string[], sampleRate?: number, tags?: Tags, callback?: StatsCb): (...args: any[]) => Promise<T>;
-    asyncTimer<T>(func: (...args: any[]) => Promise<T>, stat: string | string[], tags?: Tags, callback?: StatsCb): (...args: any[]) => Promise<T>;
-    asyncTimer<T>(func: (...args: any[]) => Promise<T>, stat: string | string[], callback?: StatsCb): (...args: any[]) => Promise<T>;
-    asyncTimer<T>(func: (...args: any[]) => Promise<T>, stat: string | string[], sampleRate?: number, callback?: StatsCb): (...args: any[]) => Promise<T>;
+    asyncTimer<P extends any[], R>(func: (...args: P) => Promise<R>, stat: string | string[], sampleRate?: number, tags?: Tags, callback?: StatsCb): (...args: P) => Promise<R>;
+    asyncTimer<P extends any[], R>(func: (...args: P) => Promise<R>, stat: string | string[], tags?: Tags, callback?: StatsCb): (...args: P) => Promise<R>;
+    asyncTimer<P extends any[], R>(func: (...args: P) => Promise<R>, stat: string | string[], callback?: StatsCb): (...args: P) => Promise<R>;
+    asyncTimer<P extends any[], R>(func: (...args: P) => Promise<R>, stat: string | string[], sampleRate?: number, callback?: StatsCb): (...args: P) => Promise<R>;
 
     histogram(stat: string | string[], value: number, sampleRate?: number, tags?: Tags, callback?: StatsCb): void;
     histogram(stat: string | string[], value: number, tags?: Tags, callback?: StatsCb): void;
