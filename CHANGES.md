@@ -1,6 +1,10 @@
 CHANGELOG
 =========
 
+## 7.1.0 (2020-3-4)
+* @wision Actually fix cachedDns with udp
+* @casey-chow TypeScript: parameterize function types in timer and asyncTimer
+
 ## 7.0.0 (2020-2-13)
 * @tomruggs Remove support for Node 6- now supporting Node 8.x or higher
 * @tomruggs Update to the latest mocha version to get rid of a security warning
