@@ -147,41 +147,6 @@ describe('#init', () => {
     assert.deepEqual(statsd.globalTags, ['gtag', 'dd.internal.entity_id:04652bb7-19b7-11e9-9cc6-42010a9c016d']);
   });
 
-  it('should lookup a dns record if dnsCache is specified', done => {
-    const originalLookup = dns.lookup;
-
-    // Replace the dns lookup function with our mock dns lookup
-    dns.lookup = (host, callback) => {
-      process.nextTick(() => {
-        dns.lookup = originalLookup;
-        assert.equal(statsd.host, host);
-        callback(null, '127.0.0.1', 4);
-        assert.equal(statsd.host, '127.0.0.1');
-        done();
-      });
-    };
-
-    statsd = createHotShotsClient({ host: 'localhost', cacheDns: true }, clientType);
-  });
-
-  it('should lookup a dns record if dnsCache is specified and DD_AGENT_HOST is set', done => {
-    const originalLookup = dns.lookup;
-
-    // Replace the dns lookup function with our mock dns lookup
-    dns.lookup = (host, callback) => {
-      process.nextTick(() => {
-        dns.lookup = originalLookup;
-        assert.equal(statsd.host, host);
-        callback(null, '127.0.0.1', 4);
-        assert.equal(statsd.host, '127.0.0.1');
-        done();
-      });
-    };
-
-    process.env.DD_AGENT_HOST = 'localhost';
-    statsd = createHotShotsClient({ cacheDns: true }, clientType);
-  });
-
   it('should not lookup a dns record if dnsCache is not specified', done => {
     const originalLookup = dns.lookup;
 
@@ -209,7 +174,7 @@ describe('#init', () => {
     statsd = createHotShotsClient({ host: 'localhost', cacheDns: true }, clientType);
 
     statsd.increment('test', 1, 1, null, err => {
-      assert.equal(err.message, 'Bad host');
+      assert.equal(err.message, 'Error sending hot-shots message: Error: Bad host');
       dns.lookup = originalLookup;
       done();
     });
