@@ -6,6 +6,7 @@ declare module "hot-shots" {
     bufferFlushInterval?: number;
     bufferHolder?: { buffer: string };
     cacheDns?: boolean;
+    dnsTtlMilliseconds?: number;
     errorHandler?: (err: Error) => void;
     globalTags?: Tags;
     globalize?: boolean;
