@@ -1,6 +1,9 @@
 CHANGELOG
 =========
 
+## Unreleased
+* @dependabot Bump acorn from 6.3.0 to 6.4.1
+
 ## 7.1.0 (2020-3-4)
 * @wision Actually fix cachedDns with udp
 * @casey-chow TypeScript: parameterize function types in timer and asyncTimer
