@@ -1,7 +1,8 @@
 CHANGELOG
 =========
 
-## Unreleased
+## 7.1.0 (2020-3-19)
+* @marciopd Add cacheDnsTtl
 * @dependabot Bump acorn from 6.3.0 to 6.4.1
 
 ## 7.1.0 (2020-3-4)
