@@ -35,9 +35,9 @@ Parameters (specified as one object passed into hot-shots):
 * `prefix`:      What to prefix each stat name with `default: ''`
 * `suffix`:      What to suffix each stat name with `default: ''`
 * `globalize`:   Expose this StatsD instance globally. `default: false`
-* `cacheDns`:    Caches dns lookup to *host* for *dnsTtlMilliseconds*, only used
+* `cacheDns`:    Caches dns lookup to *host* for *cacheDnsTtl*, only used
   when protocol is `udp`, `default: false`
-* `dnsTtlMilliseconds`: time-to-live of dns lookups in milliseconds, when *cacheDns* is enabled. `default: 60000`
+* `cacheDnsTtl`: time-to-live of dns lookups in milliseconds, when *cacheDns* is enabled. `default: 60000`
 * `mock`:        Create a mock StatsD instance, sending no stats to
   the server and allowing data to be read from mockBuffer.  Note that
   mockBuffer will keep growing, so only use for testing or clear out periodically. `default: false`

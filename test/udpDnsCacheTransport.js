@@ -121,10 +121,10 @@ describe('#udpDnsCacheTransport', () => {
       server = createServer(udpServerType, opts => {
         const socketMock = mockDgramSocket();
 
-        const dnsTtlMilliseconds = 100;
+        const cacheDnsTtl = 100;
         statsd = createHotShotsClient(Object.assign(opts, {
           cacheDns: true,
-          dnsTtlMilliseconds: dnsTtlMilliseconds
+          cacheDnsTtl: cacheDnsTtl
         }), 'client');
 
         const resolvedHostAddress = '1.1.1.1';
@@ -151,7 +151,7 @@ describe('#udpDnsCacheTransport', () => {
               done();
             }, 1000);
           });
-        }, dnsTtlMilliseconds + 1);
+        }, cacheDnsTtl + 1);
       });
     });
   });
