@@ -23,6 +23,8 @@ declare module "hot-shots" {
     suffix?: string;
     telegraf?: boolean;
     useDefaultRoute?: boolean;
+    tagPrefix?: string;
+    tagSeparator?: string;
   }
 
   export interface ChildClientOptions {
