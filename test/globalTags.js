@@ -96,6 +96,49 @@ describe('#globalTags', () => {
         });
       });
 
+      it('should format tags using prefix', done => {
+        server = createServer(serverType, opts => {
+          statsd = createHotShotsClient(Object.assign(opts, {
+            globalTags: { gtag: '123', foo: 'bar' },
+            tagPrefix: '~',
+          }), clientType);
+          statsd.increment('test', 1337, { gtag: '234' });
+        });
+        server.on('metrics', metrics => {
+          assert.equal(metrics, `test:1337|c|~gtag:234,foo:bar${metricEnd}`);
+          done();
+        });
+      });
+
+      it('should format tags using separator', done => {
+        server = createServer(serverType, opts => {
+          statsd = createHotShotsClient(Object.assign(opts, {
+            globalTags: { gtag: '123', foo: 'bar' },
+            tagSeparator: '~',
+          }), clientType);
+          statsd.increment('test', 1337, { gtag: '234' });
+        });
+        server.on('metrics', metrics => {
+          assert.equal(metrics, `test:1337|c|#gtag:234~foo:bar${metricEnd}`);
+          done();
+        });
+      });
+
+      it('should format tags using prefix & separator', done => {
+        server = createServer(serverType, opts => {
+          statsd = createHotShotsClient(Object.assign(opts, {
+            globalTags: { gtag: '123', foo: 'bar' },
+            tagPrefix: '~',
+            tagSeparator: '~',
+          }), clientType);
+          statsd.increment('test', 1337, { gtag: '234' });
+        });
+        server.on('metrics', metrics => {
+          assert.equal(metrics, `test:1337|c|~gtag:234~foo:bar${metricEnd}`);
+          done();
+        });
+      });
+
       it('should replace reserved characters with underscores in tags', done => {
         server = createServer(serverType, opts => {
           statsd = createHotShotsClient(Object.assign(opts, {
