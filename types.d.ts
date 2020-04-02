@@ -23,6 +23,8 @@ declare module "hot-shots" {
     suffix?: string;
     telegraf?: boolean;
     useDefaultRoute?: boolean;
+    udsGracefulErrorHandling?: boolean;
+    udsGracefulRestartRateLimit?: number;
   }
 
   export interface ChildClientOptions {
