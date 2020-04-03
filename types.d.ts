@@ -25,6 +25,8 @@ declare module "hot-shots" {
     useDefaultRoute?: boolean;
     tagPrefix?: string;
     tagSeparator?: string;
+    udsGracefulErrorHandling?: boolean;
+    udsGracefulRestartRateLimit?: number;
   }
 
   export interface ChildClientOptions {

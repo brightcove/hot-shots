@@ -1,6 +1,11 @@
 CHANGELOG
 =========
 
+## 7.3.0 (2020-4-1)
+* @marciopd Use Date.now() instead of new Date()
+* @chotiwat Add UDS graceful error handling options to typescript
+* @bdeitte Update packages, most notably getting node-unix-dgram 2.0.4
+
 ## 7.2.0 (2020-3-19)
 * @marciopd Add cacheDnsTtl
 * @dependabot Bump acorn from 6.3.0 to 6.4.1
