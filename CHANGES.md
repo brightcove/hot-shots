@@ -1,6 +1,9 @@
 CHANGELOG
 =========
 
+## 7.4.0 (2020-4-3)
+* @MichaelSitter add tagPrefix and tagSeparator options
+
 ## 7.3.0 (2020-4-1)
 * @marciopd Use Date.now() instead of new Date()
 * @chotiwat Add UDS graceful error handling options to typescript
