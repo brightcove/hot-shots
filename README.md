@@ -34,6 +34,8 @@ Parameters (specified as one object passed into hot-shots):
 * `port`:        The port to send stats to, if not set, the constructor tries to retrieve it from the `DD_DOGSTATSD_PORT` environment variable, `default: 8125`
 * `prefix`:      What to prefix each stat name with `default: ''`
 * `suffix`:      What to suffix each stat name with `default: ''`
+* `tagPrefix`:   Prefix tag list with character `default: '#'`. Note does not work with `telegraf` option.
+* `tagSeparator`: Separate tags with character `default: ','`. Note does not work with `telegraf` option.
 * `globalize`:   Expose this StatsD instance globally. `default: false`
 * `cacheDns`:    Caches dns lookup to *host* for *cacheDnsTtl*, only used
   when protocol is `udp`, `default: false`
