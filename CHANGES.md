@@ -1,6 +1,9 @@
 CHANGELOG
 =========
 
+## 7.4.1 (2020-4-28)
+* @lbeschastny Sanitize ',' tags characters for telegraf
+
 ## 7.4.0 (2020-4-3)
 * @MichaelSitter add tagPrefix and tagSeparator options
 
