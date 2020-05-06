@@ -1,6 +1,9 @@
 CHANGELOG
 =========
 
+## 7.4.2 (2020-5-5)
+* @kazk Fix types for set/unique
+
 ## 7.4.1 (2020-4-28)
 * @lbeschastny Sanitize ',' tags characters for telegraf
 
