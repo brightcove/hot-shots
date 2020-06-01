@@ -32,6 +32,7 @@ function SocketMock() {
     this.sendCount++;
     callback();
   };
+  this.unref = () => {};
 }
 
 const mockDgramSocket = () => {

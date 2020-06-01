@@ -100,11 +100,20 @@ describe('#close', () => {
               done();
             }
           }), clientType);
+
+          // copy the real socket so it can cleaned up at the end
+          const socketRef = Object.assign({}, statsd.socket)
+
           statsd.socket.destroy = () => {
             throw new Error('Boom!');
           };
+
           statsd.socket.close = statsd.socket.destroy;
+
           statsd.close();
+
+          // cleanup socket
+          socketRef.close();
         });
       });
     });
