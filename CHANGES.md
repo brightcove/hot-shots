@@ -1,6 +1,9 @@
 CHANGELOG
 =========
 
+## 7.5.0 (2020-6-5)
+* @benblack86 Unreference underlying socket/interval to prevent process hangs
+
 ## 7.4.2 (2020-5-5)
 * @kazk Fix types for set/unique
 
