@@ -32,6 +32,8 @@ function SocketMock() {
     this.sendCount++;
     callback();
   };
+  // eslint-disable-next-line no-empty-function
+  this.unref = () => {};
 }
 
 const mockDgramSocket = () => {
