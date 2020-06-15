@@ -109,6 +109,9 @@ The check method has the following API:
   // Timing: sends a timing command with the specified milliseconds
   client.timing('response_time', 42);
 
+  //Timing: Also accepts a Date object of which the difference is calculated
+  client.timing('response_time',new Date());
+
   // Timer: Returns a function that you call to record how long the first
   // parameter takes to execute (in milliseconds) and then sends that value
   // using 'client.timing'.
