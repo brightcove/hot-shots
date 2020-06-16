@@ -143,7 +143,7 @@ describe('#statsFunctions', () => {
             done();
           });
         });
-      })
+      });
 
       describe('#increment', () => {
         it('should send count by 1 when no params are specified', done => {
