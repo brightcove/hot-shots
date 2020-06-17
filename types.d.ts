@@ -54,7 +54,7 @@ declare module "hot-shots" {
     K2 extends keyof T,
     K3 extends keyof T,
     K4 extends keyof T,
-  > = T[K1] | T[K2] | T[K3] | T[K4];
+    > = T[K1] | T[K2] | T[K3] | T[K4];
 
   export type DatadogChecksValues = unionFromInterfaceValues4<DatadogChecks, "OK", "WARNING", "CRITICAL", "UNKNOWN">;
 
@@ -85,10 +85,10 @@ declare module "hot-shots" {
     decrement(stat: string | string[], value: number, callback?: StatsCb): void;
     decrement(stat: string | string[], value: number, sampleRate?: number, callback?: StatsCb): void;
 
-    timing(stat: string | string[], value: number, sampleRate?: number, tags?: Tags, callback?: StatsCb): void;
-    timing(stat: string | string[], value: number, tags?: Tags, callback?: StatsCb): void;
-    timing(stat: string | string[], value: number, callback?: StatsCb): void;
-    timing(stat: string | string[], value: number, sampleRate?: number, callback?: StatsCb): void;
+    timing(stat: string | string[], value: number | Date, sampleRate?: number, tags?: Tags, callback?: StatsCb): void;
+    timing(stat: string | string[], value: number | Date, tags?: Tags, callback?: StatsCb): void;
+    timing(stat: string | string[], value: number | Date, callback?: StatsCb): void;
+    timing(stat: string | string[], value: number | Date, sampleRate?: number, callback?: StatsCb): void;
 
     timer<P extends any[], R>(func: (...args: P) => R, stat: string | string[], sampleRate?: number, tags?: Tags, callback?: StatsCb): (...args: P) => R;
     timer<P extends any[], R>(func: (...args: P) => R, stat: string | string[], tags?: Tags, callback?: StatsCb): (...args: P) => R;

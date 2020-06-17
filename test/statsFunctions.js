@@ -17,13 +17,13 @@ describe('#statsFunctions', () => {
   testTypes().forEach(([description, serverType, clientType, metricsEnd]) => {
     describe(description, () => {
       [{ name: 'timing', unit: 'ms', bytes: 14 },
-       { name: 'histogram', unit: 'h', bytes: 12 },
-       { name: 'distribution', unit: 'd', bytes: 12 },
-       { name: 'gauge', unit: 'g', bytes: 12 },
-       { name: 'set', unit: 's', bytes: 12 },
+      { name: 'histogram', unit: 'h', bytes: 12 },
+      { name: 'distribution', unit: 'd', bytes: 12 },
+      { name: 'gauge', unit: 'g', bytes: 12 },
+      { name: 'set', unit: 's', bytes: 12 },
       ].forEach(statFunction => {
 
-      describe(`#${statFunction.name}`, () => {
+        describe(`#${statFunction.name}`, () => {
           it(`should send proper ${statFunction.name} format without prefix, suffix, sampling and callback`, done => {
             server = createServer(serverType, opts => {
               statsd = createHotShotsClient(opts, clientType);
@@ -118,6 +118,29 @@ describe('#statsFunctions', () => {
               assert.equal(metrics, `test,foo=bar:42|${statFunction.unit}${metricsEnd}`);
               done();
             });
+          });
+        });
+      });
+
+      describe('#timing', () => {
+        it('should send when no dates are specified', done => {
+          server = createServer(serverType, opts => {
+            statsd = createHotShotsClient(opts, clientType);
+            statsd.timing('test', 1592198027348);
+          });
+          server.on('metrics', metrics => {
+            assert.equal(metrics, `test:1592198027348|ms${metricsEnd}`);
+            done();
+          });
+        });
+        it('should send when dates are specified', done => {
+          server = createServer(serverType, opts => {
+            statsd = createHotShotsClient(opts, clientType);
+            statsd.timing('test', new Date(Date.now() - 10));
+          });
+          server.on('metrics', metrics => {
+            assert.equal(metrics, `test:10|ms${metricsEnd}`);
+            done();
           });
         });
       });
