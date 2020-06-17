@@ -1,6 +1,9 @@
 CHANGELOG
 =========
 
+## 7.6.0 (2020-6-16)
+* @Impeekay Add date type to timing function
+
 ## 7.5.0 (2020-6-5)
 * @benblack86 Unreference underlying socket/interval to prevent process hangs
 
