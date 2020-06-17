@@ -106,28 +106,6 @@ The check method has the following API:
           errorHandler: errorHandler,
       });
 
-  // Timing: sends a timing command with the specified milliseconds
-  client.timing('response_time', 42);
-
-  //Timing: Also accepts a Date object of which the difference is calculated
-  client.timing('response_time',new Date());
-
-  // Timer: Returns a function that you call to record how long the first
-  // parameter takes to execute (in milliseconds) and then sends that value
-  // using 'client.timing'.
-  // The parameters after the first one (in this case 'fn')
-  // match those in 'client.timing'.
-  var fn = function(a, b) { return a + b };
-  client.timer(fn, 'fn_execution_time')(2, 2);
-
-  // Async timer: Similar to timer above, but you instead pass in a funtion
-  // that returns a Promise.  And then it returns a Promise that will record the timing.
-  var fn = function () { return new Promise(function (resolve, reject) { setTimeout(resolve, n); }); };
-  var instrumented = statsd.asyncTimer(fn, 'fn_execution_time');
-  instrumented().then(function() {
-    console.log('Code run and metric sent');
-  });
-
   // Increment: Increments a stat by a value (default is 1)
   client.increment('my_counter');
 
@@ -176,6 +154,28 @@ The check method has the following API:
     } else {
       console.log('Successfully sent', bytes, 'bytes');
     }
+    });
+
+  // Timing: sends a timing command with the specified milliseconds
+  client.timing('response_time', 42);
+
+  // Timing: also accepts a Date object of which the difference is calculated
+  client.timing('response_time', new Date());
+
+  // Timer: Returns a function that you call to record how long the first
+  // parameter takes to execute (in milliseconds) and then sends that value
+  // using 'client.timing'.
+  // The parameters after the first one (in this case 'fn')
+  // match those in 'client.timing'.
+  var fn = function(a, b) { return a + b };
+  client.timer(fn, 'fn_execution_time')(2, 2);
+
+  // Async timer: Similar to timer above, but you instead pass in a funtion
+  // that returns a Promise.  And then it returns a Promise that will record the timing.
+  var fn = function () { return new Promise(function (resolve, reject) { setTimeout(resolve, n); }); };
+  var instrumented = statsd.asyncTimer(fn, 'fn_execution_time');
+  instrumented().then(function() {
+    console.log('Code run and metric sent');
   });
 
   // Sampling, tags and callback are optional and could be used in any combination (DataDog and Telegraf only)
