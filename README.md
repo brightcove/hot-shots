@@ -13,6 +13,7 @@ includes all changes in the latest node-statsd and many additional changes, incl
 * raw stream protocol support
 * mock mode
 * asyncTimer
+* asyncDistTimer
 * much more, including many bug fixes
 
 hot-shots supports Node 8.x and higher.
@@ -170,10 +171,17 @@ The check method has the following API:
   var fn = function(a, b) { return a + b };
   client.timer(fn, 'fn_execution_time')(2, 2);
 
-  // Async timer: Similar to timer above, but you instead pass in a funtion
+  // Async timer: Similar to timer above, but you instead pass in a function
   // that returns a Promise.  And then it returns a Promise that will record the timing.
   var fn = function () { return new Promise(function (resolve, reject) { setTimeout(resolve, n); }); };
   var instrumented = statsd.asyncTimer(fn, 'fn_execution_time');
+  instrumented().then(function() {
+    console.log('Code run and metric sent');
+  });
+
+  // Async timer: Similar to asyncTimer above, but it instead emits a distribution.
+  var fn = function () { return new Promise(function (resolve, reject) { setTimeout(resolve, n); }); };
+  var instrumented = statsd.asyncDistTimer(fn, 'fn_execution_time');
   instrumented().then(function() {
     console.log('Code run and metric sent');
   });
