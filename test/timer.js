@@ -88,6 +88,26 @@ describe('#timer', () => {
       assert.ok(parseFloat(time) < (100 + TIMER_BUFFER));
     });
   });
+
+  it('should record "user time" of promise using a distribution', () => {
+    /* globals Promise */
+    statsd = new StatsD({ mock:true });
+
+    const onehundredMsFunc = () => { return delay(100); };
+
+    const instrumented = statsd.asyncDistTimer(onehundredMsFunc, 'name-thingy');
+
+    return instrumented().then(() => {
+
+      const stat = statsd.mockBuffer[0];
+      const name = stat.split(/:|\|/)[0];
+      const time = stat.split(/:|\|/)[1];
+
+      assert.equal(name, 'name-thingy');
+      assert.ok(parseFloat(time) >= 99);
+      assert.ok(parseFloat(time) < (100 + TIMER_BUFFER));
+    });
+  });
 });
 
 /**
