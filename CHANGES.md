@@ -1,6 +1,9 @@
 CHANGELOG
 =========
 
+## 7.7.0 (2020-7-29)
+* @tebriel Add asyncDistTimer function
+
 ## 7.6.0 (2020-6-16)
 * @Impeekay Add date type to timing function
 
