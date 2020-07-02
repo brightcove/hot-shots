@@ -188,7 +188,6 @@ describe('#errorHandling', () => {
           server = createServer('uds_broken', opts => {
             const client = statsd = createHotShotsClient(Object.assign(opts, {
               protocol: 'uds',
-              udsGracefulErrorHandling: true,
               errorHandler(error) {
                 assert.ok(error);
                 assert.equal(error.code, code);
@@ -222,7 +221,6 @@ describe('#errorHandling', () => {
           server = createServer('uds_broken', opts => {
             const client = statsd = createHotShotsClient(Object.assign(opts, {
               protocol: 'uds',
-              udsGracefulErrorHandling: true,
               errorHandler(error) {
                 assert.ok(error);
                 assert.equal(error.code, code);
@@ -257,7 +255,6 @@ describe('#errorHandling', () => {
           server = createServer('uds_broken', opts => {
             const client = statsd = createHotShotsClient(Object.assign(opts, {
               protocol: 'uds',
-              udsGracefulErrorHandling: true,
               udsGracefulRestartRateLimit: limit,
               errorHandler(error) {
                 assert.ok(error);
