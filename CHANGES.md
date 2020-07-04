@@ -1,6 +1,9 @@
 CHANGELOG
 =========
 
+## 7.7.1 (2020-8-4)
+* @DerGut Fix udsGracefulErrorHandling default value
+
 ## 7.7.0 (2020-7-29)
 * @tebriel Add asyncDistTimer function
 
