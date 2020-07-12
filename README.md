@@ -244,6 +244,13 @@ var client = new StatsD({
 })
 ```
 
+### Congestion error
+
+If you get an error like `Error sending hot-shots message: Error: congestion` with an error code of `1`,
+it is probably because you are sending large volumes of metrics to a single agent/ server.
+This error only arises when using the UDS protocol and means that packages are being dropped.
+Take a look at the [Datadog docs](https://docs.datadoghq.com/developers/dogstatsd/high_throughput/?#over-uds-unix-domain-socket) for some tips on tuning your connection.
+
 ## Unix domain socket support
 
 The 'uds' option as the protocol is to support [Unix Domain Sockets for Datadog](https://docs.datadoghq.com/developers/dogstatsd/unix_socket/).  It has the following limitations:
