@@ -1,6 +1,8 @@
 CHANGELOG
 =========
 
+* @DerGut Add "Congestion error" section to README
+
 ## 7.7.1 (2020-8-4)
 * @DerGut Fix udsGracefulErrorHandling default value
 
