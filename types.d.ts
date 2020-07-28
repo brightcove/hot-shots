@@ -9,6 +9,7 @@ declare module "hot-shots" {
     cacheDnsTtl?: number;
     errorHandler?: (err: Error) => void;
     globalTags?: Tags;
+    snakeCaseTags?: boolean;
     globalize?: boolean;
     host?: string;
     isChild?: boolean;
