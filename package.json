@@ -43,5 +43,7 @@
     "nyc": "15.x"
   },
   "license": "MIT",
-  "dependencies": {}
+  "dependencies": {
+    "snake-case": "^3.0.3"
+  }
 }

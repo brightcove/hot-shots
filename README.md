@@ -45,6 +45,7 @@ Parameters (specified as one object passed into hot-shots):
   the server and allowing data to be read from mockBuffer.  Note that
   mockBuffer will keep growing, so only use for testing or clear out periodically. `default: false`
 * `globalTags`:  Tags that will be added to every metric. Can be either an object or list of tags. The *Datadog* `dd.internal.entity_id` tag is appended to `globalTags` from the `DD_ENTITY_ID` environment variable if the latter is set. `default: {}`
+* `snakeCaseTags`: If true, converts all tags to snake case using [snake-case](https://github.com/blakeembrey/change-case/tree/master/packages/snake-case). This can be useful as Datadog ignores case in its metrics.
 * `maxBufferSize`: If larger than 0,  metrics will be buffered and only sent when the string length is greater than the size. `default: 0`
 * `bufferFlushInterval`: If buffering is in use, this is the time in ms to always flush any buffered metrics. `default: 1000`
 * `telegraf`:    Use Telegraf's StatsD line protocol, which is slightly different than the rest `default: false`
