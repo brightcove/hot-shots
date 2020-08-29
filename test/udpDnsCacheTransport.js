@@ -153,7 +153,7 @@ describe('#udpDnsCacheTransport', () => {
               done();
             }, 1000);
           });
-        }, cacheDnsTtl + 1);
+        }, cacheDnsTtl + 50);
       });
     });
   });

@@ -139,7 +139,8 @@ describe('#statsFunctions', () => {
             statsd.timing('test', new Date(Date.now() - 10));
           });
           server.on('metrics', metrics => {
-            assert.equal(metrics, `test:10|ms${metricsEnd}`);
+            assert.ok(metrics === `test:10|ms${metricsEnd}` ||
+              metrics === `test:11|ms${metricsEnd}`);
             done();
           });
         });
