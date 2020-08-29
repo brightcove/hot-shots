@@ -1,6 +1,11 @@
 CHANGELOG
 =========
 
+## 7.8.0 (2020-8-28)
+* @bdeitte Fix some flaky tests
+* @ralphiech Add missing error handler when socket is not created
+* @ralphiech Add missing socket checks
+* @dependabot Bump lodash from 4.17.15 to 4.17.19
 * @DerGut Add "Congestion error" section to README
 
 ## 7.7.1 (2020-8-4)
