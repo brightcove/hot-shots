@@ -111,7 +111,7 @@ describe('#init', () => {
 
   it('should set default values when not specified', () => {
     statsd = createHotShotsClient({}, clientType);
-    assert.equal(statsd.host, 'localhost');
+    assert.equal(statsd.host, undefined);
     assert.equal(statsd.port, 8125);
     assert.equal(statsd.prefix, '');
     assert.equal(statsd.suffix, '');
@@ -156,7 +156,7 @@ describe('#init', () => {
       dns.lookup = originalLookup;
     };
 
-    statsd = createHotShotsClient({ host: 'localhost' }, clientType);
+    statsd = createHotShotsClient({ host: 'test' }, clientType);
     process.nextTick(() => {
       dns.lookup = originalLookup;
       done();
@@ -171,7 +171,7 @@ describe('#init', () => {
       return callback(new Error('Bad host'));
     };
 
-    statsd = createHotShotsClient({ host: 'localhost', cacheDns: true }, clientType);
+    statsd = createHotShotsClient({ host: 'test', cacheDns: true }, clientType);
 
     statsd.increment('test', 1, 1, null, err => {
       assert.equal(err.message, 'Error sending hot-shots message: Error: Bad host');
