@@ -24,7 +24,7 @@ describe('#check', () => {
           statsd.check('check.name', statsd.CHECKS.OK);
         });
         server.on('metrics', event => {
-          assert.equal(event, `_sc|check.name|0${metricEnd}`);
+          assert.strictEqual(event, `_sc|check.name|0${metricEnd}`);
           done();
         });
       });
@@ -38,7 +38,7 @@ describe('#check', () => {
           statsd.check('check.name', statsd.CHECKS.OK);
         });
         server.on('metrics', event => {
-          assert.equal(event, `_sc|prefix.check.name.suffix|0${metricEnd}`);
+          assert.strictEqual(event, `_sc|prefix.check.name.suffix|0${metricEnd}`);
           done();
         });
       });
@@ -55,7 +55,7 @@ describe('#check', () => {
           statsd.check('check.name', statsd.CHECKS.WARNING, options);
         });
         server.on('metrics', event => {
-          assert.equal(event, `_sc|check.name|1|d:${Math.round(date.getTime() / 1000)}|h:host|m:message${metricEnd}`
+          assert.strictEqual(event, `_sc|check.name|1|d:${Math.round(date.getTime() / 1000)}|h:host|m:message${metricEnd}`
           );
           done();
         });
@@ -70,7 +70,7 @@ describe('#check', () => {
           statsd.event('test title', 'another desc', options, ['foo', 'bar']);
         });
         server.on('metrics', event => {
-          assert.equal(event, `_e{10,12}:test title|another desc|h:host|#foo,bar${metricEnd}`);
+          assert.strictEqual(event, `_e{10,12}:test title|another desc|h:host|#foo,bar${metricEnd}`);
           done();
         });
       });
@@ -84,8 +84,8 @@ describe('#check', () => {
           });
         });
         server.on('metrics', event => {
-          assert.equal(event, `_sc|check.name|0|#foo,bar${metricEnd}`);
-          assert.equal(called, true);
+          assert.strictEqual(event, `_sc|check.name|0|#foo,bar${metricEnd}`);
+          assert.strictEqual(called, true);
           done();
         });
       });

@@ -21,7 +21,7 @@ describe('#send', () => {
           const err = new Error('Boom!');
           statsd = createHotShotsClient(Object.assign(opts, {
             errorHandler(e) {
-              assert.equal(e, err);
+              assert.strictEqual(e, err);
               done();
             }
           }), clientType);

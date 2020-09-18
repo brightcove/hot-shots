@@ -30,7 +30,7 @@ describe('#statsFunctions', () => {
               statsd[statFunction.name]('test', 42);
             });
             server.on('metrics', metrics => {
-              assert.equal(metrics, `test:42|${statFunction.unit}${metricsEnd}`);
+              assert.strictEqual(metrics, `test:42|${statFunction.unit}${metricsEnd}`);
               done();
             });
           });
@@ -41,7 +41,7 @@ describe('#statsFunctions', () => {
               statsd[statFunction.name]('test', 42, ['foo', 'bar']);
             });
             server.on('metrics', metrics => {
-              assert.equal(metrics, `test:42|${statFunction.unit}|#foo,bar${metricsEnd}`);
+              assert.strictEqual(metrics, `test:42|${statFunction.unit}|#foo,bar${metricsEnd}`);
               done();
             });
           });
@@ -54,7 +54,7 @@ describe('#statsFunctions', () => {
               statsd[statFunction.name]('test', 42, ['foo', 'bar']);
             });
             server.on('metrics', metrics => {
-              assert.equal(metrics, `test:42|${statFunction.unit}|#foo,bar${metricsEnd}`);
+              assert.strictEqual(metrics, `test:42|${statFunction.unit}|#foo,bar${metricsEnd}`);
               done();
             });
           });
@@ -71,8 +71,8 @@ describe('#statsFunctions', () => {
               });
             });
             server.on('metrics', metrics => {
-              assert.equal(metrics, `foo.test.bar:42|${statFunction.unit}|@0.5${metricsEnd}`);
-              assert.equal(called, true);
+              assert.strictEqual(metrics, `foo.test.bar:42|${statFunction.unit}|@0.5${metricsEnd}`);
+              assert.strictEqual(called, true);
               done();
             });
           });
@@ -87,11 +87,11 @@ describe('#statsFunctions', () => {
               statsd[statFunction.name](['a', 'b'], 42, null, (error) => {
                 called += 1;
                 assert.ok(called === 1); // Ensure it only gets called once
-                assert.equal(error, null);
+                assert.strictEqual(error, null);
               });
             });
             server.on('metrics', metrics => {
-              assert.equal(metrics, `a:42|${statFunction.unit}\nb:42|${statFunction.unit}\n`);
+              assert.strictEqual(metrics, `a:42|${statFunction.unit}\nb:42|${statFunction.unit}\n`);
               done();
             });
           });
@@ -102,7 +102,7 @@ describe('#statsFunctions', () => {
               statsd[statFunction.name]('test', 42, { foo: 'bar' });
             });
             server.on('metrics', metrics => {
-              assert.equal(metrics, `test:42|${statFunction.unit}|#foo:bar${metricsEnd}`);
+              assert.strictEqual(metrics, `test:42|${statFunction.unit}|#foo:bar${metricsEnd}`);
               done();
             });
           });
@@ -115,7 +115,7 @@ describe('#statsFunctions', () => {
               statsd[statFunction.name]('test', 42, { foo: 'bar' });
             });
             server.on('metrics', metrics => {
-              assert.equal(metrics, `test,foo=bar:42|${statFunction.unit}${metricsEnd}`);
+              assert.strictEqual(metrics, `test,foo=bar:42|${statFunction.unit}${metricsEnd}`);
               done();
             });
           });
@@ -129,7 +129,7 @@ describe('#statsFunctions', () => {
             statsd.timing('test', 1592198027348);
           });
           server.on('metrics', metrics => {
-            assert.equal(metrics, `test:1592198027348|ms${metricsEnd}`);
+            assert.strictEqual(metrics, `test:1592198027348|ms${metricsEnd}`);
             done();
           });
         });
@@ -153,7 +153,7 @@ describe('#statsFunctions', () => {
             statsd.increment('test');
           });
           server.on('metrics', metrics => {
-            assert.equal(metrics, `test:1|c${metricsEnd}`);
+            assert.strictEqual(metrics, `test:1|c${metricsEnd}`);
             done();
           });
         });
@@ -164,7 +164,7 @@ describe('#statsFunctions', () => {
             statsd.increment('test', 0);
           });
           server.on('metrics', metrics => {
-            assert.equal(metrics, `test:0|c${metricsEnd}`);
+            assert.strictEqual(metrics, `test:0|c${metricsEnd}`);
             done();
           });
         });
@@ -175,7 +175,7 @@ describe('#statsFunctions', () => {
             statsd.increment('test', 42, ['foo', 'bar']);
           });
           server.on('metrics', metrics => {
-            assert.equal(metrics, `test:42|c|#foo,bar${metricsEnd}`);
+            assert.strictEqual(metrics, `test:42|c|#foo,bar${metricsEnd}`);
             done();
           });
         });
@@ -186,7 +186,7 @@ describe('#statsFunctions', () => {
             statsd.increment('test', ['foo', 'bar']);
           });
           server.on('metrics', metrics => {
-            assert.equal(metrics, `test:1|c|#foo,bar${metricsEnd}`);
+            assert.strictEqual(metrics, `test:1|c|#foo,bar${metricsEnd}`);
             done();
           });
         });
@@ -197,7 +197,7 @@ describe('#statsFunctions', () => {
             statsd.increment('test', 23, ['foo', 'bar']);
           });
           server.on('metrics', metrics => {
-            assert.equal(metrics, `test:23|c|#foo,bar${metricsEnd}`);
+            assert.strictEqual(metrics, `test:23|c|#foo,bar${metricsEnd}`);
             done();
           });
         });
@@ -214,8 +214,8 @@ describe('#statsFunctions', () => {
             });
           });
           server.on('metrics', metrics => {
-            assert.equal(metrics, `foo.test.bar:42|c|@0.5${metricsEnd}`);
-            assert.equal(called, true);
+            assert.strictEqual(metrics, `foo.test.bar:42|c|@0.5${metricsEnd}`);
+            assert.strictEqual(called, true);
             done();
           });
         });
@@ -230,12 +230,12 @@ describe('#statsFunctions', () => {
             statsd.increment(['a', 'b'], 42, null, (error, bytes) => {
               called += 1;
               assert.ok(called === 1); // Ensure it only gets called once
-              assert.equal(error, null);
-              assert.equal(bytes, 0);
+              assert.strictEqual(error, null);
+              assert.strictEqual(bytes, 0);
             });
           });
           server.on('metrics', metrics => {
-            assert.equal(metrics, 'a:42|c\nb:42|c\n');
+            assert.strictEqual(metrics, 'a:42|c\nb:42|c\n');
             done();
           });
         });
@@ -248,7 +248,7 @@ describe('#statsFunctions', () => {
             statsd.decrement('test');
           });
           server.on('metrics', metrics => {
-            assert.equal(metrics, `test:-1|c${metricsEnd}`);
+            assert.strictEqual(metrics, `test:-1|c${metricsEnd}`);
             done();
           });
         });
@@ -259,7 +259,7 @@ describe('#statsFunctions', () => {
             statsd.decrement('test', ['foo', 'bar']);
           });
           server.on('metrics', metrics => {
-            assert.equal(metrics, `test:-1|c|#foo,bar${metricsEnd}`);
+            assert.strictEqual(metrics, `test:-1|c|#foo,bar${metricsEnd}`);
             done();
           });
         });
@@ -270,7 +270,7 @@ describe('#statsFunctions', () => {
             statsd.decrement('test', 23, ['foo', 'bar']);
           });
           server.on('metrics', metrics => {
-            assert.equal(metrics, `test:-23|c|#foo,bar${metricsEnd}`);
+            assert.strictEqual(metrics, `test:-23|c|#foo,bar${metricsEnd}`);
             done();
           });
         });
@@ -281,7 +281,7 @@ describe('#statsFunctions', () => {
             statsd.decrement('test', 42, ['foo', 'bar']);
           });
           server.on('metrics', metrics => {
-            assert.equal(metrics, `test:-42|c|#foo,bar${metricsEnd}`);
+            assert.strictEqual(metrics, `test:-42|c|#foo,bar${metricsEnd}`);
             done();
           });
         });
@@ -298,8 +298,8 @@ describe('#statsFunctions', () => {
             });
           });
           server.on('metrics', metrics => {
-            assert.equal(metrics, `foo.test.bar:-42|c|@0.5${metricsEnd}`);
-            assert.equal(called, true);
+            assert.strictEqual(metrics, `foo.test.bar:-42|c|@0.5${metricsEnd}`);
+            assert.strictEqual(called, true);
             done();
           });
         });
@@ -314,12 +314,12 @@ describe('#statsFunctions', () => {
             statsd.decrement(['a', 'b'], 42, null, (error, bytes) => {
               called += 1;
               assert.ok(called === 1); // Ensure it only gets called once
-              assert.equal(error, null);
-              assert.equal(bytes, 0);
+              assert.strictEqual(error, null);
+              assert.strictEqual(bytes, 0);
             });
           });
           server.on('metrics', metrics => {
-            assert.equal(metrics, 'a:-42|c\nb:-42|c\n');
+            assert.strictEqual(metrics, 'a:-42|c\nb:-42|c\n');
             done();
           });
         });

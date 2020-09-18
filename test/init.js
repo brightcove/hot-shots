@@ -37,18 +37,18 @@ describe('#init', () => {
       clientType
     );
 
-    assert.equal(statsd.host, 'host');
-    assert.equal(statsd.port, 1234);
-    assert.equal(statsd.prefix, 'prefix');
-    assert.equal(statsd.suffix, 'suffix');
-    assert.equal(statsd, global.statsd);
-    assert.equal(statsd.mock, true);
-    assert.deepEqual(statsd.globalTags, ['gtag']);
-    assert.equal(statsd.maxBufferSize, 0);
-    assert.equal(statsd.bufferFlushInterval, 60);
-    assert.equal(statsd.telegraf, false);
-    assert.equal(statsd.sampleRate, 0.5);
-    assert.equal(statsd.protocol, 'udp');
+    assert.strictEqual(statsd.host, 'host');
+    assert.strictEqual(statsd.port, 1234);
+    assert.strictEqual(statsd.prefix, 'prefix');
+    assert.strictEqual(statsd.suffix, 'suffix');
+    assert.strictEqual(statsd, global.statsd);
+    assert.strictEqual(statsd.mock, true);
+    assert.deepStrictEqual(statsd.globalTags, ['gtag']);
+    assert.strictEqual(statsd.maxBufferSize, 0);
+    assert.strictEqual(statsd.bufferFlushInterval, 60);
+    assert.strictEqual(statsd.telegraf, false);
+    assert.strictEqual(statsd.sampleRate, 0.5);
+    assert.strictEqual(statsd.protocol, 'udp');
   });
 
   it('should set the proper values with options hash format', () => {
@@ -72,18 +72,18 @@ describe('#init', () => {
       protocol: 'tcp'
     }, clientType);
 
-    assert.equal(statsd.host, 'host');
-    assert.equal(statsd.port, 1234);
-    assert.equal(statsd.prefix, 'prefix');
-    assert.equal(statsd.suffix, 'suffix');
-    assert.equal(statsd, global.statsd);
-    assert.equal(statsd.mock, true);
-    assert.equal(statsd.sampleRate, 0.6);
-    assert.deepEqual(statsd.globalTags, ['gtag']);
-    assert.equal(statsd.maxBufferSize, 0);
-    assert.equal(statsd.bufferFlushInterval, 60);
-    assert.deepEqual(statsd.telegraf, false);
-    assert.equal(statsd.protocol, 'tcp');
+    assert.strictEqual(statsd.host, 'host');
+    assert.strictEqual(statsd.port, 1234);
+    assert.strictEqual(statsd.prefix, 'prefix');
+    assert.strictEqual(statsd.suffix, 'suffix');
+    assert.strictEqual(statsd, global.statsd);
+    assert.strictEqual(statsd.mock, true);
+    assert.strictEqual(statsd.sampleRate, 0.6);
+    assert.deepStrictEqual(statsd.globalTags, ['gtag']);
+    assert.strictEqual(statsd.maxBufferSize, 0);
+    assert.strictEqual(statsd.bufferFlushInterval, 60);
+    assert.deepStrictEqual(statsd.telegraf, false);
+    assert.strictEqual(statsd.protocol, 'tcp');
 
     dns.lookup = originalLookup;
   });
@@ -94,41 +94,41 @@ describe('#init', () => {
     process.env.DD_DOGSTATSD_PORT = '1234';
 
     statsd = createHotShotsClient({}, clientType);
-    assert.equal(statsd.host, 'envhost');
-    assert.equal(statsd.port, 1234);
-    assert.equal(statsd.prefix, '');
-    assert.equal(statsd.suffix, '');
-    assert.equal(global.statsd, undefined);
-    assert.equal(statsd.mock, undefined);
-    assert.deepEqual(statsd.globalTags, []);
+    assert.strictEqual(statsd.host, 'envhost');
+    assert.strictEqual(statsd.port, 1234);
+    assert.strictEqual(statsd.prefix, '');
+    assert.strictEqual(statsd.suffix, '');
+    assert.strictEqual(global.statsd, undefined);
+    assert.strictEqual(statsd.mock, undefined);
+    assert.deepStrictEqual(statsd.globalTags, []);
     assert.ok(!statsd.mock);
-    assert.equal(statsd.sampleRate, 1);
-    assert.equal(statsd.maxBufferSize, 0);
-    assert.equal(statsd.bufferFlushInterval, 1000);
-    assert.equal(statsd.telegraf, false);
-    assert.equal(statsd.protocol, 'udp');
+    assert.strictEqual(statsd.sampleRate, 1);
+    assert.strictEqual(statsd.maxBufferSize, 0);
+    assert.strictEqual(statsd.bufferFlushInterval, 1000);
+    assert.strictEqual(statsd.telegraf, false);
+    assert.strictEqual(statsd.protocol, 'udp');
   });
 
   it('should set default values when not specified', () => {
     statsd = createHotShotsClient({}, clientType);
-    assert.equal(statsd.host, undefined);
-    assert.equal(statsd.port, 8125);
-    assert.equal(statsd.prefix, '');
-    assert.equal(statsd.suffix, '');
-    assert.equal(global.statsd, undefined);
-    assert.equal(statsd.mock, undefined);
-    assert.deepEqual(statsd.globalTags, []);
+    assert.strictEqual(statsd.host, undefined);
+    assert.strictEqual(statsd.port, 8125);
+    assert.strictEqual(statsd.prefix, '');
+    assert.strictEqual(statsd.suffix, '');
+    assert.strictEqual(global.statsd, undefined);
+    assert.strictEqual(statsd.mock, undefined);
+    assert.deepStrictEqual(statsd.globalTags, []);
     assert.ok(!statsd.mock);
-    assert.equal(statsd.sampleRate, 1);
-    assert.equal(statsd.maxBufferSize, 0);
-    assert.equal(statsd.bufferFlushInterval, 1000);
-    assert.equal(statsd.telegraf, false);
-    assert.equal(statsd.protocol, 'udp');
+    assert.strictEqual(statsd.sampleRate, 1);
+    assert.strictEqual(statsd.maxBufferSize, 0);
+    assert.strictEqual(statsd.bufferFlushInterval, 1000);
+    assert.strictEqual(statsd.telegraf, false);
+    assert.strictEqual(statsd.protocol, 'udp');
   });
 
   it('should map global_tags to globalTags for backwards compatibility', () => {
     statsd = createHotShotsClient({ global_tags: ['gtag'] }, clientType);
-    assert.deepEqual(statsd.globalTags, ['gtag']);
+    assert.deepStrictEqual(statsd.globalTags, ['gtag']);
   });
 
   it('should get the dd.internal.entity_id tag from DD_ENTITY_ID env var', () => {
@@ -136,7 +136,7 @@ describe('#init', () => {
     process.env.DD_ENTITY_ID = '04652bb7-19b7-11e9-9cc6-42010a9c016d';
 
     statsd = createHotShotsClient({}, clientType);
-    assert.deepEqual(statsd.globalTags, ['dd.internal.entity_id:04652bb7-19b7-11e9-9cc6-42010a9c016d']);
+    assert.deepStrictEqual(statsd.globalTags, ['dd.internal.entity_id:04652bb7-19b7-11e9-9cc6-42010a9c016d']);
   });
 
   it('should get the dd.internal.entity_id tag from DD_ENTITY_ID env var and append it to existing tags', () => {
@@ -144,7 +144,7 @@ describe('#init', () => {
     process.env.DD_ENTITY_ID = '04652bb7-19b7-11e9-9cc6-42010a9c016d';
 
     statsd = createHotShotsClient({ globalTags: ['gtag'] }, clientType);
-    assert.deepEqual(statsd.globalTags, ['gtag', 'dd.internal.entity_id:04652bb7-19b7-11e9-9cc6-42010a9c016d']);
+    assert.deepStrictEqual(statsd.globalTags, ['gtag', 'dd.internal.entity_id:04652bb7-19b7-11e9-9cc6-42010a9c016d']);
   });
 
   it('should not lookup a dns record if dnsCache is not specified', done => {
@@ -174,7 +174,7 @@ describe('#init', () => {
     statsd = createHotShotsClient({ host: 'test', cacheDns: true }, clientType);
 
     statsd.increment('test', 1, 1, null, err => {
-      assert.equal(err.message, 'Error sending hot-shots message: Error: Bad host');
+      assert.strictEqual(err.message, 'Error sending hot-shots message: Error: Bad host');
       dns.lookup = originalLookup;
       done();
     });
@@ -187,7 +187,7 @@ describe('#init', () => {
 
   it('should not create a global variable when not specified', () => {
     statsd = createHotShotsClient(['host', 1234, 'prefix', 'suffix'], clientType);
-    assert.equal(global.statsd, undefined);
+    assert.strictEqual(global.statsd, undefined);
   });
 
   it('should create a mock Client when mock variable is specified', () => {
@@ -197,14 +197,14 @@ describe('#init', () => {
 
   it('should create a socket variable that is an instance of dgram.Socket', () => {
     statsd = createHotShotsClient({}, clientType);
-    assert.equal(statsd.socket.type, 'udp');
+    assert.strictEqual(statsd.socket.type, 'udp');
     skipClose = true;
   });
 
   it('should create a socket variable that is an instance of net.Socket if set to TCP', done => {
     server = createServer('tcp', opts => {
       statsd = createHotShotsClient(opts, clientType);
-      assert.equal(statsd.socket.type, 'tcp');
+      assert.strictEqual(statsd.socket.type, 'tcp');
       done();
     });
   });
