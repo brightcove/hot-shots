@@ -35,9 +35,9 @@ describe('#childClient', () => {
           globalTags: ['awesomeness:over9000', 'tag1:xxx', 'bar', ':baz']
         });
 
-        assert.equal(child.prefix, 'preff.prefix');
-        assert.equal(child.suffix, 'suffix.suff');
-        assert.equal(statsd, global.statsd);
+        assert.strictEqual(child.prefix, 'preff.prefix');
+        assert.strictEqual(child.suffix, 'suffix.suff');
+        assert.strictEqual(statsd, global.statsd);
         assert.deepEqual(child.globalTags, ['gtag', 'tag1:xxx', 'awesomeness:over9000', 'bar', ':baz']);
       });
     });
@@ -55,7 +55,7 @@ describe('#childClient', () => {
           statsd.increment('b', 2);
       });
       server.on('metrics', metrics => {
-        assert.equal(metrics, 'preff.a.suff:1|c|#awesomeness:over9000\npreff.b.suff:2|c|#awesomeness:over9000\n');
+        assert.strictEqual(metrics, 'preff.a.suff:1|c|#awesomeness:over9000\npreff.b.suff:2|c|#awesomeness:over9000\n');
         done();
       });
     });
@@ -76,7 +76,7 @@ describe('#childClient', () => {
         statsd.increment('b', 2);
       });
       server.on('metrics', metrics => {
-        assert.equal(metrics, 'preff.p.a.s.suff:1|c|#xyz,awesomeness:' +
+        assert.strictEqual(metrics, 'preff.p.a.s.suff:1|c|#xyz,awesomeness:' +
           'over9000\npreff.p.b.s.suff:2|c|#xyz,awesomeness:over9000\n'
         );
         done();

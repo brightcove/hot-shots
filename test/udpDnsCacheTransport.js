@@ -72,12 +72,12 @@ describe('#udpDnsCacheTransport', () => {
         };
 
         statsd.send('test title', {}, (error) => {
-          assert.equal(error, undefined);
+          assert.strictEqual(error, null);
           setTimeout(() => {
-            assert.equal(dnsLookupCount, 1);
-            assert.equal(socketMock.sendCount, 1);
-            assert.equal(socketMock.host, resolvedHostAddress);
-            assert.equal(socketMock.buf, 'test title');
+            assert.strictEqual(dnsLookupCount, 1);
+            assert.strictEqual(socketMock.sendCount, 1);
+            assert.strictEqual(socketMock.host, resolvedHostAddress);
+            assert.strictEqual(socketMock.buf.toString(), 'test title');
             done();
           }, 1000);
         });
@@ -102,15 +102,15 @@ describe('#udpDnsCacheTransport', () => {
         };
 
         statsd.send('message', {}, (error) => {
-          assert.equal(error, undefined);
+          assert.strictEqual(error, null);
         });
 
         statsd.send('other message', {}, (error) => {
-          assert.equal(error, undefined);
+          assert.strictEqual(error, null);
           setTimeout(() => {
-            assert.equal(dnsLookupCount, 1);
-            assert.equal(socketMock.sendCount, 2);
-            assert.equal(socketMock.host, resolvedHostAddress);
+            assert.strictEqual(dnsLookupCount, 1);
+            assert.strictEqual(socketMock.sendCount, 2);
+            assert.strictEqual(socketMock.host, resolvedHostAddress);
             done();
           }, 1000);
         });
@@ -137,19 +137,19 @@ describe('#udpDnsCacheTransport', () => {
         };
 
         statsd.send('message', {}, (error) => {
-          assert.equal(error, undefined);
+          assert.strictEqual(error, null);
         });
 
         statsd.send('other message', {}, (error) => {
-          assert.equal(error, undefined);
+          assert.strictEqual(error, null);
         });
 
         setTimeout(() => {
           statsd.send('message 1ms after TTL', {}, (error) => {
-            assert.equal(error, undefined);
+            assert.strictEqual(error, null);
             setTimeout(() => {
-              assert.equal(dnsLookupCount, 2);
-              assert.equal(socketMock.sendCount, 3);
+              assert.strictEqual(dnsLookupCount, 2);
+              assert.strictEqual(socketMock.sendCount, 3);
               done();
             }, 1000);
           });

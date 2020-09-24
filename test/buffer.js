@@ -27,7 +27,7 @@ describe('#buffer', () => {
           statsd.increment('b', 2);
         });
         server.on('metrics', metrics => {
-          assert.equal(metrics, 'a:1|c\nb:2|c\n');
+          assert.strictEqual(metrics, 'a:1|c\nb:2|c\n');
           done();
         });
       });
@@ -47,16 +47,16 @@ describe('#buffer', () => {
           // one of the few places we have an actual test difference based on server type
           if (serverType === 'udp' || serverType === 'uds' || serverType === 'stream') {
             const index = expected.indexOf(metrics.trim());
-            assert.equal(index >= 0, true);
+            assert.strictEqual(index >= 0, true);
             expected.splice(index, 1);
             noOfMessages++;
             if (noOfMessages === 2) {
-              assert.equal(expected.length, 0);
+              assert.strictEqual(expected.length, 0);
               done();
             }
           }
           else {
-            assert.equal(metrics, 'a:1|c\nb:2|c\n');
+            assert.strictEqual(metrics, 'a:1|c\nb:2|c\n');
             done();
           }
         });
@@ -71,7 +71,7 @@ describe('#buffer', () => {
           statsd.increment('b', 2);
         });
         server.once('metrics', metrics => {
-          assert.equal(metrics, 'a:1|c\n');
+          assert.strictEqual(metrics, 'a:1|c\n');
           done();
         });
       });
@@ -88,8 +88,8 @@ describe('#buffer', () => {
         });
         server.on('metrics', metric => {
           const elapsed = Date.now() - start;
-          assert.equal(metric, 'a:1|c\n');
-          assert.equal(elapsed > 1000, true);
+          assert.strictEqual(metric, 'a:1|c\n');
+          assert.strictEqual(elapsed > 1000, true);
           done();
         });
       });
