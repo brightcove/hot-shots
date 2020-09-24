@@ -34,7 +34,7 @@ describe('#timer', () => {
         server.on('metrics', metrics => {
           // Search for a string similar to 'test:0.123|ms'
           const re = RegExp('(test:)([0-9]+.[0-9]+)\\|{1}(ms)');
-          assert.equal(true, re.test(metrics));
+          assert.strictEqual(true, re.test(metrics));
           done();
         });
       });
@@ -50,7 +50,7 @@ describe('#timer', () => {
         server.on('metrics', metrics => {
           // Search for a string similar to 'test:0.123|ms|#foo,bar'
           const re = RegExp('(test:)([0-9]+.[0-9]+)\\|{1}(ms)\\|{1}\\#(foo,bar)');
-          assert.equal(true, re.test(metrics));
+          assert.strictEqual(true, re.test(metrics));
           done();
         });
       });
@@ -83,7 +83,7 @@ describe('#timer', () => {
       const name = stat.split(/:|\|/)[0];
       const time = stat.split(/:|\|/)[1];
 
-      assert.equal(name, 'name-thingy');
+      assert.strictEqual(name, 'name-thingy');
       assert.ok(parseFloat(time) >= 99);
       assert.ok(parseFloat(time) < (100 + TIMER_BUFFER));
     });
@@ -103,7 +103,7 @@ describe('#timer', () => {
       const name = stat.split(/:|\|/)[0];
       const time = stat.split(/:|\|/)[1];
 
-      assert.equal(name, 'name-thingy');
+      assert.strictEqual(name, 'name-thingy');
       assert.ok(parseFloat(time) >= 99);
       assert.ok(parseFloat(time) < (100 + TIMER_BUFFER));
     });

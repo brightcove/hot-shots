@@ -22,7 +22,7 @@ describe('#event', () => {
           statsd.event('test', 'description');
         });
         server.on('metrics', event => {
-          assert.equal(event, `_e{4,11}:test|description${metricEnd}`);
+          assert.strictEqual(event, `_e{4,11}:test|description${metricEnd}`);
           done();
         });
       });
@@ -33,7 +33,7 @@ describe('#event', () => {
           statsd.event('test');
         });
         server.on('metrics', event => {
-          assert.equal(event, `_e{4,4}:test|test${metricEnd}`);
+          assert.strictEqual(event, `_e{4,4}:test|test${metricEnd}`);
           done();
         });
       });
@@ -53,7 +53,7 @@ describe('#event', () => {
           statsd.event('test title', 'another\nmultiline\ndescription', options);
         });
         server.on('metrics', event => {
-          assert.equal(event, `_e{10,31}:test title|another\\nmultiline\\ndescription|d:${Math.round(date.getTime() / 1000)}|h:host|k:ag_key|p:low|s:source_type|t:warning${metricEnd}`
+          assert.strictEqual(event, `_e{10,31}:test title|another\\nmultiline\\ndescription|d:${Math.round(date.getTime() / 1000)}|h:host|k:ag_key|p:low|s:source_type|t:warning${metricEnd}`
           );
           done();
         });
@@ -68,7 +68,7 @@ describe('#event', () => {
           statsd.event('test title', 'another desc', options, ['foo', 'bar']);
         });
         server.on('metrics', event => {
-          assert.equal(event, `_e{10,12}:test title|another desc|h:host|#foo,bar${metricEnd}`);
+          assert.strictEqual(event, `_e{10,12}:test title|another desc|h:host|#foo,bar${metricEnd}`);
           done();
         });
       });
@@ -82,8 +82,8 @@ describe('#event', () => {
           });
         });
         server.on('metrics', event => {
-          assert.equal(event, `_e{10,12}:test title|another desc|#foo,bar${metricEnd}`);
-          assert.equal(called, true);
+          assert.strictEqual(event, `_e{10,12}:test title|another desc|#foo,bar${metricEnd}`);
+          assert.strictEqual(called, true);
           done();
         });
       });

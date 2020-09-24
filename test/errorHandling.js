@@ -85,7 +85,7 @@ describe('#errorHandling', () => {
           const err = new Error('Boom!');
           statsd = createHotShotsClient(Object.assign(opts, {
             errorHandler(e) {
-              assert.equal(e, err);
+              assert.strictEqual(e, err);
               done();
             }
           }), clientType);
@@ -101,7 +101,7 @@ describe('#errorHandling', () => {
           const err = new Error('Boom!');
           statsd = createHotShotsClient(Object.assign(opts, {
             errorHandler(e) {
-              assert.equal(e, err);
+              assert.strictEqual(e, err);
               ignoreErrors = true;
               done();
             }
@@ -125,7 +125,7 @@ describe('#errorHandling', () => {
 
         statsd.send('test title', [], error => {
           assert.ok(error);
-          assert.equal(error.code, 'ENOTFOUND');
+          assert.strictEqual(error.code, 'ENOTFOUND');
           // skip closing, because the unresolvable host hangs
           statsd = null;
           done();
@@ -145,7 +145,7 @@ describe('#errorHandling', () => {
           protocol: serverType,
           errorHandler(error) {
             assert.ok(error);
-            assert.equal(error.code, 'ENOTFOUND');
+            assert.strictEqual(error.code, 'ENOTFOUND');
             // skip closing, because the unresolvable host hangs
             statsd = null;
             done();
@@ -168,7 +168,7 @@ describe('#errorHandling', () => {
 
         statsd.socket.on('error', error => {
           assert.ok(error);
-          assert.equal(error.code, 'ENOTFOUND');
+          assert.strictEqual(error.code, 'ENOTFOUND');
 
           // skip closing, because the unresolvable host hangs
           statsd = null;
@@ -190,7 +190,7 @@ describe('#errorHandling', () => {
               protocol: 'uds',
               errorHandler(error) {
                 assert.ok(error);
-                assert.equal(error.code, code);
+                assert.strictEqual(error.code, code);
               }
             }), 'client');
             const initialSocket = client.socket;
@@ -223,7 +223,7 @@ describe('#errorHandling', () => {
               protocol: 'uds',
               errorHandler(error) {
                 assert.ok(error);
-                assert.equal(error.code, code);
+                assert.strictEqual(error.code, code);
               }
             }), 'client');
             const initialSocket = client.socket;
@@ -258,7 +258,7 @@ describe('#errorHandling', () => {
               udsGracefulRestartRateLimit: limit,
               errorHandler(error) {
                 assert.ok(error);
-                assert.equal(error.code, code);
+                assert.strictEqual(error.code, code);
               }
             }), 'client');
             const initialSocket = client.socket;
@@ -271,7 +271,7 @@ describe('#errorHandling', () => {
               initialSocket.emit('error', { code });
               setTimeout(() => {
                 // make sure the socket was NOT re-created
-                assert.equal(initialSocket, client.socket);
+                assert.strictEqual(initialSocket, client.socket);
                 Date.now = () => 4857394578 + limit; // 1 second later
                 initialSocket.emit('error', { code });
                 setTimeout(() => {
@@ -298,7 +298,7 @@ describe('#errorHandling', () => {
               udsGracefulErrorHandling: false,
               errorHandler(error) {
                 assert.ok(error);
-                assert.equal(error.code, code);
+                assert.strictEqual(error.code, code);
               }
             }), 'client');
             const initialSocket = client.socket;
@@ -311,7 +311,7 @@ describe('#errorHandling', () => {
               initialSocket.emit('error', { code });
               setTimeout(() => {
                 // make sure the socket was NOT re-created
-                assert.equal(initialSocket, client.socket);
+                assert.strictEqual(initialSocket, client.socket);
                 // put things back
                 Date.now = realDateNow;
                 done();

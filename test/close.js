@@ -37,7 +37,7 @@ describe('#close', () => {
           });
         });
         server.on('metrics', metrics => {
-          assert.equal(metrics, `test:42|s${metricsEnd}`);
+          assert.strictEqual(metrics, `test:42|s${metricsEnd}`);
           metricSeen = true;
         });
       });
@@ -62,7 +62,7 @@ describe('#close', () => {
         server.on('metrics', metrics => {
           // this uses '\n' instead of metricsEnd because that's how things are set up when
           // maxBufferSize is in use
-          assert.equal(metrics, 'test:42|s\n');
+          assert.strictEqual(metrics, 'test:42|s\n');
           metricSeen = true;
         });
       });
@@ -87,7 +87,7 @@ describe('#close', () => {
         server.on('metrics', metrics => {
           // this uses '\n' instead of metricsEnd because that's how things are set up when
           // maxBufferSize is in use
-          assert.equal(metrics, 'test:42|s\n');
+          assert.strictEqual(metrics, 'test:42|s\n');
           metricSeen = true;
         });
       });

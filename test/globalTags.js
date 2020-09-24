@@ -23,7 +23,7 @@ describe('#globalTags', () => {
           statsd.increment('test');
         });
         server.on('metrics', metrics => {
-          assert.equal(metrics, `test:1|c${metricEnd}`);
+          assert.strictEqual(metrics, `test:1|c${metricEnd}`);
           done();
         });
       });
@@ -36,7 +36,7 @@ describe('#globalTags', () => {
           statsd.increment('test');
         });
         server.on('metrics', metrics => {
-          assert.equal(metrics, `test:1|c|#gtag${metricEnd}`);
+          assert.strictEqual(metrics, `test:1|c|#gtag${metricEnd}`);
           done();
         });
       });
@@ -52,7 +52,7 @@ describe('#globalTags', () => {
           statsd.increment('test');
         });
         server.on('metrics', metrics => {
-          assert.equal(metrics, `test:1|c|#gtag,dd.internal.entity_id:04652bb7-19b7-11e9-9cc6-42010a9c016d${metricEnd}`);
+          assert.strictEqual(metrics, `test:1|c|#gtag,dd.internal.entity_id:04652bb7-19b7-11e9-9cc6-42010a9c016d${metricEnd}`);
           done();
         });
       });
@@ -65,7 +65,7 @@ describe('#globalTags', () => {
           statsd.increment('test', 1337, ['foo']);
         });
         server.on('metrics', metrics => {
-          assert.equal(metrics, `test:1337|c|#gtag:1,gtag:2,bar,foo${metricEnd}`);
+          assert.strictEqual(metrics, `test:1337|c|#gtag:1,gtag:2,bar,foo${metricEnd}`);
           done();
         });
       });
@@ -78,7 +78,7 @@ describe('#globalTags', () => {
           statsd.increment('test', 1337, ['gtag:234', 'bar']);
         });
         server.on('metrics', metrics => {
-          assert.equal(metrics, `test:1337|c|#foo,gtag:234,bar${metricEnd}`);
+          assert.strictEqual(metrics, `test:1337|c|#foo,gtag:234,bar${metricEnd}`);
           done();
         });
       });
@@ -91,7 +91,7 @@ describe('#globalTags', () => {
           statsd.increment('test', 1337, { gtag: '234' });
         });
         server.on('metrics', metrics => {
-          assert.equal(metrics, `test:1337|c|#foo:bar,gtag:234${metricEnd}`);
+          assert.strictEqual(metrics, `test:1337|c|#foo:bar,gtag:234${metricEnd}`);
           done();
         });
       });
@@ -105,7 +105,7 @@ describe('#globalTags', () => {
           statsd.increment('test', 1337, { gtag: '234' });
         });
         server.on('metrics', metrics => {
-          assert.equal(metrics, `test:1337|c|~foo:bar,gtag:234${metricEnd}`);
+          assert.strictEqual(metrics, `test:1337|c|~foo:bar,gtag:234${metricEnd}`);
           done();
         });
       });
@@ -119,7 +119,7 @@ describe('#globalTags', () => {
           statsd.increment('test', 1337, { gtag: '234' });
         });
         server.on('metrics', metrics => {
-          assert.equal(metrics, `test:1337|c|#foo:bar~gtag:234${metricEnd}`);
+          assert.strictEqual(metrics, `test:1337|c|#foo:bar~gtag:234${metricEnd}`);
           done();
         });
       });
@@ -134,7 +134,7 @@ describe('#globalTags', () => {
           statsd.increment('test', 1337, { gtag: '234' });
         });
         server.on('metrics', metrics => {
-          assert.equal(metrics, `test:1337|c|~foo:bar~gtag:234${metricEnd}`);
+          assert.strictEqual(metrics, `test:1337|c|~foo:bar~gtag:234${metricEnd}`);
           done();
         });
       });
@@ -147,7 +147,7 @@ describe('#globalTags', () => {
           statsd.increment('test', 1337, { 'reserved:character': 'is@replaced@' });
         });
         server.on('metrics', metrics => {
-          assert.equal(metrics, `test:1337|c|#foo:b_a_r,reserved_character:is_replaced_${metricEnd}`);
+          assert.strictEqual(metrics, `test:1337|c|#foo:b_a_r,reserved_character:is_replaced_${metricEnd}`);
           done();
         });
       });
@@ -161,7 +161,7 @@ describe('#globalTags', () => {
           statsd.increment('test');
         });
         server.on('metrics', metrics => {
-          assert.equal(metrics, `test,gtag=gvalue,gtag=gvalue2,gtag2=gvalue2:1|c${metricEnd}`);
+          assert.strictEqual(metrics, `test,gtag=gvalue,gtag=gvalue2,gtag2=gvalue2:1|c${metricEnd}`);
           done();
         });
       });
@@ -175,7 +175,7 @@ describe('#globalTags', () => {
           statsd.increment('test', 1337, ['foo:bar']);
         });
         server.on('metrics', metrics => {
-          assert.equal(metrics, `test,gtag=gvalue,foo=bar:1337|c${metricEnd}`);
+          assert.strictEqual(metrics, `test,gtag=gvalue,foo=bar:1337|c${metricEnd}`);
           done();
         });
       });
@@ -189,7 +189,7 @@ describe('#globalTags', () => {
           statsd.increment('test', 1337, { foo: 'bar' });
         });
         server.on('metrics', metrics => {
-          assert.equal(metrics, `test,gtag=gvalue,foo=bar:1337|c${metricEnd}`);
+          assert.strictEqual(metrics, `test,gtag=gvalue,foo=bar:1337|c${metricEnd}`);
           done();
         });
       });

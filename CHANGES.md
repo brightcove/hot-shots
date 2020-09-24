@@ -1,6 +1,14 @@
 CHANGELOG
 =========
 
+## 8.0.0 (2020-9-23)
+* @naseemkullah Change default value for 'host' from 'localhost' to
+  undefined. This means the default host will now be 127.0.0.1 or ::1,
+  which has cases where it will speed up sending metrics. This should be a
+  non-breaking change, but bumping to a major version for it given
+  it's a very base change to the library.
+* @naseemkullah Switch from equals to strictEquals in tests
+
 ## 7.8.0 (2020-8-28)
 * @bdeitte Fix some flaky tests
 * @ralphiech Add missing error handler when socket is not created
