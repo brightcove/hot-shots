@@ -1,6 +1,14 @@
 CHANGELOG
 =========
 
+## 8.0.0 (2020-9-23)
+* @naseemkullah Change default value for 'host' from 'localhost' to
+  undefined. This should also 127.0.0.1 or ::1 to be used in the
+  default case, which does look to speed things up. This should be a
+  non-breaking change, but bumping to a major version for it given
+  it's a very base change to the library.
+* @naseemkullah Switch from equals to strictEquals in tests
+
 ## 7.8.0 (2020-8-28)
 * @bdeitte Fix some flaky tests
 * @ralphiech Add missing error handler when socket is not created
