@@ -179,12 +179,12 @@ describe('#errorHandling', () => {
       });
 
       if (serverType === 'uds' && clientType === 'client') {
-        it('should re-create the socket on 111 error for type uds', (done) => {
-          const code = 111;
+        it('should re-create the socket on -111 error for type uds', (done) => {
+          const code = -111;
           const realDateNow = Date.now;
           Date.now = () => '4857394578';
           // emit an error, like a socket would
-          // 111 is connection refused
+          // -111 is connection refused
           server = createServer('uds_broken', opts => {
             const client = statsd = createHotShotsClient(Object.assign(opts, {
               protocol: 'uds',
@@ -212,12 +212,12 @@ describe('#errorHandling', () => {
           });
         });
 
-        it('should re-create the socket on 107 error for type uds', (done) => {
-          const code = 107;
+        it('should re-create the socket on -107 error for type uds', (done) => {
+          const code = -107;
           const realDateNow = Date.now;
           Date.now = () => '4857394578';
           // emit an error, like a socket would
-          // 111 is connection refused
+          // -107 is transport endpoint not connected
           server = createServer('uds_broken', opts => {
             const client = statsd = createHotShotsClient(Object.assign(opts, {
               protocol: 'uds',
@@ -246,12 +246,12 @@ describe('#errorHandling', () => {
         });
 
         it('should re-create the socket on error for type uds with the configurable limit', (done) => {
-          const code = 111;
+          const code = -111;
           const limit = 4000;
           const realDateNow = Date.now;
           Date.now = () => '4857394578';
           // emit an error, like a socket would
-          // 111 is connection refused
+          // -111 is connection refused
           server = createServer('uds_broken', opts => {
             const client = statsd = createHotShotsClient(Object.assign(opts, {
               protocol: 'uds',
@@ -287,7 +287,7 @@ describe('#errorHandling', () => {
         });
 
         it('should not re-create the socket on error for type uds with udsGracefulErrorHandling set to false', (done) => {
-          const code = 111;
+          const code = -111;
           const realDateNow = Date.now;
           Date.now = () => '4857394578';
           // emit an error, like a socket would
