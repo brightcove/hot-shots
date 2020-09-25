@@ -1,6 +1,9 @@
 CHANGELOG
 =========
 
+## 8.1.0 (2020-9-25)
+* @maleblond Support multiple values for the same tag key
+
 ## 8.0.0 (2020-9-23)
 * @naseemkullah Change default value for 'host' from 'localhost' to
   undefined. This means the default host will now be 127.0.0.1 or ::1,
