@@ -60,12 +60,12 @@ describe('#globalTags', () => {
       it('should combine global tags and metric tags', done => {
         server = createServer(serverType, opts => {
           statsd = createHotShotsClient(Object.assign(opts, {
-            global_tags: ['gtag'],
+            global_tags: ['gtag:1', 'gtag:2', 'bar'],
           }), clientType);
           statsd.increment('test', 1337, ['foo']);
         });
         server.on('metrics', metrics => {
-          assert.strictEqual(metrics, `test:1337|c|#gtag,foo${metricEnd}`);
+          assert.strictEqual(metrics, `test:1337|c|#gtag:1,gtag:2,bar,foo${metricEnd}`);
           done();
         });
       });
@@ -73,7 +73,7 @@ describe('#globalTags', () => {
       it('should override global tags with metric tags', done => {
         server = createServer(serverType, opts => {
           statsd = createHotShotsClient(Object.assign(opts, {
-            global_tags: ['foo', 'gtag:123'],
+            global_tags: ['foo', 'gtag:1', 'gtag:2'],
           }), clientType);
           statsd.increment('test', 1337, ['gtag:234', 'bar']);
         });
@@ -91,7 +91,7 @@ describe('#globalTags', () => {
           statsd.increment('test', 1337, { gtag: '234' });
         });
         server.on('metrics', metrics => {
-          assert.strictEqual(metrics, `test:1337|c|#gtag:234,foo:bar${metricEnd}`);
+          assert.strictEqual(metrics, `test:1337|c|#foo:bar,gtag:234${metricEnd}`);
           done();
         });
       });
@@ -105,7 +105,7 @@ describe('#globalTags', () => {
           statsd.increment('test', 1337, { gtag: '234' });
         });
         server.on('metrics', metrics => {
-          assert.strictEqual(metrics, `test:1337|c|~gtag:234,foo:bar${metricEnd}`);
+          assert.strictEqual(metrics, `test:1337|c|~foo:bar,gtag:234${metricEnd}`);
           done();
         });
       });
@@ -119,7 +119,7 @@ describe('#globalTags', () => {
           statsd.increment('test', 1337, { gtag: '234' });
         });
         server.on('metrics', metrics => {
-          assert.strictEqual(metrics, `test:1337|c|#gtag:234~foo:bar${metricEnd}`);
+          assert.strictEqual(metrics, `test:1337|c|#foo:bar~gtag:234${metricEnd}`);
           done();
         });
       });
@@ -134,7 +134,7 @@ describe('#globalTags', () => {
           statsd.increment('test', 1337, { gtag: '234' });
         });
         server.on('metrics', metrics => {
-          assert.strictEqual(metrics, `test:1337|c|~gtag:234~foo:bar${metricEnd}`);
+          assert.strictEqual(metrics, `test:1337|c|~foo:bar~gtag:234${metricEnd}`);
           done();
         });
       });
@@ -155,13 +155,13 @@ describe('#globalTags', () => {
       it('should add global tags using telegraf format when enabled', done => {
         server = createServer(serverType, opts => {
           statsd = createHotShotsClient(Object.assign(opts, {
-            globalTags: ['gtag:gvalue', 'gtag2:gvalue2'],
+            globalTags: ['gtag:gvalue', 'gtag:gvalue2', 'gtag2:gvalue2'],
             telegraf: true,
           }), clientType);
           statsd.increment('test');
         });
         server.on('metrics', metrics => {
-          assert.strictEqual(metrics, `test,gtag=gvalue,gtag2=gvalue2:1|c${metricEnd}`);
+          assert.strictEqual(metrics, `test,gtag=gvalue,gtag=gvalue2,gtag2=gvalue2:1|c${metricEnd}`);
           done();
         });
       });

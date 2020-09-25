@@ -38,10 +38,10 @@ describe('#statsFunctions', () => {
           it(`should send proper ${statFunction.name} format with tags`, done => {
             server = createServer(serverType, opts => {
               statsd = createHotShotsClient(opts, clientType);
-              statsd[statFunction.name]('test', 42, ['foo', 'bar']);
+              statsd[statFunction.name]('test', 42, ['foo', 'bar', 'gtag:gvalue1', 'gtag:gvalue2']);
             });
             server.on('metrics', metrics => {
-              assert.strictEqual(metrics, `test:42|${statFunction.unit}|#foo,bar${metricsEnd}`);
+              assert.strictEqual(metrics, `test:42|${statFunction.unit}|#gtag:gvalue1,gtag:gvalue2,foo,bar${metricsEnd}`);
               done();
             });
           });
@@ -172,10 +172,10 @@ describe('#statsFunctions', () => {
         it('should send proper count format with tags', done => {
           server = createServer(serverType, opts => {
             statsd = createHotShotsClient(opts, clientType);
-            statsd.increment('test', 42, ['foo', 'bar']);
+            statsd.increment('test', 42, ['foo', 'bar', 'gtag:gvalue1', 'gtag:gvalue2']);
           });
           server.on('metrics', metrics => {
-            assert.strictEqual(metrics, `test:42|c|#foo,bar${metricsEnd}`);
+            assert.strictEqual(metrics, `test:42|c|#gtag:gvalue1,gtag:gvalue2,foo,bar${metricsEnd}`);
             done();
           });
         });
@@ -183,10 +183,10 @@ describe('#statsFunctions', () => {
         it('should send default count 1 with tags', done => {
           server = createServer(serverType, opts => {
             statsd = createHotShotsClient(opts, clientType);
-            statsd.increment('test', ['foo', 'bar']);
+            statsd.increment('test', ['foo', 'bar', 'gtag:gvalue1', 'gtag:gvalue2']);
           });
           server.on('metrics', metrics => {
-            assert.strictEqual(metrics, `test:1|c|#foo,bar${metricsEnd}`);
+            assert.strictEqual(metrics, `test:1|c|#gtag:gvalue1,gtag:gvalue2,foo,bar${metricsEnd}`);
             done();
           });
         });
@@ -194,10 +194,10 @@ describe('#statsFunctions', () => {
         it('should send tags when sampleRate is omitted', done => {
           server = createServer(serverType, opts => {
             statsd = createHotShotsClient(opts, clientType);
-            statsd.increment('test', 23, ['foo', 'bar']);
+            statsd.increment('test', 23, ['foo', 'bar', 'gtag:gvalue1', 'gtag:gvalue2']);
           });
           server.on('metrics', metrics => {
-            assert.strictEqual(metrics, `test:23|c|#foo,bar${metricsEnd}`);
+            assert.strictEqual(metrics, `test:23|c|#gtag:gvalue1,gtag:gvalue2,foo,bar${metricsEnd}`);
             done();
           });
         });
@@ -256,10 +256,10 @@ describe('#statsFunctions', () => {
         it('should send default count -1 with tags', done => {
           server = createServer(serverType, opts => {
             statsd = createHotShotsClient(opts, clientType);
-            statsd.decrement('test', ['foo', 'bar']);
+            statsd.decrement('test', ['foo', 'bar', 'gtag:gvalue1', 'gtag:gvalue2']);
           });
           server.on('metrics', metrics => {
-            assert.strictEqual(metrics, `test:-1|c|#foo,bar${metricsEnd}`);
+            assert.strictEqual(metrics, `test:-1|c|#gtag:gvalue1,gtag:gvalue2,foo,bar${metricsEnd}`);
             done();
           });
         });
@@ -267,10 +267,10 @@ describe('#statsFunctions', () => {
         it('should send tags when sampleRate is omitted', done => {
           server = createServer(serverType, opts => {
             statsd = createHotShotsClient(opts, clientType);
-            statsd.decrement('test', 23, ['foo', 'bar']);
+            statsd.decrement('test', 23, ['foo', 'bar', 'gtag:gvalue1', 'gtag:gvalue2']);
           });
           server.on('metrics', metrics => {
-            assert.strictEqual(metrics, `test:-23|c|#foo,bar${metricsEnd}`);
+            assert.strictEqual(metrics, `test:-23|c|#gtag:gvalue1,gtag:gvalue2,foo,bar${metricsEnd}`);
             done();
           });
         });
@@ -278,10 +278,10 @@ describe('#statsFunctions', () => {
         it('should send proper count format with tags', done => {
           server = createServer(serverType, opts => {
             statsd = createHotShotsClient(opts, clientType);
-            statsd.decrement('test', 42, ['foo', 'bar']);
+            statsd.decrement('test', 42, ['foo', 'bar', 'gtag:gvalue1', 'gtag:gvalue2']);
           });
           server.on('metrics', metrics => {
-            assert.strictEqual(metrics, `test:-42|c|#foo,bar${metricsEnd}`);
+            assert.strictEqual(metrics, `test:-42|c|#gtag:gvalue1,gtag:gvalue2,foo,bar${metricsEnd}`);
             done();
           });
         });
