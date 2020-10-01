@@ -1,4 +1,6 @@
 const assert = require('assert');
+const os = require('os');
+const process = require('process');
 const helpers = require('./helpers/helpers.js');
 
 const closeAll = helpers.closeAll;
@@ -179,12 +181,11 @@ describe('#errorHandling', () => {
       });
 
       if (serverType === 'uds' && clientType === 'client') {
-        it('should re-create the socket on 111 error for type uds', (done) => {
-          const code = 111;
+        it('should re-create the socket on bad connection error for type uds', (done) => {
+          const code = badUDSConnectionCode();
           const realDateNow = Date.now;
           Date.now = () => '4857394578';
           // emit an error, like a socket would
-          // 111 is connection refused
           server = createServer('uds_broken', opts => {
             const client = statsd = createHotShotsClient(Object.assign(opts, {
               protocol: 'uds',
@@ -212,12 +213,11 @@ describe('#errorHandling', () => {
           });
         });
 
-        it('should re-create the socket on 107 error for type uds', (done) => {
-          const code = 107;
+        it('should re-create the socket on bad descriptor error for type uds', (done) => {
+          const code = badUDSDescriptorCode();
           const realDateNow = Date.now;
           Date.now = () => '4857394578';
           // emit an error, like a socket would
-          // 111 is connection refused
           server = createServer('uds_broken', opts => {
             const client = statsd = createHotShotsClient(Object.assign(opts, {
               protocol: 'uds',
@@ -246,12 +246,11 @@ describe('#errorHandling', () => {
         });
 
         it('should re-create the socket on error for type uds with the configurable limit', (done) => {
-          const code = 111;
+          const code = badUDSConnectionCode();
           const limit = 4000;
           const realDateNow = Date.now;
           Date.now = () => '4857394578';
           // emit an error, like a socket would
-          // 111 is connection refused
           server = createServer('uds_broken', opts => {
             const client = statsd = createHotShotsClient(Object.assign(opts, {
               protocol: 'uds',
@@ -287,11 +286,10 @@ describe('#errorHandling', () => {
         });
 
         it('should not re-create the socket on error for type uds with udsGracefulErrorHandling set to false', (done) => {
-          const code = 111;
+          const code = badUDSConnectionCode();
           const realDateNow = Date.now;
           Date.now = () => '4857394578';
           // emit an error, like a socket would
-          // 111 is connection refused
           server = createServer('uds_broken', opts => {
             const client = statsd = createHotShotsClient(Object.assign(opts, {
               protocol: 'uds',
@@ -323,3 +321,47 @@ describe('#errorHandling', () => {
     });
   });
 });
+
+/**
+ * Return system error code for a "bad connection" to a UDS (e.g. does not
+ * exist).
+ *
+ * The value is negated because of the way errors are returned, e.g. by `libuv`.
+ *
+ * - 111 (ECONNREFUSED) on Linux
+ * - 54 (ECONNRESET) on macOS
+ * - "not-implemented" on other platforms
+ */
+function badUDSConnectionCode() {
+  if (process.platform === 'linux') {
+    return -os.constants.errno.ECONNREFUSED;
+  }
+
+  if (process.platform === 'darwin') {
+    return -os.constants.errno.ECONNRESET;
+  }
+
+  return 'not-implemented';
+}
+
+/**
+ * Return system error code for a "bad descriptor" (e.g. descriptor exists
+ * but server is gone).
+ *
+ * The value is negated because of the way errors are returned, e.g. by `libuv`.
+ *
+ * - 107 (ENOTCONN) on Linux
+ * - 39 (EDESTADDRREQ) on macOS
+ * - "not-implemented" on other platforms
+ */
+function badUDSDescriptorCode() {
+  if (process.platform === 'linux') {
+    return -os.constants.errno.ENOTCONN;
+  }
+
+  if (process.platform === 'darwin') {
+    return -os.constants.errno.EDESTADDRREQ;
+  }
+
+  return 'not-implemented';
+}
