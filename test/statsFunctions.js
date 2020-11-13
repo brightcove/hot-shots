@@ -20,6 +20,7 @@ describe('#statsFunctions', () => {
       { name: 'histogram', unit: 'h', bytes: 12 },
       { name: 'distribution', unit: 'd', bytes: 12 },
       { name: 'gauge', unit: 'g', bytes: 12 },
+      { name: 'gaugeDelta', unit: 'g', bytes: 12 },
       { name: 'set', unit: 's', bytes: 12 },
       ].forEach(statFunction => {
 
