@@ -1,6 +1,9 @@
 CHANGELOG
 =========
 
+## 8.2.1 (2020-12-1)
+* @stephenmathieson Make close callback optional in TypeScript definition
+
 ## 8.2.0 (2020-9-30)
 * @dhermes Making UDS error handling and recovery more robust. Note these look to be ok in a minor release but are signficant upgrades to how UDS works. Thanks as well to @prognant for an overlapping PR.
 
