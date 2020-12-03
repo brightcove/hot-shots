@@ -285,6 +285,80 @@ describe('#errorHandling', () => {
           });
         });
 
+        it('should re-create the socket on bad descriptor error when sending metric', (done) => {
+          const code = badUDSDescriptorCode();
+          const realDateNow = Date.now;
+          Date.now = () => '4857394578';
+          // emit an error, like a socket would
+          server = createServer('uds_broken', opts => {
+            const client = statsd = createHotShotsClient(Object.assign(opts, {
+              protocol: 'uds',
+              errorHandler(error) {
+                assert.ok(error);
+                assert.strictEqual(error.code, code);
+              }
+            }), 'client');
+            const initialSocket = client.socket;
+            client.socket.send = function (_, callback) {
+              callback({ code })
+            };
+            setTimeout(() => {
+              client.increment('metric.name');
+              assert.ok(Object.is(initialSocket, client.socket));
+              // it should not create the socket if it breaks too quickly
+              // change time and make another error
+              Date.now = () => 4857394578 + 1000; // 1 second later
+              client.increment('metric.name');
+              setTimeout(() => {
+                // make sure the socket was re-created
+                assert.notEqual(initialSocket, client.socket);
+                // put things back
+                Date.now = realDateNow;
+                done();
+              }, 5);
+            }, 5);
+          });
+        });
+
+        it('should re-create the socket on bad descriptor error when sending metric with a callback', (done) => {
+          const code = badUDSDescriptorCode();
+          const realDateNow = Date.now;
+          Date.now = () => '4857394578';
+          // emit an error, like a socket would
+          server = createServer('uds_broken', opts => {
+            const client = statsd = createHotShotsClient(Object.assign(opts, {
+              protocol: 'uds',
+              errorHandler(error) {
+                assert.ok(error);
+                assert.strictEqual(error.code, code);
+              }
+            }), 'client');
+            const initialSocket = client.socket;
+            client.socket.send = function (_, callback) {
+              callback({ code })
+            };
+            setTimeout(() => {
+              client.increment('metric.name', (error) => {
+                assert.strictEqual(error.code, code);
+                assert.ok(Object.is(initialSocket, client.socket));
+                // it should not create the socket if it breaks too quickly
+                // change time and make another error
+                Date.now = () => 4857394578 + 1000; // 1 second later
+                client.increment('metric.name', (error) => {
+                  assert.strictEqual(error.code, code)
+                  setTimeout(() => {
+                    // make sure the socket was re-created
+                    assert.notEqual(initialSocket, client.socket);
+                    // put things back
+                    Date.now = realDateNow;
+                    done();
+                  }, 5);
+                });
+              });
+            }, 5);
+          });
+        });
+
         it('should not re-create the socket on error for type uds with udsGracefulErrorHandling set to false', (done) => {
           const code = badUDSConnectionCode();
           const realDateNow = Date.now;
