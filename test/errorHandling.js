@@ -182,14 +182,15 @@ describe('#errorHandling', () => {
 
       if (serverType === 'uds' && clientType === 'client') {
         describe('#udsSocket', () => {
+
+          // ensure we restore the original `Date.now` after each test
           const realDateNow = Date.now;
           afterEach(() => {
-            // put things back
             Date.now = realDateNow;
           })
+
           it('should re-create the socket on bad connection error for type uds', (done) => {
             const code = badUDSConnectionCode();
-            const realDateNow = Date.now;
             Date.now = () => '4857394578';
             // emit an error, like a socket would
             server = createServer('uds_broken', opts => {
@@ -219,7 +220,6 @@ describe('#errorHandling', () => {
 
           it('should re-create the socket on bad descriptor error for type uds', (done) => {
             const code = badUDSDescriptorCode();
-            const realDateNow = Date.now;
             Date.now = () => '4857394578';
             // emit an error, like a socket would
             server = createServer('uds_broken', opts => {
@@ -250,7 +250,6 @@ describe('#errorHandling', () => {
           it('should re-create the socket on error for type uds with the configurable limit', (done) => {
             const code = badUDSConnectionCode();
             const limit = 4000;
-            const realDateNow = Date.now;
             Date.now = () => '4857394578';
             // emit an error, like a socket would
             server = createServer('uds_broken', opts => {
@@ -287,7 +286,6 @@ describe('#errorHandling', () => {
 
           it('should re-create the socket on bad descriptor error when sending metric', (done) => {
             const code = badUDSDescriptorCode();
-            const realDateNow = Date.now;
             Date.now = () => '4857394578';
             // emit an error, like a socket would
             server = createServer('uds_broken', opts => {
@@ -321,7 +319,6 @@ describe('#errorHandling', () => {
 
           it('should re-create the socket on bad descriptor error when sending metric with a callback', (done) => {
             const code = badUDSDescriptorCode();
-            const realDateNow = Date.now;
             Date.now = () => '4857394578';
             // emit an error, like a socket would
             server = createServer('uds_broken', opts => {
@@ -359,7 +356,6 @@ describe('#errorHandling', () => {
 
           it('should not re-create the socket on error for type uds with udsGracefulErrorHandling set to false', (done) => {
             const code = badUDSConnectionCode();
-            const realDateNow = Date.now;
             Date.now = () => '4857394578';
             // emit an error, like a socket would
             server = createServer('uds_broken', opts => {
