@@ -187,7 +187,7 @@ describe('#errorHandling', () => {
           const realDateNow = Date.now;
           afterEach(() => {
             Date.now = realDateNow;
-          })
+          });
 
           it('should re-create the socket on bad connection error for type uds', (done) => {
             const code = badUDSConnectionCode();
