@@ -298,7 +298,7 @@ describe('#errorHandling', () => {
               }), 'client');
               const initialSocket = client.socket;
               // mock send function on the initial socket
-              initialSocket.send = function (_, callback) {
+              initialSocket.send = (_, callback) => {
                 callback({ code });
               };
               setTimeout(() => {
@@ -331,7 +331,7 @@ describe('#errorHandling', () => {
               }), 'client');
               const initialSocket = client.socket;
               // mock send function on the initial socket
-              initialSocket.send = function (_, callback) {
+              initialSocket.send = (_, callback) => {
                 callback({ code });
               };
               setTimeout(() => {
