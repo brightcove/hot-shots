@@ -299,7 +299,7 @@ describe('#errorHandling', () => {
               const initialSocket = client.socket;
               // mock send function on the initial socket
               initialSocket.send = function (_, callback) {
-                callback({ code })
+                callback({ code });
               };
               setTimeout(() => {
                 client.increment('metric.name');
@@ -332,17 +332,17 @@ describe('#errorHandling', () => {
               const initialSocket = client.socket;
               // mock send function on the initial socket
               initialSocket.send = function (_, callback) {
-                callback({ code })
+                callback({ code });
               };
               setTimeout(() => {
-                client.increment('metric.name', (error) => {
+                client.increment('metric.name', error => {
                   assert.strictEqual(error.code, code);
                   assert.ok(Object.is(initialSocket, client.socket));
                   // it should not create the socket if it breaks too quickly
                   // change time and make another error
                   Date.now = () => 4857394578 + 1000; // 1 second later
-                  client.increment('metric.name', (error) => {
-                    assert.strictEqual(error.code, code)
+                  client.increment('metric.name', anotherError => {
+                    assert.strictEqual(anotherError.code, code);
                     setTimeout(() => {
                       // make sure the socket was re-created
                       assert.notEqual(initialSocket, client.socket);
