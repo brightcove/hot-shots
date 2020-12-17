@@ -1,6 +1,9 @@
 CHANGELOG
 =========
 
+## 8.3.0 (2020-12-16)
+* @chotiwat Handle UDS errors occurring when sending metrics
+
 ## 8.2.1 (2020-12-1)
 * @stephenmathieson Make close callback optional in TypeScript definition
 
