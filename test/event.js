@@ -59,6 +59,28 @@ describe('#event', () => {
         });
       });
 
+      it('should send proper event format for title, text, and options for primitive dates', done => {
+        const date = Math.round(Date.now() / 1000);
+        const dateAsDate = new Date(date);
+        server = createServer(serverType, opts => {
+          statsd = createHotShotsClient(opts, clientType);
+          const options = {
+            date_happened: date,
+            hostname: 'host',
+            aggregation_key: 'ag_key',
+            priority: 'low',
+            source_type_name: 'source_type',
+            alert_type: 'warning'
+          };
+          statsd.event('test title', 'another\nmultiline\ndescription', options);
+        });
+        server.on('metrics', event => {
+          assert.strictEqual(event, `_e{10,31}:test title|another\\nmultiline\\ndescription|d:${dateAsDate.getTime()}|h:host|k:ag_key|p:low|s:source_type|t:warning${metricEnd}`
+          );
+          done();
+        });
+      });
+
       it('should send proper event format for title, text, some options, and tags', done => {
         server = createServer(serverType, opts => {
           statsd = createHotShotsClient(opts, clientType);
