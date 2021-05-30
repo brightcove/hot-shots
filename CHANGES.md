@@ -1,6 +1,9 @@
 CHANGELOG
 =========
 
+## 8.3.2 (2021-5-29)
+@cmaddalozzo Close unix domain socket after unsuccessful attempts to connect
+
 ## 8.3.1 (2021-4-1)
 * @dvd-z Fix date_happened to allow usage of numbers
 * @bdeitte Bump y18n from 4.0.0 to 4.0.1
