@@ -6,7 +6,6 @@ CHANGELOG
 
 ## 8.3.1 (2021-4-1)
 * @dvd-z Fix date_happened to allow usage of numbers
-* @bdeitte Bump y18n from 4.0.0 to 4.0.1
 
 ## 8.3.0 (2020-12-16)
 * @chotiwat Handle UDS errors occurring when sending metrics
