@@ -1,6 +1,9 @@
 CHANGELOG
 =========
 
+## 8.4.0 (2021-7-3)
+@roim Use errorHandler when possible on UDS socket replace error
+
 ## 8.3.2 (2021-5-29)
 @cmaddalozzo Close unix domain socket after unsuccessful attempts to connect
 
