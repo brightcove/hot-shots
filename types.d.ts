@@ -27,6 +27,7 @@ declare module "hot-shots" {
     tagSeparator?: string;
     udsGracefulErrorHandling?: boolean;
     udsGracefulRestartRateLimit?: number;
+    closingFlushInterval?: number;
   }
 
   export interface ChildClientOptions {
