@@ -1,6 +1,9 @@
 CHANGELOG
 =========
 
+## 8.5.0 (2021-7-16)
+@maxday Add a closingFlushInterval option which allows stopping quicker
+
 ## 8.4.0 (2021-7-3)
 @roim Use errorHandler when possible on UDS socket replace error
 
