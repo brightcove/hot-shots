@@ -2,13 +2,13 @@ CHANGELOG
 =========
 
 ## 8.5.0 (2021-7-16)
-@maxday Add a closingFlushInterval option which allows stopping quicker
+* @maxday Add a closingFlushInterval option which allows stopping quicker
 
 ## 8.4.0 (2021-7-3)
-@roim Use errorHandler when possible on UDS socket replace error
+* @roim Use errorHandler when possible on UDS socket replace error
 
 ## 8.3.2 (2021-5-29)
-@cmaddalozzo Close unix domain socket after unsuccessful attempts to connect
+* @cmaddalozzo Close unix domain socket after unsuccessful attempts to connect
 
 ## 8.3.1 (2021-4-1)
 * @dvd-z Fix date_happened to allow usage of numbers
