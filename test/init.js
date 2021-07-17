@@ -201,6 +201,18 @@ describe('#init', () => {
     skipClose = true;
   });
 
+  it('should set the closingFlushInterval option with the provided value', () => {
+    statsd = createHotShotsClient({
+      closingFlushInterval: 10
+    }, clientType);
+    assert.strictEqual(statsd.closingFlushInterval, 10);
+  });
+
+  it('should set the closingFlushInterval option with the default value', () => {
+    statsd = createHotShotsClient({}, clientType);
+    assert.strictEqual(statsd.closingFlushInterval, 50);
+  });
+
   it('should create a socket variable that is an instance of net.Socket if set to TCP', done => {
     server = createServer('tcp', opts => {
       statsd = createHotShotsClient(opts, clientType);
