@@ -180,6 +180,212 @@ describe('#errorHandling', () => {
         statsd.send('test title');
       });
 
+      if (serverType === 'tcp' && clientType === 'client') {
+        describe('#tcpSocket', () => {
+
+          // ensure we restore the original `Date.now` after each test
+          const realDateNow = Date.now;
+          afterEach(() => {
+            Date.now = realDateNow;
+          });
+
+          it('should re-create the socket on bad connection error for type tcp', (done) => {
+            const code = badTCPConnectionCode();
+            Date.now = () => '4857394578';
+            // emit an error, like a socket would
+            server = createServer('tcp', opts => {
+              const client = statsd = createHotShotsClient(Object.assign(opts, {
+                protocol: 'tcp',
+                errorHandler(error) {
+                  assert.ok(error);
+                  assert.strictEqual(error.code, code);
+                }
+              }), 'client');
+              const initialSocket = client.socket;
+              setTimeout(() => {
+                initialSocket.emit('error', { code });
+                assert.ok(Object.is(initialSocket, client.socket));
+                // it should not create the socket if it breaks too quickly
+                // change time and make another error
+                Date.now = () => 4857394578 + 1000; // 1 second later
+                initialSocket.emit('error', { code });
+                setTimeout(() => {
+                  // make sure the socket was re-created
+                  assert.notEqual(initialSocket, client.socket);
+                  done();
+                }, 5);
+              }, 5);
+            });
+          });
+
+          it('should re-create the socket on bad descriptor error for type tcp', (done) => {
+            const code = badTCPDescriptorCode();
+            Date.now = () => '4857394578';
+            // emit an error, like a socket would
+            server = createServer('tcp', opts => {
+              const client = statsd = createHotShotsClient(Object.assign(opts, {
+                protocol: 'tcp',
+                errorHandler(error) {
+                  assert.ok(error);
+                  assert.strictEqual(error.code, code);
+                }
+              }), 'client');
+              const initialSocket = client.socket;
+              setTimeout(() => {
+                initialSocket.emit('error', { code });
+                assert.ok(Object.is(initialSocket, client.socket));
+                // it should not create the socket if it breaks too quickly
+                // change time and make another error
+                Date.now = () => 4857394578 + 1000; // 1 second later
+                initialSocket.emit('error', { code });
+                setTimeout(() => {
+                  // make sure the socket was re-created
+                  assert.notEqual(initialSocket, client.socket);
+                  done();
+                }, 5);
+              }, 5);
+            });
+          });
+
+          it('should re-create the socket on error for type tcp with the configurable limit', (done) => {
+            const code = badTCPConnectionCode();
+            const limit = 4000;
+            Date.now = () => '4857394578';
+            // emit an error, like a socket would
+            server = createServer('tcp', opts => {
+              const client = statsd = createHotShotsClient(Object.assign(opts, {
+                protocol: 'tcp',
+                tcpGracefulRestartRateLimit: limit,
+                errorHandler(error) {
+                  assert.ok(error);
+                  assert.strictEqual(error.code, code);
+                }
+              }), 'client');
+              const initialSocket = client.socket;
+              setTimeout(() => {
+                initialSocket.emit('error', { code });
+                assert.ok(Object.is(initialSocket, client.socket));
+                // it should not create the socket if it breaks too quickly
+                // change time and make another error
+                Date.now = () => 4857394578 + 1000; // 1 second later
+                initialSocket.emit('error', { code });
+                setTimeout(() => {
+                  // make sure the socket was NOT re-created
+                  assert.strictEqual(initialSocket, client.socket);
+                  Date.now = () => 4857394578 + limit; // 1 second later
+                  initialSocket.emit('error', { code });
+                  setTimeout(() => {
+                    // make sure the socket was re-created
+                    assert.notEqual(initialSocket, client.socket);
+                    done();
+                  }, 5);
+                }, 5);
+              }, 5);
+            });
+          });
+
+          it('should re-create the socket on bad descriptor error when sending metric', (done) => {
+            const code = badTCPDescriptorCode();
+            Date.now = () => '4857394578';
+            // emit an error, like a socket would
+            server = createServer('tcp', opts => {
+              const client = statsd = createHotShotsClient(Object.assign(opts, {
+                protocol: 'tcp',
+                errorHandler(error) {
+                  assert.ok(error);
+                  assert.strictEqual(error.code, code);
+                }
+              }), 'client');
+              const initialSocket = client.socket;
+              // mock send function on the initial socket
+              initialSocket.send = (_, callback) => {
+                callback({ code });
+              };
+              setTimeout(() => {
+                client.increment('metric.name');
+                assert.ok(Object.is(initialSocket, client.socket));
+                // it should not create the socket if it breaks too quickly
+                // change time and make another error
+                Date.now = () => 4857394578 + 1000; // 1 second later
+                client.increment('metric.name');
+                setTimeout(() => {
+                  // make sure the socket was re-created
+                  assert.notEqual(initialSocket, client.socket);
+                  done();
+                }, 5);
+              }, 5);
+            });
+          });
+
+          it('should re-create the socket on bad descriptor error when sending metric with a callback', (done) => {
+            const code = badTCPDescriptorCode();
+            Date.now = () => '4857394578';
+            // emit an error, like a socket would
+            server = createServer('tcp', opts => {
+              const client = statsd = createHotShotsClient(Object.assign(opts, {
+                protocol: 'tcp',
+                errorHandler(error) {
+                  assert.ok(error);
+                  assert.strictEqual(error.code, code);
+                }
+              }), 'client');
+              const initialSocket = client.socket;
+              // mock send function on the initial socket
+              initialSocket.send = (_, callback) => {
+                callback({ code });
+              };
+              setTimeout(() => {
+                client.increment('metric.name', error => {
+                  assert.strictEqual(error.code, code);
+                  assert.ok(Object.is(initialSocket, client.socket));
+                  // it should not create the socket if it breaks too quickly
+                  // change time and make another error
+                  Date.now = () => 4857394578 + 1000; // 1 second later
+                  client.increment('metric.name', anotherError => {
+                    assert.strictEqual(anotherError.code, code);
+                    setTimeout(() => {
+                      // make sure the socket was re-created
+                      assert.notEqual(initialSocket, client.socket);
+                      done();
+                    }, 5);
+                  });
+                });
+              }, 5);
+            });
+          });
+
+          it('should not re-create the socket on error for type tcp with tcpGracefulErrorHandling set to false', (done) => {
+            const code = badTCPConnectionCode();
+            Date.now = () => '4857394578';
+            // emit an error, like a socket would
+            server = createServer('tcp', opts => {
+              const client = statsd = createHotShotsClient(Object.assign(opts, {
+                protocol: 'tcp',
+                tcpGracefulErrorHandling: false,
+                errorHandler(error) {
+                  assert.ok(error);
+                  assert.strictEqual(error.code, code);
+                }
+              }), 'client');
+              const initialSocket = client.socket;
+              setTimeout(() => {
+                initialSocket.emit('error', { code });
+                assert.ok(Object.is(initialSocket, client.socket));
+                // it should not create the socket anyway if it breaks too quickly
+                // change time and make another error
+                Date.now = () => 4857394578 + 1000; // 1 second later
+                initialSocket.emit('error', { code });
+                setTimeout(() => {
+                  // make sure the socket was NOT re-created
+                  assert.strictEqual(initialSocket, client.socket);
+                  done();
+                }, 5);
+              }, 5);
+            });
+          });
+        });
+      }
+
       if (serverType === 'uds' && clientType === 'client') {
         describe('#udsSocket', () => {
 
@@ -390,6 +596,28 @@ describe('#errorHandling', () => {
 });
 
 /**
+ * Return system error code for a "bad connection" to a TCP (e.g. does not
+ * exist).
+ *
+ * The value is negated because of the way errors are returned, e.g. by `libuv`.
+ *
+ * - 111 (ECONNREFUSED) on Linux
+ * - 54 (ECONNRESET) on macOS
+ * - "not-implemented" on other platforms
+ */
+ function badTCPConnectionCode() {
+  if (process.platform === 'linux') {
+    return -os.constants.errno.ECONNREFUSED;
+  }
+
+  if (process.platform === 'darwin') {
+    return -os.constants.errno.ECONNRESET;
+  }
+
+  return 'not-implemented';
+}
+
+/**
  * Return system error code for a "bad connection" to a UDS (e.g. does not
  * exist).
  *
@@ -406,6 +634,28 @@ function badUDSConnectionCode() {
 
   if (process.platform === 'darwin') {
     return -os.constants.errno.ECONNRESET;
+  }
+
+  return 'not-implemented';
+}
+
+/**
+ * Return system error code for a "bad descriptor" (e.g. descriptor exists
+ * but server is gone).
+ *
+ * The value is negated because of the way errors are returned, e.g. by `libuv`.
+ *
+ * - 107 (ENOTCONN) on Linux
+ * - 39 (EDESTADDRREQ) on macOS
+ * - "not-implemented" on other platforms
+ */
+ function badTCPDescriptorCode() {
+  if (process.platform === 'linux') {
+    return -os.constants.errno.ENOTCONN;
+  }
+
+  if (process.platform === 'darwin') {
+    return -os.constants.errno.EDESTADDRREQ;
   }
 
   return 'not-implemented';
