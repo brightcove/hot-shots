@@ -1,6 +1,10 @@
 CHANGELOG
 =========
 
+## 8.5.1 (2021-9-2)
+* @tim-crisp TypeScript update:  add stream to protocol string union type
+* @bdeitte Bump path-parse (used just in dev builds) from 1.0.6 to 1.0.7
+
 ## 8.5.0 (2021-7-16)
 * @maxday Add a closingFlushInterval option which allows stopping quicker
 
