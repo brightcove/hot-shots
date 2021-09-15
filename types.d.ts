@@ -81,6 +81,7 @@ declare module "hot-shots" {
     increment(stat: string | string[], value: number, sampleRate?: number, callback?: StatsCb): void;
 
     decrement(stat: string): void;
+    decrement(stat: string, tags?: Tags): void;
     decrement(stat: string | string[], value: number, sampleRate?: number, tags?: Tags, callback?: StatsCb): void;
     decrement(stat: string | string[], value: number, tags?: Tags, callback?: StatsCb): void;
     decrement(stat: string | string[], value: number, callback?: StatsCb): void;
