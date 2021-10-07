@@ -60,6 +60,7 @@ Parameters (specified as one object passed into hot-shots):
 * `tcpGracefulRestartRateLimit`: Used only when the protocol is `tcp`. Time (ms) between re-creating the socket. Defaults to `1000`.
 * `udsGracefulErrorHandling`: Used only when the protocol is `uds`. Boolean indicating whether to handle socket errors gracefully. Defaults to true.
 * `udsGracefulRestartRateLimit`: Used only when the protocol is `uds`. Time (ms) between re-creating the socket. Defaults to `1000`.
+* `closingFlushInterval`: Before closing, StatsD will check for inflight messages. Time (ms) between each check. Defaults to `50`.
 
 ### StatsD methods
 All StatsD methods other than `event`, `close`, and `check` have the same API:

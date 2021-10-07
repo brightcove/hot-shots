@@ -17,7 +17,7 @@ declare module "hot-shots" {
     path?: string;
     port?: number;
     prefix?: string;
-    protocol?: 'tcp' | 'udp' | 'uds';
+    protocol?: 'tcp' | 'udp' | 'uds' | 'stream';
     sampleRate?: number;
     socket?: dgram.Socket;
     suffix?: string;
@@ -29,6 +29,7 @@ declare module "hot-shots" {
     tcpGracefulRestartRateLimit?: number;
     udsGracefulErrorHandling?: boolean;
     udsGracefulRestartRateLimit?: number;
+    closingFlushInterval?: number;
   }
 
   export interface ChildClientOptions {
@@ -82,6 +83,7 @@ declare module "hot-shots" {
     increment(stat: string | string[], value: number, sampleRate?: number, callback?: StatsCb): void;
 
     decrement(stat: string): void;
+    decrement(stat: string, tags?: Tags): void;
     decrement(stat: string | string[], value: number, sampleRate?: number, tags?: Tags, callback?: StatsCb): void;
     decrement(stat: string | string[], value: number, tags?: Tags, callback?: StatsCb): void;
     decrement(stat: string | string[], value: number, callback?: StatsCb): void;
