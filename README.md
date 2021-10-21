@@ -35,8 +35,8 @@ Parameters (specified as one object passed into hot-shots):
 * `host`:        The host to send stats to, if not set, the constructor tries to
   retrieve it from the `DD_AGENT_HOST` environment variable, `default: 'undefined'` which as per [UDP/datagram socket docs](https://nodejs.org/api/dgram.html#dgram_socket_send_msg_offset_length_port_address_callback) results in `127.0.0.1` or `::1` being used.
 * `port`:        The port to send stats to, if not set, the constructor tries to retrieve it from the `DD_DOGSTATSD_PORT` environment variable, `default: 8125`
-* `prefix`:      What to prefix each stat name with `default: ''`
-* `suffix`:      What to suffix each stat name with `default: ''`
+* `prefix`:      What to prefix each stat name with `default: ''`. Note prefix separator must be specified explicitly if desired (e.g. `my_prefix.`).
+* `suffix`:      What to suffix each stat name with `default: ''`. Note suffix separator must be specified explicitly if desired (e.g. `.my_suffix`).
 * `tagPrefix`:   Prefix tag list with character `default: '#'`. Note does not work with `telegraf` option.
 * `tagSeparator`: Separate tags with character `default: ','`. Note does not work with `telegraf` option.
 * `globalize`:   Expose this StatsD instance globally. `default: false`
