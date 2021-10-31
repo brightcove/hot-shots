@@ -1,6 +1,10 @@
 CHANGELOG
 =========
 
+## 9.0.0 (2021-10-31)
+* @cesarfd Add TCP reconnections, similar to how it's done for UDS. Enabled by default and configurable through tcpGracefulErrorHandling/tcpGracefulRestartRateLimit.
+* @sambostock Document explicit prefix/suffix separators
+
 ## 8.5.2 (2021-9-26)
 * @amc6 TypeScript: add missing decrement overload type
 
