@@ -65,7 +65,7 @@ describe('#buffer', () => {
       it('should not send batches larger then maxBufferSize', done => {
         server = createServer(serverType, opts => {
           statsd = createHotShotsClient(Object.assign(opts, {
-            maxBufferSize: 8,
+            maxBufferSize: 5,
           }), clientType);
           statsd.increment('a', 1);
           statsd.increment('b', 2);
