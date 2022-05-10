@@ -28,6 +28,9 @@ describe('#init', () => {
     delete process.env.DD_AGENT_HOST;
     delete process.env.DD_DOGSTATSD_PORT;
     delete process.env.DD_ENTITY_ID;
+    delete process.env.DD_ENV;
+    delete process.env.DD_SERVICE;
+    delete process.env.DD_VERSION;
   });
 
   it('should set the proper values when specified', () => {
@@ -131,20 +134,37 @@ describe('#init', () => {
     assert.deepStrictEqual(statsd.globalTags, ['gtag']);
   });
 
-  it('should get the dd.internal.entity_id tag from DD_ENTITY_ID env var', () => {
-    // set the DD_ENTITY_ID env var
+  it('should get global tags from DD_ prefixed env vars', () => {
+    // set DD_ prefixed env vars
     process.env.DD_ENTITY_ID = '04652bb7-19b7-11e9-9cc6-42010a9c016d';
+    process.env.DD_ENV = 'test';
+    process.env.DD_SERVICE = 'test-service';
+    process.env.DD_VERSION = '1.0.0';
 
     statsd = createHotShotsClient({}, clientType);
-    assert.deepStrictEqual(statsd.globalTags, ['dd.internal.entity_id:04652bb7-19b7-11e9-9cc6-42010a9c016d']);
+    assert.deepStrictEqual(statsd.globalTags, [
+      'dd.internal.entity_id:04652bb7-19b7-11e9-9cc6-42010a9c016d',
+      'env:test',
+      'service:test-service',
+      'version:1.0.0'
+    ]);
   });
 
-  it('should get the dd.internal.entity_id tag from DD_ENTITY_ID env var and append it to existing tags', () => {
-    // set the DD_ENTITY_ID env var
+  it('should get global tag from DD_ prefixed env vars and append them to existing tags', () => {
+    // set DD_ prefixed env vars
     process.env.DD_ENTITY_ID = '04652bb7-19b7-11e9-9cc6-42010a9c016d';
+    process.env.DD_ENV = 'test';
+    process.env.DD_SERVICE = 'test-service';
+    process.env.DD_VERSION = '1.0.0';
 
     statsd = createHotShotsClient({ globalTags: ['gtag'] }, clientType);
-    assert.deepStrictEqual(statsd.globalTags, ['gtag', 'dd.internal.entity_id:04652bb7-19b7-11e9-9cc6-42010a9c016d']);
+    assert.deepStrictEqual(statsd.globalTags, [
+      'gtag',
+      'dd.internal.entity_id:04652bb7-19b7-11e9-9cc6-42010a9c016d',
+      'env:test',
+      'service:test-service',
+      'version:1.0.0'
+    ]);
   });
 
   it('should not lookup a dns record if dnsCache is not specified', done => {
