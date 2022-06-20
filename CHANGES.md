@@ -1,6 +1,10 @@
 CHANGELOG
 =========
 
+## 9.1.0 (2022-6-20)
+* @bdeitte Update testing dependencies
+* @bdeitte Check if client is undefined before closing to fix error
+
 ## 9.0.0 (2021-10-31)
 * @cesarfd Add TCP reconnections, similar to how it's done for UDS. Enabled by default and configurable through tcpGracefulErrorHandling/tcpGracefulRestartRateLimit.
 * @sambostock Document explicit prefix/suffix separators
