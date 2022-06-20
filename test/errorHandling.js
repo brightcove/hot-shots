@@ -213,8 +213,8 @@ describe('#errorHandling', () => {
                   // make sure the socket was re-created
                   assert.notEqual(initialSocket, client.socket);
                   done();
-                }, 5);
-              }, 5);
+                }, 50);
+              }, 50);
             });
           });
 
@@ -242,8 +242,8 @@ describe('#errorHandling', () => {
                   // make sure the socket was re-created
                   assert.notEqual(initialSocket, client.socket);
                   done();
-                }, 5);
-              }, 5);
+                }, 50);
+              }, 50);
             });
           });
 
