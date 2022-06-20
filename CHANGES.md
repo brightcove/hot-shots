@@ -4,6 +4,7 @@ CHANGELOG
 ## 9.1.0 (2022-6-20)
 * @zhyu Append standard Datadog tags from env vars (DD_ENTITY_ID, DD_ENV, DD_SERVICE, and DD_VERSION)
 * @bdeitte Check if client is undefined before closing to fix error
+* @bdeitte Start using GitHub Actions for tests and remove now-broken travis file
 * @bdeitte Update testing dependencies
 
 ## 9.0.0 (2021-10-31)
