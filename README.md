@@ -18,7 +18,7 @@ includes all changes in the latest node-statsd and many additional changes, incl
 
 hot-shots supports Node 8.x and higher.
 
-![Build Status](https://github.com/brightcove/hot-shots/actions/workflows/.node.js.yml/badge.svg)
+[Build Status](https://github.com/brightcove/hot-shots/actions/workflows/node.js.yml/badge.svg)
 
 ## Migrating from node-statsd
 
