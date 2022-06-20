@@ -180,7 +180,7 @@ describe('#errorHandling', () => {
         statsd.send('test title');
       });
 
-      if (serverType === 'tcp' && clientType === 'client') {
+      if (serverType === 'tcp' && clientType === 'client' && process.platform !== 'win32') {
         describe('#tcpSocket', () => {
 
           // ensure we restore the original `Date.now` after each test
@@ -213,8 +213,8 @@ describe('#errorHandling', () => {
                   // make sure the socket was re-created
                   assert.notEqual(initialSocket, client.socket);
                   done();
-                }, 50);
-              }, 50);
+                }, 5);
+              }, 5);
             });
           });
 
@@ -242,8 +242,8 @@ describe('#errorHandling', () => {
                   // make sure the socket was re-created
                   assert.notEqual(initialSocket, client.socket);
                   done();
-                }, 50);
-              }, 50);
+                }, 5);
+              }, 5);
             });
           });
 
