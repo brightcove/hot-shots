@@ -30,6 +30,7 @@ declare module "hot-shots" {
     udsGracefulErrorHandling?: boolean;
     udsGracefulRestartRateLimit?: number;
     closingFlushInterval?: number;
+    udpSocketOptions?: dgram.SocketOptions;
   }
 
   export interface ChildClientOptions {
