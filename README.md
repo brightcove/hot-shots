@@ -65,7 +65,7 @@ Parameters (specified as one object passed into hot-shots):
 * `udsGracefulErrorHandling`: Used only when the protocol is `uds`. Boolean indicating whether to handle socket errors gracefully. Defaults to true.
 * `udsGracefulRestartRateLimit`: Used only when the protocol is `uds`. Time (ms) between re-creating the socket. Defaults to `1000`.
 * `closingFlushInterval`: Before closing, StatsD will check for inflight messages. Time (ms) between each check. Defaults to `50`.
-* `udpSocketOptions`: Specify these options to control how StatsD will create a UDP (dgram) socket.
+* `udpSocketOptions`: Used only when the protocol is `uds`. Specify the options passed into dgram.createSocket(). Defaults to `{ type: 'udp4' }`
 
 ### StatsD methods
 All StatsD methods other than `event`, `close`, and `check` have the same API:
