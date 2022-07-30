@@ -1,6 +1,9 @@
 CHANGELOG
 =========
 
+## 9.2.0 (2022-7-30)
+* @hjr3 Add udpSocketOptions to control how UDP socket is created
+
 ## 9.1.0 (2022-6-20)
 * @zhyu Append standard Datadog tags from env vars (DD_ENTITY_ID, DD_ENV, DD_SERVICE, and DD_VERSION)
 * @bdeitte Check if client is undefined before closing to fix error
