@@ -1,4 +1,5 @@
 import dgram = require("dgram");
+import stream = require("stream");
 
 declare module "hot-shots" {
   export type Tags = { [key: string]: string } | string[];
@@ -20,6 +21,7 @@ declare module "hot-shots" {
     protocol?: 'tcp' | 'udp' | 'uds' | 'stream';
     sampleRate?: number;
     socket?: dgram.Socket;
+    stream?: stream.Writable;
     suffix?: string;
     telegraf?: boolean;
     useDefaultRoute?: boolean;
