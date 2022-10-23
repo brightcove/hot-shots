@@ -13,7 +13,8 @@
     "dogstatsd",
     "datadog",
     "metrics",
-    "telegraf"
+    "telegraf",
+    "backend"
   ],
   "repository": {
     "type": "git",
@@ -26,7 +27,7 @@
     "lib": "./lib/"
   },
   "engines": {
-    "node": ">=6.0.0"
+    "node": ">=8.0.0"
   },
   "scripts": {
     "coverage": "nyc --reporter=lcov --reporter=text npm test",
@@ -35,11 +36,11 @@
     "pretest": "npm run lint"
   },
   "optionalDependencies": {
-    "unix-dgram": "2.0.x"
+    "unix-dgram": "2.x"
   },
   "devDependencies": {
-    "eslint": "5.9.x",
-    "mocha": "6.2.x",
+    "eslint": "6.x",
+    "mocha": "10.x",
     "nyc": "15.x"
   },
   "license": "MIT",
