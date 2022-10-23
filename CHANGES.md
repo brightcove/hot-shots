@@ -1,6 +1,10 @@
 CHANGELOG
 =========
 
+## 9.3.0 (2022-10-23)
+* @albert-mirzoyan add stream property type to ClientOptions
+* @bdeitte Upgrade unix-dgram to support Node 18
+
 ## 9.2.0 (2022-7-30)
 * @hjr3 Add udpSocketOptions to control how UDP socket is created
 
