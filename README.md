@@ -292,7 +292,7 @@ When you've done all this we're happy to try to get this merged in right away.
 
 Versions will attempt to follow semantic versioning, with major changes only coming in major versions.
 
-npm publishing is possible by one person, [bdeitte](https://github.com/bdeitte), who has two-factor authentication enabled for publishes.  Publishes only contain one additional library, unix-dgram.
+npm publishing is possible by one person, [bdeitte](https://github.com/bdeitte), who has two-factor authentication enabled for publishes.  Publishes only contain one additional library, [unix-dgram](https://github.com/bnoordhuis/node-unix-dgram).
 
 ## Name
 
