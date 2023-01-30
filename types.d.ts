@@ -73,7 +73,7 @@ declare module "hot-shots" {
     source_type_name?: string;
   }
 
-  export type StatsCb = (error: Error | undefined, bytes: any) => void;
+  export type StatsCb = (error?: Error, bytes?: number) => void;
 
   export class StatsD {
     constructor(options?: ClientOptions);
