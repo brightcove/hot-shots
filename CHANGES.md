@@ -1,6 +1,8 @@
 CHANGELOG
 =========
 
+@imyourmanzi In TypeScript, narrow callback parameter types
+
 ## 9.3.0 (2022-10-23)
 * @albert-mirzoyan add stream property type to ClientOptions
 * @bdeitte Upgrade unix-dgram to support Node 18
