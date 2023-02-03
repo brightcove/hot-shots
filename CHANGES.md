@@ -2,8 +2,8 @@ CHANGELOG
 =========
 
 ## 10.0 (2023-2-3)
-@imyourmanzi In TypeScript, narrow callback parameter types
-@bdeitte Remove Node 8 from supported list and add testing of Node 18
+* @imyourmanzi In TypeScript, narrow callback parameter types
+* @bdeitte Remove Node 8 from supported list and add testing of Node 18
 
 ## 9.3.0 (2022-10-23)
 * @albert-mirzoyan add stream property type to ClientOptions
