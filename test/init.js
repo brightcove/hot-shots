@@ -167,6 +167,22 @@ describe('#init', () => {
     ]);
   });
 
+  it('should prefer global tags from options over DD_ prefixed env vars', () => {
+    // set DD_ prefixed env vars
+    process.env.DD_ENTITY_ID = '04652bb7-19b7-11e9-9cc6-42010a9c016d';
+    process.env.DD_ENV = 'test';
+    process.env.DD_SERVICE = 'test-service';
+    process.env.DD_VERSION = '1.0.0';
+
+    statsd = createHotShotsClient({ globalTags: { service: 'init-service' } }, clientType);
+    assert.deepStrictEqual(statsd.globalTags, [
+      'service:init-service',
+      'dd.internal.entity_id:04652bb7-19b7-11e9-9cc6-42010a9c016d',
+      'env:test',
+      'version:1.0.0'
+    ]);
+  });
+
   it('should not lookup a dns record if dnsCache is not specified', done => {
     const originalLookup = dns.lookup;
 
