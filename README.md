@@ -16,15 +16,9 @@ includes all changes in the latest node-statsd and many additional changes, incl
 * asyncDistTimer
 * much more, including many bug fixes
 
-hot-shots supports Node 8.x and higher.
+hot-shots supports Node 10.x and higher.
 
-[![Build Status](https://secure.travis-ci.org/brightcove/hot-shots.png?branch=master)](http://travis-ci.org/brightcove/hot-shots)
-
-## Migrating from node-statsd
-
-You should only need to do one thing: change node-statsd to hot-shots in all requires.
-
-You can check the detailed [change log](https://github.com/brightcove/hot-shots/blob/master/CHANGES.md) for what has changed since the last release of node-statsd.
+![Build Status](https://github.com/brightcove/hot-shots/actions/workflows/node.js.yml/badge.svg)
 
 ## Usage
 
@@ -46,7 +40,11 @@ Parameters (specified as one object passed into hot-shots):
 * `mock`:        Create a mock StatsD instance, sending no stats to
   the server and allowing data to be read from mockBuffer.  Note that
   mockBuffer will keep growing, so only use for testing or clear out periodically. `default: false`
-* `globalTags`:  Tags that will be added to every metric. Can be either an object or list of tags. The *Datadog* `dd.internal.entity_id` tag is appended to `globalTags` from the `DD_ENTITY_ID` environment variable if the latter is set. `default: {}`
+* `globalTags`:  Tags that will be added to every metric. Can be either an object or list of tags. `default: {}`. The following *Datadog* tags are appended to `globalTags` from the corresponding environment variable if the latter is set:
+  * `dd.internal.entity_id` from `DD_ENTITY_ID` ([docs](https://docs.datadoghq.com/developers/dogstatsd/?tab=kubernetes#origin-detection-over-udp))
+  * `env` from `DD_ENV` ([docs](https://docs.datadoghq.com/getting_started/tagging/unified_service_tagging/?tab=kubernetes#full-configuration))
+  * `service` from `DD_SERVICE` ([docs](https://docs.datadoghq.com/getting_started/tagging/unified_service_tagging/?tab=kubernetes#full-configuration))
+  * `version` from `DD_VERSION` ([docs](https://docs.datadoghq.com/getting_started/tagging/unified_service_tagging/?tab=kubernetes#full-configuration))
 * `maxBufferSize`: If larger than 0,  metrics will be buffered and only sent when the string length is greater than the size. `default: 0`
 * `bufferFlushInterval`: If buffering is in use, this is the time in ms to always flush any buffered metrics. `default: 1000`
 * `telegraf`:    Use Telegraf's StatsD line protocol, which is slightly different than the rest `default: false`
@@ -61,6 +59,7 @@ Parameters (specified as one object passed into hot-shots):
 * `udsGracefulErrorHandling`: Used only when the protocol is `uds`. Boolean indicating whether to handle socket errors gracefully. Defaults to true.
 * `udsGracefulRestartRateLimit`: Used only when the protocol is `uds`. Time (ms) between re-creating the socket. Defaults to `1000`.
 * `closingFlushInterval`: Before closing, StatsD will check for inflight messages. Time (ms) between each check. Defaults to `50`.
+* `udpSocketOptions`: Used only when the protocol is `uds`. Specify the options passed into dgram.createSocket(). Defaults to `{ type: 'udp4' }`
 
 ### StatsD methods
 All StatsD methods other than `event`, `close`, and `check` have the same API:
@@ -270,9 +269,15 @@ optionalDependency, and how it's used in the codebase, this install
 failure will not cause any problems.  It only means that you can't use
 the uds feature.
 
+## Migrating from node-statsd
+
+You should only need to do one thing: change node-statsd to hot-shots in all requires.
+
+You can check the detailed [change log](https://github.com/brightcove/hot-shots/blob/master/CHANGES.md) for what has changed since the last release of node-statsd.
+
 ## Submitting changes
 
-Thanks for considering making any updates to this project!  Here are the steps to take in your fork:
+Thanks for considering making any updates to this project! This project is entirely community-driven, and so your changes are important. Here are the steps to take in your fork:
 
 1. Run "npm install"
 2. Add your changes in your fork as well as any new tests needed
@@ -287,7 +292,7 @@ When you've done all this we're happy to try to get this merged in right away.
 
 Versions will attempt to follow semantic versioning, with major changes only coming in major versions.
 
-npm publishing is possible by one person, [bdeitte](https://github.com/bdeitte), who has two-factor authentication enabled for publishes.  Publishes only contain one additional library, unix-dgram.
+npm publishing is possible by one person, [bdeitte](https://github.com/bdeitte), who has two-factor authentication enabled for publishes.  Publishes only contain one additional library, [unix-dgram](https://github.com/bnoordhuis/node-unix-dgram).
 
 ## Name
 

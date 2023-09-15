@@ -180,7 +180,7 @@ describe('#errorHandling', () => {
         statsd.send('test title');
       });
 
-      if (serverType === 'tcp' && clientType === 'client') {
+      if (serverType === 'tcp' && clientType === 'client' && process.platform !== 'win32') {
         describe('#tcpSocket', () => {
 
           // ensure we restore the original `Date.now` after each test

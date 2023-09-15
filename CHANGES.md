@@ -1,6 +1,23 @@
 CHANGELOG
 =========
 
+## 10.0 (2023-2-3)
+* @imyourmanzi In TypeScript, narrow callback parameter types
+* @bdeitte Remove Node 8 from supported list and add testing of Node 18
+
+## 9.3.0 (2022-10-23)
+* @albert-mirzoyan add stream property type to ClientOptions
+* @bdeitte Upgrade unix-dgram to support Node 18
+
+## 9.2.0 (2022-7-30)
+* @hjr3 Add udpSocketOptions to control how UDP socket is created
+
+## 9.1.0 (2022-6-20)
+* @zhyu Append standard Datadog tags from env vars (DD_ENTITY_ID, DD_ENV, DD_SERVICE, and DD_VERSION)
+* @bdeitte Check if client is undefined before closing to fix error
+* @bdeitte Start using GitHub Actions for tests and remove now-broken travis file
+* @bdeitte Update testing dependencies
+
 ## 9.0.0 (2021-10-31)
 * @cesarfd Add TCP reconnections, similar to how it's done for UDS. Enabled by default and configurable through tcpGracefulErrorHandling/tcpGracefulRestartRateLimit.
 * @sambostock Document explicit prefix/suffix separators
