@@ -1,4 +1,5 @@
 import dgram = require("dgram");
+import stream = require("stream");
 
 declare module "hot-shots" {
   export type Tags = { [key: string]: string } | string[];
@@ -20,6 +21,7 @@ declare module "hot-shots" {
     protocol?: 'tcp' | 'udp' | 'uds' | 'stream';
     sampleRate?: number;
     socket?: dgram.Socket;
+    stream?: stream.Writable;
     suffix?: string;
     telegraf?: boolean;
     useDefaultRoute?: boolean;
@@ -30,6 +32,7 @@ declare module "hot-shots" {
     udsGracefulErrorHandling?: boolean;
     udsGracefulRestartRateLimit?: number;
     closingFlushInterval?: number;
+    udpSocketOptions?: dgram.SocketOptions;
   }
 
   export interface ChildClientOptions {
@@ -70,7 +73,7 @@ declare module "hot-shots" {
     source_type_name?: string;
   }
 
-  export type StatsCb = (error: Error | undefined, bytes: any) => void;
+  export type StatsCb = (error?: Error, bytes?: number) => void;
 
   export class StatsD {
     constructor(options?: ClientOptions);

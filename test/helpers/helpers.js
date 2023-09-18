@@ -177,7 +177,7 @@ function createServer(serverType, callback) {
       onListening(server.address());
     });
 
-    server.listen(0, '127.0.0.1');
+    server.listen(0, 'localhost');
   }
   else if (serverType === TCP_BROKEN) {
     server = net.createServer(socket => {
@@ -193,7 +193,7 @@ function createServer(serverType, callback) {
       onListening(server.address());
     });
 
-    server.listen(0, '127.0.0.1');
+    server.listen(0, 'localhost');
   }
   else if (serverType === STREAM) {
     server = new EventEmitter();
