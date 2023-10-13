@@ -327,4 +327,27 @@ describe('#statsFunctions', () => {
       });
     });
   });
+
+  describe('gaugeDelta', () => {
+    it('Adds a plus sign when the value is positive', done => {
+      server = createServer('udp', opts => {
+        statsd = createHotShotsClient(opts, 'client');
+        statsd.gaugeDelta('test', 42);
+      });
+      server.on('metrics', metrics => {
+        assert.strictEqual(metrics, 'test:+42|g');
+        done();
+      });
+    });
+    it('Adds a minus sign when the value is negative', done => {
+      server = createServer('udp', opts => {
+        statsd = createHotShotsClient(opts, 'client');
+        statsd.gaugeDelta('test', -42);
+      });
+      server.on('metrics', metrics => {
+        assert.strictEqual(metrics, 'test:-42|g');
+        done();
+      });
+    });
+  });
 });
