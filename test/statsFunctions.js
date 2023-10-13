@@ -16,11 +16,12 @@ describe('#statsFunctions', () => {
 
   testTypes().forEach(([description, serverType, clientType, metricsEnd]) => {
     describe(description, () => {
-      [{ name: 'timing', unit: 'ms', bytes: 14 },
-      { name: 'histogram', unit: 'h', bytes: 12 },
-      { name: 'distribution', unit: 'd', bytes: 12 },
-      { name: 'gauge', unit: 'g', bytes: 12 },
-      { name: 'set', unit: 's', bytes: 12 },
+      [{ name: 'timing', unit: 'ms', bytes: 14, sign: '' },
+      { name: 'histogram', unit: 'h', bytes: 12, sign: '' },
+      { name: 'distribution', unit: 'd', bytes: 12, sign: '' },
+      { name: 'gauge', unit: 'g', bytes: 12, sign: '' },
+      { name: 'gaugeDelta', unit: 'g', bytes: 12, sign: '+' },
+      { name: 'set', unit: 's', bytes: 12, sign: '' },
       ].forEach(statFunction => {
 
         describe(`#${statFunction.name}`, () => {
@@ -30,7 +31,7 @@ describe('#statsFunctions', () => {
               statsd[statFunction.name]('test', 42);
             });
             server.on('metrics', metrics => {
-              assert.strictEqual(metrics, `test:42|${statFunction.unit}${metricsEnd}`);
+              assert.strictEqual(metrics, `test:${statFunction.sign}42|${statFunction.unit}${metricsEnd}`);
               done();
             });
           });
@@ -41,7 +42,7 @@ describe('#statsFunctions', () => {
               statsd[statFunction.name]('test', 42, ['foo', 'bar', 'gtag:gvalue1', 'gtag:gvalue2']);
             });
             server.on('metrics', metrics => {
-              assert.strictEqual(metrics, `test:42|${statFunction.unit}|#gtag:gvalue1,gtag:gvalue2,foo,bar${metricsEnd}`);
+              assert.strictEqual(metrics, `test:${statFunction.sign}42|${statFunction.unit}|#gtag:gvalue1,gtag:gvalue2,foo,bar${metricsEnd}`);
               done();
             });
           });
@@ -54,7 +55,7 @@ describe('#statsFunctions', () => {
               statsd[statFunction.name]('test', 42, ['foo', 'bar']);
             });
             server.on('metrics', metrics => {
-              assert.strictEqual(metrics, `test:42|${statFunction.unit}|#foo,bar${metricsEnd}`);
+              assert.strictEqual(metrics, `test:${statFunction.sign}42|${statFunction.unit}|#foo,bar${metricsEnd}`);
               done();
             });
           });
@@ -71,7 +72,7 @@ describe('#statsFunctions', () => {
               });
             });
             server.on('metrics', metrics => {
-              assert.strictEqual(metrics, `foo.test.bar:42|${statFunction.unit}|@0.5${metricsEnd}`);
+              assert.strictEqual(metrics, `foo.test.bar:${statFunction.sign}42|${statFunction.unit}|@0.5${metricsEnd}`);
               assert.strictEqual(called, true);
               done();
             });
@@ -91,7 +92,7 @@ describe('#statsFunctions', () => {
               });
             });
             server.on('metrics', metrics => {
-              assert.strictEqual(metrics, `a:42|${statFunction.unit}\nb:42|${statFunction.unit}\n`);
+              assert.strictEqual(metrics, `a:${statFunction.sign}42|${statFunction.unit}\nb:${statFunction.sign}42|${statFunction.unit}\n`);
               done();
             });
           });
@@ -102,7 +103,7 @@ describe('#statsFunctions', () => {
               statsd[statFunction.name]('test', 42, { foo: 'bar' });
             });
             server.on('metrics', metrics => {
-              assert.strictEqual(metrics, `test:42|${statFunction.unit}|#foo:bar${metricsEnd}`);
+              assert.strictEqual(metrics, `test:${statFunction.sign}42|${statFunction.unit}|#foo:bar${metricsEnd}`);
               done();
             });
           });
@@ -115,7 +116,7 @@ describe('#statsFunctions', () => {
               statsd[statFunction.name]('test', 42, { foo: 'bar' });
             });
             server.on('metrics', metrics => {
-              assert.strictEqual(metrics, `test,foo=bar:42|${statFunction.unit}${metricsEnd}`);
+              assert.strictEqual(metrics, `test,foo=bar:${statFunction.sign}42|${statFunction.unit}${metricsEnd}`);
               done();
             });
           });
