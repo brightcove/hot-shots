@@ -1,5 +1,6 @@
 const assert = require('assert');
 const helpers = require('./helpers/helpers.js');
+const libHelpers = require('../lib/helpers.js');
 
 const closeAll = helpers.closeAll;
 const testTypes = helpers.testTypes;
@@ -75,6 +76,32 @@ describe('#globalTags', () => {
         });
         server.on('metrics', metrics => {
           assert.strictEqual(metrics, `test:1337|c|#gtag:1,gtag:2,bar,foo${metricEnd}`);
+          done();
+        });
+      });
+
+      it('only global tags - array, no metric tags', done => {
+        server = createServer(serverType, opts => {
+          statsd = createHotShotsClient(Object.assign(opts, {
+            global_tags: ['gtag:1', 'gtag:2', 'bar'],
+          }), clientType);
+          statsd.increment('test', 1337, {});
+        });
+        server.on('metrics', metrics => {
+          assert.strictEqual(metrics, `test:1337|c|#gtag:1,gtag:2,bar${metricEnd}`);
+          done();
+        });
+      });
+
+      it('only global tags - object, no metric tags', done => {
+        server = createServer(serverType, opts => {
+          statsd = createHotShotsClient(Object.assign(opts, {
+            global_tags: { gtag: 1, gtagb: 2, }
+          }), clientType);
+          statsd.increment('test', 1337, {});
+        });
+        server.on('metrics', metrics => {
+          assert.strictEqual(metrics, `test:1337|c|#gtag:1,gtagb:2${metricEnd}`);
           done();
         });
       });
@@ -203,5 +230,36 @@ describe('#globalTags', () => {
         });
       });
     });
+  });
+});
+
+
+describe.skip('#globalTags performance benchmarks', () => {
+  // eslint-disable-next-line require-jsdoc
+  function time(f, iterations, opName) {
+    const startTime = process.hrtime.bigint();
+    for (let i = 0; i < iterations; ++i) {
+      f();
+    }
+    const endTime = process.hrtime.bigint();
+    const elapsedMs = Number(endTime - startTime) / 1e6;
+    console.log(opName + ' performance benchmark: %d ms', elapsedMs);
+
+  }
+  it('adhoc performance benchmark - overrideTags', () => {
+    const globalTags = { gtag: '123', foo: 'bar', dfjkserhu: 'fasdfheasdf', sdfygthsf: 'asdfuhtbhadsf', aslfkah4thutuehtrheu: 'asdfhasuihetlhstjlkfsjlk;f' };
+    const tags = { gtag: '234', asdfwer: 'weradfsdsf',  foo: 'bar', asfiehtjasdflksf: 'asdfkljfeuhtbasf', bbuhrewiuhfasknjasdflkjsdfjlksdfjlkafdsljkadsfjlkdfsjlkdfsjlfsjlkfdsjlkdsfjlkdsfjlkdfsljkadfshkaghk: 'asdfuhthb', asdfhjkasdfhjafsjlhfdsjlfd: 'ashdfhuaewrlhkjareshljkarshjklfdshklj', asflkjasdfhjhthiuatwekjhashfkjlf: 'asdfhhkuawrehljkatelhkjatslhkjfshlk' };
+    const ITERATIONS = 10000;
+
+    const fakeMemo = JSON.stringify(globalTags);
+    const formattedGlobalTags =  libHelpers.formatTags(globalTags, false);
+    time(() => {
+      libHelpers.overrideTags(formattedGlobalTags, tags, false, ',');
+    }, ITERATIONS, 'overrideTags');
+
+    time(() => {
+      libHelpers.overrideTags2(globalTags, fakeMemo, tags, false, ',');
+    }, ITERATIONS, 'overrideTags2');
+
   });
 });
