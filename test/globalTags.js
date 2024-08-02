@@ -249,17 +249,24 @@ describe('#globalTags performance benchmarks', () => {
   it('adhoc performance benchmark - overrideTagsUnoptimized', () => {
     const globalTags = { gtag: '123', foo: 'bar', dfjkserhu: 'fasdfheasdf', sdfygthsf: 'asdfuhtbhadsf', aslfkah4thutuehtrheu: 'asdfhasuihetlhstjlkfsjlk;f' };
     const tags = { gtag: '234', asdfwer: 'weradfsdsf',  foo: 'bar', asfiehtjasdflksf: 'asdfkljfeuhtbasf', bbuhrewiuhfasknjasdflkjsdfjlksdfjlkafdsljkadsfjlkdfsjlkdfsjlfsjlkfdsjlkdsfjlkdsfjlkdfsljkadfshkaghk: 'asdfuhthb', asdfhjkasdfhjafsjlhfdsjlfd: 'ashdfhuaewrlhkjareshljkarshjklfdshklj', asflkjasdfhjhthiuatwekjhashfkjlf: 'asdfhhkuawrehljkatelhkjatslhkjfshlk' };
-    const ITERATIONS = 100000;
+    const ITERATIONS = 10000;
 
     const fakeMemo = JSON.stringify(globalTags);
     const formattedGlobalTags =  libHelpers.formatTags(globalTags, false);
+
     time(() => {
       libHelpers.overrideTagsToString(formattedGlobalTags, tags, false, ',');
     }, ITERATIONS, 'overrideTagsUnoptimized');
-
+    time(() => {
+      const arrayTags = libHelpers.formatTags(tags, false);
+      libHelpers.overrideTagsToString(formattedGlobalTags, arrayTags, false, ',');
+    }, ITERATIONS, 'overrideTagsUnoptimized for non-pre-made arrays');
+    const arrayTags = libHelpers.formatTags(tags, false);
+    time(() => {
+      libHelpers.overrideTagsToString(formattedGlobalTags, arrayTags, false, ',');
+    }, ITERATIONS, 'overrideTagsUnoptimized for pre-made arrays');
     time(() => {
       libHelpers.overrideTags2(globalTags, fakeMemo, tags, false, ',');
     }, ITERATIONS, 'overrideTags2');
-
   });
 });
