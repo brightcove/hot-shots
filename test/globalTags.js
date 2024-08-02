@@ -234,7 +234,7 @@ describe('#globalTags', () => {
 });
 
 
-describe.skip('#globalTags performance benchmarks', () => {
+describe('#globalTags performance benchmarks', () => {
   // eslint-disable-next-line require-jsdoc
   function time(f, iterations, opName) {
     const startTime = process.hrtime.bigint();
@@ -249,12 +249,12 @@ describe.skip('#globalTags performance benchmarks', () => {
   it('adhoc performance benchmark - overrideTagsUnoptimized', () => {
     const globalTags = { gtag: '123', foo: 'bar', dfjkserhu: 'fasdfheasdf', sdfygthsf: 'asdfuhtbhadsf', aslfkah4thutuehtrheu: 'asdfhasuihetlhstjlkfsjlk;f' };
     const tags = { gtag: '234', asdfwer: 'weradfsdsf',  foo: 'bar', asfiehtjasdflksf: 'asdfkljfeuhtbasf', bbuhrewiuhfasknjasdflkjsdfjlksdfjlkafdsljkadsfjlkdfsjlkdfsjlfsjlkfdsjlkdsfjlkdsfjlkdfsljkadfshkaghk: 'asdfuhthb', asdfhjkasdfhjafsjlhfdsjlfd: 'ashdfhuaewrlhkjareshljkarshjklfdshklj', asflkjasdfhjhthiuatwekjhashfkjlf: 'asdfhhkuawrehljkatelhkjatslhkjfshlk' };
-    const ITERATIONS = 10000;
+    const ITERATIONS = 100000;
 
     const fakeMemo = JSON.stringify(globalTags);
     const formattedGlobalTags =  libHelpers.formatTags(globalTags, false);
     time(() => {
-      libHelpers.overrideTagsUnoptimized(formattedGlobalTags, tags, false, ',');
+      libHelpers.overrideTagsToString(formattedGlobalTags, tags, false, ',');
     }, ITERATIONS, 'overrideTagsUnoptimized');
 
     time(() => {
