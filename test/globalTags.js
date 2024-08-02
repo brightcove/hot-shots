@@ -246,7 +246,7 @@ describe.skip('#globalTags performance benchmarks', () => {
     console.log(opName + ' performance benchmark: %d ms', elapsedMs);
 
   }
-  it('adhoc performance benchmark - overrideTags', () => {
+  it('adhoc performance benchmark - overrideTagsUnoptimized', () => {
     const globalTags = { gtag: '123', foo: 'bar', dfjkserhu: 'fasdfheasdf', sdfygthsf: 'asdfuhtbhadsf', aslfkah4thutuehtrheu: 'asdfhasuihetlhstjlkfsjlk;f' };
     const tags = { gtag: '234', asdfwer: 'weradfsdsf',  foo: 'bar', asfiehtjasdflksf: 'asdfkljfeuhtbasf', bbuhrewiuhfasknjasdflkjsdfjlksdfjlkafdsljkadsfjlkdfsjlkdfsjlfsjlkfdsjlkdsfjlkdsfjlkdfsljkadfshkaghk: 'asdfuhthb', asdfhjkasdfhjafsjlhfdsjlfd: 'ashdfhuaewrlhkjareshljkarshjklfdshklj', asflkjasdfhjhthiuatwekjhashfkjlf: 'asdfhhkuawrehljkatelhkjatslhkjfshlk' };
     const ITERATIONS = 10000;
@@ -254,8 +254,8 @@ describe.skip('#globalTags performance benchmarks', () => {
     const fakeMemo = JSON.stringify(globalTags);
     const formattedGlobalTags =  libHelpers.formatTags(globalTags, false);
     time(() => {
-      libHelpers.overrideTags(formattedGlobalTags, tags, false, ',');
-    }, ITERATIONS, 'overrideTags');
+      libHelpers.overrideTagsUnoptimized(formattedGlobalTags, tags, false, ',');
+    }, ITERATIONS, 'overrideTagsUnoptimized');
 
     time(() => {
       libHelpers.overrideTags2(globalTags, fakeMemo, tags, false, ',');
