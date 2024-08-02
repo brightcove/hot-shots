@@ -258,6 +258,8 @@ describe('#globalTags performance benchmarks', () => {
       libHelpers.overrideTagsToString(formattedGlobalTags, tags, false, ',');
     }, ITERATIONS, 'overrideTagsUnoptimized');
     time(() => {
+      // it's a fair comparison to include the formatTags call in the benchmark, because I expect
+      // most actual use-cases of the API will start with an object and convert it into an array.
       const arrayTags = libHelpers.formatTags(tags, false);
       libHelpers.overrideTagsToString(formattedGlobalTags, arrayTags, false, ',');
     }, ITERATIONS, 'overrideTagsUnoptimized for non-pre-made arrays');
