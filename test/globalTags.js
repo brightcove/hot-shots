@@ -261,10 +261,6 @@ describe('#globalTags performance benchmarks', () => {
       const arrayTags = libHelpers.formatTags(tags, false);
       libHelpers.overrideTagsToString(formattedGlobalTags, arrayTags, false, ',');
     }, ITERATIONS, 'overrideTagsUnoptimized for non-pre-made arrays');
-    const arrayTags = libHelpers.formatTags(tags, false);
-    time(() => {
-      libHelpers.overrideTagsToString(formattedGlobalTags, arrayTags, false, ',');
-    }, ITERATIONS, 'overrideTagsUnoptimized for pre-made arrays');
     time(() => {
       libHelpers.overrideTags2(globalTags, fakeMemo, tags, false, ',');
     }, ITERATIONS, 'overrideTags2');
