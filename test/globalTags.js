@@ -255,13 +255,13 @@ describe.skip('#globalTags performance benchmarks', () => {
     const formattedGlobalTags =  libHelpers.formatTags(globalTags, false);
 
     time(() => {
-      libHelpers.overrideTagsToString(formattedGlobalTags, tags, false, ',');
+      libHelpers.overrideTagsToStringUnoptimized(formattedGlobalTags, tags, false, ',');
     }, ITERATIONS, 'overrideTagsUnoptimized');
     time(() => {
       // it's a fair comparison to include the formatTags call in the benchmark, because I expect
       // most actual use-cases of the API will start with an object and convert it into an array.
       const arrayTags = libHelpers.formatTags(tags, false);
-      libHelpers.overrideTagsToString(formattedGlobalTags, arrayTags, false, ',');
+      libHelpers.overrideTagsToStringUnoptimized(formattedGlobalTags, arrayTags, false, ',');
     }, ITERATIONS, 'overrideTagsUnoptimized for non-pre-made arrays');
     time(() => {
       libHelpers.overrideTags2(globalTags, fakeMemo, tags, false, ',');
