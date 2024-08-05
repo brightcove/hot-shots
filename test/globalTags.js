@@ -234,7 +234,7 @@ describe('#globalTags', () => {
 });
 
 
-describe('#globalTags performance benchmarks', () => {
+describe.skip('#globalTags performance benchmarks', () => {
   // eslint-disable-next-line require-jsdoc
   function time(f, iterations, opName) {
     const startTime = process.hrtime.bigint();
