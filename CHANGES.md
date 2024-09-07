@@ -1,7 +1,13 @@
 CHANGELOG
 =========
 
-## 10.0 (2023-2-3)
+## 10.1.0 (2024-9-6)
+
+* @lachlankidson Add gaugeDelta function
+* @bdeitte Various dev library updates
+* @bdeitte Add Node 20 testing
+
+## 10.0.0 (2023-2-3)
 * @imyourmanzi In TypeScript, narrow callback parameter types
 * @bdeitte Remove Node 8 from supported list and add testing of Node 18
 
