@@ -127,6 +127,10 @@ The check method has the following API:
   // Gauge: Gauge a stat by a specified amount
   client.gauge('my_gauge', 123.45);
 
+  // Gauge: Gauge a stat by a specified amount, but change it rather than setting it
+  client.gaugeDelta('my_gauge', -10);
+  client.gaugeDelta('my_gauge', 4);
+
   // Set: Counts unique occurrences of a stat (alias of unique)
   client.set('my_unique', 'foobar');
   client.unique('my_unique', 'foobarbaz');
