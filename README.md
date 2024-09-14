@@ -16,6 +16,8 @@ includes all changes in the latest node-statsd and many additional changes, incl
 * asyncDistTimer
 * much more, including many bug fixes
 
+You can read about all changes in [the changelog](CHANGES.md).
+
 hot-shots supports Node 10.x and higher.
 
 ![Build Status](https://github.com/brightcove/hot-shots/actions/workflows/node.js.yml/badge.svg)
@@ -273,12 +275,6 @@ optionalDependency, and how it's used in the codebase, this install
 failure will not cause any problems.  It only means that you can't use
 the uds feature.
 
-## Migrating from node-statsd
-
-You should only need to do one thing: change node-statsd to hot-shots in all requires.
-
-You can check the detailed [change log](https://github.com/brightcove/hot-shots/blob/master/CHANGES.md) for what has changed since the last release of node-statsd.
-
 ## Submitting changes
 
 Thanks for considering making any updates to this project! This project is entirely community-driven, and so your changes are important. Here are the steps to take in your fork:
@@ -297,14 +293,6 @@ When you've done all this we're happy to try to get this merged in right away.
 Versions will attempt to follow semantic versioning, with major changes only coming in major versions.
 
 npm publishing is possible by one person, [bdeitte](https://github.com/bdeitte), who has two-factor authentication enabled for publishes.  Publishes only contain one additional library, [unix-dgram](https://github.com/bnoordhuis/node-unix-dgram).
-
-## Name
-
-Why is this project named hot-shots?  Because:
-
-1. It's impossible to find another statsd name on npm
-2. It's the name of a dumb movie
-3. No good reason
 
 ## License
 

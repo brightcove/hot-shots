@@ -3,7 +3,7 @@ CHANGELOG
 
 ## 10.1.1 (2024-9-12)
 
-@matteosb Handle synchronous socket.send error in sendUsingDnsCache
+* @matteosb Handle synchronous socket.send error in sendUsingDnsCache
 
 ## 10.1.0 (2024-9-6)
 
