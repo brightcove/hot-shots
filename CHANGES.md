@@ -3,7 +3,7 @@ CHANGELOG
 
 ## Unreleased
 
-* @bdeitte Upgrade dev dependencies for security warning a few README updates
+* @bdeitte Upgrade dependencies for security warning a few README updates
 
 ## 10.1.1 (2024-9-12)
 
