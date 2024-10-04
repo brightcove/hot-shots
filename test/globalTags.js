@@ -66,6 +66,29 @@ describe('#globalTags', () => {
         });
       });
 
+      it('should not add global tags from DD_ prefixed env vars if opted out', done => {
+        // set DD_ prefixed env vars
+        process.env.DD_ENTITY_ID = '04652bb7-19b7-11e9-9cc6-42010a9c016d';
+        process.env.DD_ENV = 'test';
+        process.env.DD_SERVICE = 'test-service';
+        process.env.DD_VERSION = '1.0.0';
+
+        server = createServer(serverType, opts => {
+          statsd = createHotShotsClient(Object.assign(opts, {
+            global_tags: ['gtag-dd-optout'],
+            includeDataDogTags: false,
+          }), clientType);
+          statsd.increment('test-gtag-dd-optout');
+        });
+        server.on('metrics', metrics => {
+          assert.strictEqual(
+            metrics,
+            `test-gtag-dd-optout:1|c|#gtag-dd-optout${metricEnd}`
+          );
+          done();
+        });
+      });
+
       it('should combine global tags and metric tags', done => {
         server = createServer(serverType, opts => {
           statsd = createHotShotsClient(Object.assign(opts, {
