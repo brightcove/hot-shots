@@ -42,7 +42,8 @@ Parameters (specified as one object passed into hot-shots):
 * `mock`:        Create a mock StatsD instance, sending no stats to
   the server and allowing data to be read from mockBuffer.  Note that
   mockBuffer will keep growing, so only use for testing or clear out periodically. `default: false`
-* `globalTags`:  Tags that will be added to every metric. Can be either an object or list of tags. `default: {}`. The following *Datadog* tags are appended to `globalTags` from the corresponding environment variable if the latter is set:
+* `globalTags`:  Tags that will be added to every metric. Can be either an object or list of tags. `default: {}`. 
+* `includeDataDogTags`: Whether to include DataDog tags to the global tags. `default: true`. The following *Datadog* tags are appended to `globalTags` from the corresponding environment variable if the latter is set:
   * `dd.internal.entity_id` from `DD_ENTITY_ID` ([docs](https://docs.datadoghq.com/developers/dogstatsd/?tab=kubernetes#origin-detection-over-udp))
   * `env` from `DD_ENV` ([docs](https://docs.datadoghq.com/getting_started/tagging/unified_service_tagging/?tab=kubernetes#full-configuration))
   * `service` from `DD_SERVICE` ([docs](https://docs.datadoghq.com/getting_started/tagging/unified_service_tagging/?tab=kubernetes#full-configuration))
