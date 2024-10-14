@@ -1,8 +1,9 @@
 CHANGELOG
 =========
 
-## Unreleased
+## 10.2.0 (2024-11-13)
 
+* @thiago-negri Add option 'includeDataDogTags'
 * @bdeitte Upgrade dependencies for security warning a few README updates
 
 ## 10.1.1 (2024-9-12)
