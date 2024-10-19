@@ -10,6 +10,7 @@ declare module "hot-shots" {
     cacheDnsTtl?: number;
     errorHandler?: (err: Error) => void;
     globalTags?: Tags;
+    includeDataDogTags?: boolean;
     globalize?: boolean;
     host?: string;
     isChild?: boolean;
