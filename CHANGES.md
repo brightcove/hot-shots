@@ -1,6 +1,10 @@
 CHANGELOG
 =========
 
+## 10.2.1 (2024-10-19)
+
+* @thiago-negri Add 'includeDataDogTags' property to 'ClientOptions' type
+
 ## 10.2.0 (2024-10-13)
 
 * @thiago-negri Add option 'includeDataDogTags'
