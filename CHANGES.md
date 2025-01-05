@@ -67,7 +67,7 @@ CHANGELOG
 * @stephenmathieson Make close callback optional in TypeScript definition
 
 ## 8.2.0 (2020-9-30)
-* @dhermes Making UDS error handling and recovery more robust. Note these look to be ok in a minor release but are signficant upgrades to how UDS works. Thanks as well to @prognant for an overlapping PR.
+* @dhermes Making UDS error handling and recovery more robust. Note these look to be ok in a minor release but are significant upgrades to how UDS works. Thanks as well to @prognant for an overlapping PR.
 
 ## 8.1.0 (2020-9-25)
 * @maleblond Support multiple values for the same tag key
