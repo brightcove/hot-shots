@@ -5,3 +5,4 @@ node_modules
 coverage
 test/helpers/test.sock
 .vscode/
+.claude/

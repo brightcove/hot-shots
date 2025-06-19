@@ -92,7 +92,7 @@ describe('#statsFunctions', () => {
               });
             });
             server.on('metrics', metrics => {
-              assert.strictEqual(metrics, `a:${statFunction.sign}42|${statFunction.unit}\nb:${statFunction.sign}42|${statFunction.unit}\n`);
+              assert.strictEqual(metrics, `a:${statFunction.sign}42|${statFunction.unit}\nb:${statFunction.sign}42|${statFunction.unit}${metricsEnd}`);
               done();
             });
           });
@@ -236,9 +236,9 @@ describe('#statsFunctions', () => {
             });
           });
           server.on('metrics', metrics => {
-            assert.strictEqual(metrics, 'a:42|c\nb:42|c\n');
+            assert.strictEqual(metrics, `a:42|c\nb:42|c${metricsEnd}`);
             done();
-          });
+        });
         });
       });
 
@@ -320,9 +320,9 @@ describe('#statsFunctions', () => {
             });
           });
           server.on('metrics', metrics => {
-            assert.strictEqual(metrics, 'a:-42|c\nb:-42|c\n');
+            assert.strictEqual(metrics, `a:-42|c\nb:-42|c${metricsEnd}`);
             done();
-          });
+        });
         });
       });
     });

@@ -402,6 +402,7 @@ describe('#errorHandling', () => {
             server = createServer('uds_broken', opts => {
               const client = statsd = createHotShotsClient(Object.assign(opts, {
                 protocol: 'uds',
+                maxBufferSize: 0, // disable to test error handling more easily
                 errorHandler(error) {
                   assert.ok(error);
                   assert.strictEqual(error.code, code);
@@ -431,6 +432,7 @@ describe('#errorHandling', () => {
             server = createServer('uds_broken', opts => {
               const client = statsd = createHotShotsClient(Object.assign(opts, {
                 protocol: 'uds',
+                maxBufferSize: 0, // disable to test error handling more easily
                 errorHandler(error) {
                   assert.ok(error);
                   assert.strictEqual(error.code, code);
@@ -461,6 +463,7 @@ describe('#errorHandling', () => {
             server = createServer('uds_broken', opts => {
               const client = statsd = createHotShotsClient(Object.assign(opts, {
                 protocol: 'uds',
+                maxBufferSize: 0, // disable to test error handling more easily
                 udsGracefulRestartRateLimit: limit,
                 errorHandler(error) {
                   assert.ok(error);
@@ -497,6 +500,7 @@ describe('#errorHandling', () => {
             server = createServer('uds_broken', opts => {
               const client = statsd = createHotShotsClient(Object.assign(opts, {
                 protocol: 'uds',
+                maxBufferSize: 0, // disable to test error handling more easily
                 errorHandler(error) {
                   assert.ok(error);
                   assert.strictEqual(error.code, code);
@@ -530,6 +534,7 @@ describe('#errorHandling', () => {
             server = createServer('uds_broken', opts => {
               const client = statsd = createHotShotsClient(Object.assign(opts, {
                 protocol: 'uds',
+                maxBufferSize: 0, // disable to test error handling more easily
                 errorHandler(error) {
                   assert.ok(error);
                   assert.strictEqual(error.code, code);
@@ -567,6 +572,7 @@ describe('#errorHandling', () => {
             server = createServer('uds_broken', opts => {
               const client = statsd = createHotShotsClient(Object.assign(opts, {
                 protocol: 'uds',
+                maxBufferSize: 0, // disable to test error handling more easily
                 udsGracefulErrorHandling: false,
                 errorHandler(error) {
                   assert.ok(error);

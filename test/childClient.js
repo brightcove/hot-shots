@@ -18,7 +18,7 @@ describe('#childClient', () => {
     statsd = null;
   });
 
-  testProtocolTypes().forEach(([description, serverType, clientType]) => {
+  testProtocolTypes().forEach(([description, serverType, clientType, metricsEnd]) => {
 
     describe(description, () => {
       it('init should set the proper values when specified', () => {
@@ -55,7 +55,7 @@ describe('#childClient', () => {
           statsd.increment('b', 2);
       });
       server.on('metrics', metrics => {
-        assert.strictEqual(metrics, 'preff.a.suff:1|c|#awesomeness:over9000\npreff.b.suff:2|c|#awesomeness:over9000\n');
+        assert.strictEqual(metrics, `preff.a.suff:1|c|#awesomeness:over9000\npreff.b.suff:2|c|#awesomeness:over9000${metricsEnd}`);
         done();
       });
     });
@@ -77,7 +77,7 @@ describe('#childClient', () => {
       });
       server.on('metrics', metrics => {
         assert.strictEqual(metrics, 'preff.p.a.s.suff:1|c|#xyz,awesomeness:' +
-          'over9000\npreff.p.b.s.suff:2|c|#xyz,awesomeness:over9000\n'
+          `over9000\npreff.p.b.s.suff:2|c|#xyz,awesomeness:over9000${metricsEnd}`
         );
         done();
       });

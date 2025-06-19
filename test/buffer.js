@@ -16,7 +16,7 @@ describe('#buffer', () => {
     statsd = null;
   });
 
-  testTypes().forEach(([description, serverType, clientType]) => {
+  testTypes().forEach(([description, serverType, clientType, metricsEnd]) => {
     describe(description, () => {
       it('should aggregate packets when maxBufferSize is set to non-zero', done => {
         server = createServer(serverType, opts => {
@@ -27,7 +27,7 @@ describe('#buffer', () => {
           statsd.increment('b', 2);
         });
         server.on('metrics', metrics => {
-          assert.strictEqual(metrics, 'a:1|c\nb:2|c\n');
+          assert.strictEqual(metrics, `a:1|c\nb:2|c${metricsEnd}`);
           done();
         });
       });
@@ -56,7 +56,7 @@ describe('#buffer', () => {
             }
           }
           else {
-            assert.strictEqual(metrics, 'a:1|c\nb:2|c\n');
+            assert.strictEqual(metrics, `a:1|c\nb:2|c${metricsEnd}`);
             done();
           }
         });
@@ -71,7 +71,7 @@ describe('#buffer', () => {
           statsd.increment('b', 2);
         });
         server.once('metrics', metrics => {
-          assert.strictEqual(metrics, 'a:1|c\n');
+          assert.strictEqual(metrics, `a:1|c${metricsEnd}`);
           done();
         });
       });
@@ -88,11 +88,40 @@ describe('#buffer', () => {
         });
         server.on('metrics', metric => {
           const elapsed = Date.now() - start;
-          assert.strictEqual(metric, 'a:1|c\n');
+          assert.strictEqual(metric, `a:1|c${metricsEnd}`);
           assert.strictEqual(elapsed > 1000, true);
           done();
         });
       });
     });
   });
+
+  // Test UDS specific default buffering behavior
+  if (require('os').platform() !== 'win32') {
+    describe('UDS default buffering', () => {
+      it('should enable 8KiB buffering by default for UDS protocol', done => {
+        server = createServer('uds', opts => {
+          // Don't set maxBufferSize to test the default
+          statsd = createHotShotsClient(opts, 'client');
+
+          // Verify the default buffer size is 8192 for UDS
+          assert.strictEqual(statsd.maxBufferSize, 8192);
+          done();
+        });
+      });
+
+      it('should allow override of default UDS buffering', done => {
+        server = createServer('uds', opts => {
+          // Explicitly set maxBufferSize to 0 to override the default
+          statsd = createHotShotsClient(Object.assign(opts, {
+            maxBufferSize: 0,
+          }), 'client');
+
+          // Verify the override works
+          assert.strictEqual(statsd.maxBufferSize, 0);
+          done();
+        });
+      });
+    });
+  }
 });
