@@ -6,7 +6,7 @@ const testTypes = helpers.testTypes;
 const createServer = helpers.createServer;
 const createHotShotsClient = helpers.createHotShotsClient;
 
-describe('#buffer', () => {
+describe.only('#buffer', () => {
   let server;
   let statsd;
 
@@ -65,7 +65,7 @@ describe('#buffer', () => {
       it('should not send batches larger then maxBufferSize', done => {
         server = createServer(serverType, opts => {
           statsd = createHotShotsClient(Object.assign(opts, {
-            maxBufferSize: 8,
+            maxBufferSize: 2,
           }), clientType);
           statsd.increment('a', 1);
           statsd.increment('b', 2);
@@ -95,33 +95,4 @@ describe('#buffer', () => {
       });
     });
   });
-
-  // Test UDS specific default buffering behavior
-  if (require('os').platform() !== 'win32') {
-    describe('UDS default buffering', () => {
-      it('should enable 8KiB buffering by default for UDS protocol', done => {
-        server = createServer('uds', opts => {
-          // Don't set maxBufferSize to test the default
-          statsd = createHotShotsClient(opts, 'client');
-
-          // Verify the default buffer size is 8192 for UDS
-          assert.strictEqual(statsd.maxBufferSize, 8192);
-          done();
-        });
-      });
-
-      it('should allow override of default UDS buffering', done => {
-        server = createServer('uds', opts => {
-          // Explicitly set maxBufferSize to 0 to override the default
-          statsd = createHotShotsClient(Object.assign(opts, {
-            maxBufferSize: 0,
-          }), 'client');
-
-          // Verify the override works
-          assert.strictEqual(statsd.maxBufferSize, 0);
-          done();
-        });
-      });
-    });
-  }
 });

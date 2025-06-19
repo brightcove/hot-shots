@@ -80,7 +80,7 @@ function testTypes() {
     [`${TCP} ${CLIENT}`, TCP, CLIENT, TCP_METRIC_END],
     [`${TCP} ${CHILD_CLIENT}`, TCP, CHILD_CLIENT, TCP_METRIC_END]];
 
-  // Not everywhere can run UDS, and we don't want to fail the tests in those places
+   // Not everywhere can run UDS, and we don't want to fail the tests in those places
   if (os.platform() !== 'win32') {
     testTypesArr.push([`${UDS} ${CLIENT}`, UDS, CLIENT, UDS_METRIC_END]);
     testTypesArr.push([`${UDS} ${CHILD_CLIENT}`, UDS, CLIENT, UDS_METRIC_END]);
@@ -225,7 +225,7 @@ function createServer(serverType, callback) {
  * @param {*} clientType
  */
 function createHotShotsClient(args, clientType) {
-  if (clientType === UDS && ! args.maxBufferSize) {
+  if (args.protocol === UDS && ! args.maxBufferSize) {
     args.maxBufferSize = 1; // use a buffer like normal but shrink to get messages early
   }
    /* eslint-disable require-jsdoc */
