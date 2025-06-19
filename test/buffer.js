@@ -6,7 +6,7 @@ const testTypes = helpers.testTypes;
 const createServer = helpers.createServer;
 const createHotShotsClient = helpers.createHotShotsClient;
 
-describe.only('#buffer', () => {
+describe('#buffer', () => {
   let server;
   let statsd;
 
@@ -63,14 +63,21 @@ describe.only('#buffer', () => {
       });
 
       it('should not send batches larger then maxBufferSize', done => {
+        let calledMetrics = false;
         server = createServer(serverType, opts => {
           statsd = createHotShotsClient(Object.assign(opts, {
             maxBufferSize: 2,
           }), clientType);
           statsd.increment('a', 1);
-          statsd.increment('b', 2);
+          setTimeout(() => {
+            if (! calledMetrics) {
+              // give a small delay to ensure the buffer is flushed
+              statsd.increment('b', 2);
+            }
+          }, 50);
         });
         server.once('metrics', metrics => {
+          calledMetrics = true;
           assert.strictEqual(metrics, `a:1|c${metricsEnd}`);
           done();
         });
