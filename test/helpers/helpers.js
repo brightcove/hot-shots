@@ -225,6 +225,9 @@ function createServer(serverType, callback) {
  * @param {*} clientType
  */
 function createHotShotsClient(args, clientType) {
+  if (clientType === UDS && ! args.maxBufferSize) {
+    args.maxBufferSize = 1; // use a buffer like normal but shrink to get messages early
+  }
    /* eslint-disable require-jsdoc */
   function construct(ctor, constructArgs) {
     function F() {
