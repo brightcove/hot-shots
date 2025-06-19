@@ -13,7 +13,9 @@ try {
   unixDgram = require('unix-dgram'); // eslint-disable-line global-require
 }
 catch (err) {
-  // ignore, with better details showing up in the npm install
+  if (os.platform() !== 'win32') {
+    console.error('Error installing unix-dgram: ', err);
+  }
 }
 
 const CLIENT = 'client';
