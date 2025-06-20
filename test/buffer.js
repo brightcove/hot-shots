@@ -16,7 +16,7 @@ describe('#buffer', () => {
     statsd = null;
   });
 
-  testTypes().forEach(([description, serverType, clientType]) => {
+  testTypes().forEach(([description, serverType, clientType, metricsEnd]) => {
     describe(description, () => {
       it('should aggregate packets when maxBufferSize is set to non-zero', done => {
         server = createServer(serverType, opts => {
@@ -27,7 +27,7 @@ describe('#buffer', () => {
           statsd.increment('b', 2);
         });
         server.on('metrics', metrics => {
-          assert.strictEqual(metrics, 'a:1|c\nb:2|c\n');
+          assert.strictEqual(metrics, `a:1|c\nb:2|c${metricsEnd}`);
           done();
         });
       });
@@ -56,22 +56,29 @@ describe('#buffer', () => {
             }
           }
           else {
-            assert.strictEqual(metrics, 'a:1|c\nb:2|c\n');
+            assert.strictEqual(metrics, `a:1|c\nb:2|c${metricsEnd}`);
             done();
           }
         });
       });
 
       it('should not send batches larger then maxBufferSize', done => {
+        let calledMetrics = false;
         server = createServer(serverType, opts => {
           statsd = createHotShotsClient(Object.assign(opts, {
-            maxBufferSize: 8,
+            maxBufferSize: 2,
           }), clientType);
           statsd.increment('a', 1);
-          statsd.increment('b', 2);
+          setTimeout(() => {
+            if (! calledMetrics) {
+              // give a small delay to ensure the buffer is flushed
+              statsd.increment('b', 2);
+            }
+          }, 50);
         });
         server.once('metrics', metrics => {
-          assert.strictEqual(metrics, 'a:1|c\n');
+          calledMetrics = true;
+          assert.strictEqual(metrics, `a:1|c${metricsEnd}`);
           done();
         });
       });
@@ -88,7 +95,7 @@ describe('#buffer', () => {
         });
         server.on('metrics', metric => {
           const elapsed = Date.now() - start;
-          assert.strictEqual(metric, 'a:1|c\n');
+          assert.strictEqual(metric, `a:1|c${metricsEnd}`);
           assert.strictEqual(elapsed > 1000, true);
           done();
         });

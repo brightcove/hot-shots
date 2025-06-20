@@ -43,7 +43,10 @@ describe('#errorHandling', () => {
           }
         }
       }), 'client');
-      statsd.increment('a', 42, null);
+      setTimeout(() => {
+        // give a small delay to ensure errorHandler is setup
+        statsd.increment('a', 42, null);
+      }, 50);
       server.on('metrics', () => {
         assert.ok(false);
       });
@@ -55,7 +58,8 @@ describe('#errorHandling', () => {
       it('should not use errorHandler when there is not an error', done => {
         server = createServer(serverType, (opts) => {
           statsd = createHotShotsClient(Object.assign(opts, {
-            errorHandler() {
+            errorHandler(err) {
+              console.log('Error handler called with:', err);
               assert.ok(false);
             }
           }), clientType);

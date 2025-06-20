@@ -18,7 +18,7 @@ includes all changes in the latest node-statsd and many additional changes, incl
 
 You can read about all changes in [the changelog](CHANGES.md).
 
-hot-shots supports Node 10.x and higher.
+hot-shots supports Node 16.x and higher.
 
 ![Build Status](https://github.com/brightcove/hot-shots/actions/workflows/node.js.yml/badge.svg)
 
@@ -42,13 +42,13 @@ Parameters (specified as one object passed into hot-shots):
 * `mock`:        Create a mock StatsD instance, sending no stats to
   the server and allowing data to be read from mockBuffer.  Note that
   mockBuffer will keep growing, so only use for testing or clear out periodically. `default: false`
-* `globalTags`:  Tags that will be added to every metric. Can be either an object or list of tags. `default: {}`. 
+* `globalTags`:  Tags that will be added to every metric. Can be either an object or list of tags. `default: {}`.
 * `includeDataDogTags`: Whether to include DataDog tags to the global tags. `default: true`. The following *Datadog* tags are appended to `globalTags` from the corresponding environment variable if the latter is set:
   * `dd.internal.entity_id` from `DD_ENTITY_ID` ([docs](https://docs.datadoghq.com/developers/dogstatsd/?tab=kubernetes#origin-detection-over-udp))
   * `env` from `DD_ENV` ([docs](https://docs.datadoghq.com/getting_started/tagging/unified_service_tagging/?tab=kubernetes#full-configuration))
   * `service` from `DD_SERVICE` ([docs](https://docs.datadoghq.com/getting_started/tagging/unified_service_tagging/?tab=kubernetes#full-configuration))
   * `version` from `DD_VERSION` ([docs](https://docs.datadoghq.com/getting_started/tagging/unified_service_tagging/?tab=kubernetes#full-configuration))
-* `maxBufferSize`: If larger than 0,  metrics will be buffered and only sent when the string length is greater than the size. `default: 0`
+* `maxBufferSize`: If larger than 0,  metrics will be buffered and only sent when the string length is greater than the size. `default: 0` for udp and tcp.  `default: 8192` for uds.
 * `bufferFlushInterval`: If buffering is in use, this is the time in ms to always flush any buffered metrics. `default: 1000`
 * `telegraf`:    Use Telegraf's StatsD line protocol, which is slightly different than the rest `default: false`
 * `sampleRate`:    Sends only a sample of data to StatsD for all StatsD methods.  Can be overridden at the method level. `default: 1`

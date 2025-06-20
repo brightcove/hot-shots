@@ -1,6 +1,15 @@
 CHANGELOG
 =========
 
+## 11.0.0 (2024-10-19)
+
+* @bdeitte Stop testing much older Node.js versions and test latest: now testing Node 16 to Node 24
+* @bdeitte Enable buffering by default (as 8192) for UDS connections
+* @bdeitte Stop adding extra newline in buffering cases where it's not needed
+* @bdeitte Flush buffering earlier when possible
+* @bdeitte Add CLAUDE.md for easlier Claude usage
+* @bdeitte Ensure client.close() does not throws errors when mock: true is set
+
 ## 10.2.1 (2024-10-19)
 
 * @thiago-negri Add 'includeDataDogTags' property to 'ClientOptions' type
