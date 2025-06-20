@@ -23,7 +23,7 @@ describe('#helpersExtended', () => {
     });
 
     it('should format Number object to integer', () => {
-      const timestamp = new Number(1672531200.7);
+      const timestamp = Number(1672531200.7);
       const result = helpers.formatDate(timestamp);
       assert.strictEqual(result, 1672531201); // Should round up
     });
@@ -81,7 +81,7 @@ describe('#helpersExtended', () => {
     let consoleErrorCalls;
 
     beforeEach(() => {
-      originalReadFileSync = fs.readFileSync;
+      originalReadFileSync = fs.readFileSync; // eslint-disable-line no-sync
       originalConsoleError = console.error;
       consoleErrorCalls = [];
       console.error = (...args) => {
@@ -90,12 +90,12 @@ describe('#helpersExtended', () => {
     });
 
     afterEach(() => {
-      fs.readFileSync = originalReadFileSync;
+      fs.readFileSync = originalReadFileSync; // eslint-disable-line no-sync
       console.error = originalConsoleError;
     });
 
     it('should return default route IP when /proc/net/route exists', () => {
-      // Mock /proc/net/route content with default route
+      // Mock /proc/net/route content with default route (tab-separated)
       const mockRouteContent = `Iface	Destination	Gateway	Flags	RefCnt	Use	Metric	Mask	MTU	Window	IRTT
 eth0	00000000	0100A8C0	0003	0	0	0	00000000	0	0	0
 eth0	0000A8C0	00000000	0001	0	0	0	0000FFFF	0	0	0`;
@@ -112,7 +112,7 @@ eth0	0000A8C0	00000000	0001	0	0	0	0000FFFF	0	0	0`;
     });
 
     it('should return null when no default route found', () => {
-      // Mock /proc/net/route content without default route
+      // Mock /proc/net/route content without default route (tab-separated)
       const mockRouteContent = `Iface	Destination	Gateway	Flags	RefCnt	Use	Metric	Mask	MTU	Window	IRTT
 eth0	0000A8C0	00000000	0001	0	0	0	0000FFFF	0	0	0`;
 

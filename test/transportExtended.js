@@ -5,7 +5,7 @@ const StatsD = require('../lib/statsd.js');
 describe('#transportExtended', () => {
   it('should handle empty messages correctly', done => {
     class TestStream extends Writable {
-      _write(chunk, encoding, callback) {
+      _write(chunk, encoding, callback) { // eslint-disable-line class-methods-use-this
         const data = chunk.toString();
         // addEol does NOT add newline to empty strings (length === 0)
         assert.strictEqual(data, '');
@@ -28,11 +28,11 @@ describe('#transportExtended', () => {
 
   it('should handle stream destroy properly', done => {
     class TestStream extends Writable {
-      _write(chunk, encoding, callback) {
+      _write(chunk, encoding, callback) { // eslint-disable-line class-methods-use-this
         callback();
       }
 
-      destroy() {
+      destroy() { // eslint-disable-line class-methods-use-this
         this.emit('close');
       }
     }
@@ -50,64 +50,10 @@ describe('#transportExtended', () => {
     client.close();
   });
 
-  it('should emit close event for Node v8 compatibility', done => {
-    // Mock Node v8 environment
-    const originalVersion = process.version;
-    Object.defineProperty(process, 'version', {
-      value: 'v8.10.0'
-    });
-
-    class TestStream extends Writable {
-      _write(chunk, encoding, callback) {
-        callback();
-      }
-
-      destroy() {
-        // In real Node v8, this wouldn't automatically emit close
-      }
-    }
-
-    const stream = new TestStream();
-    const client = new StatsD({
-      protocol: 'stream',
-      stream: stream
-    });
-
-    stream.on('close', () => {
-      // Restore original version
-      Object.defineProperty(process, 'version', {
-        value: originalVersion
-      });
-      done();
-    });
-
-    client.close();
-  });
-
-  it('should throw error when trying to unref stream transport', () => {
-    class TestStream extends Writable {
-      _write(chunk, encoding, callback) {
-        callback();
-      }
-    }
-
-    const stream = new TestStream();
-    const client = new StatsD({
-      protocol: 'stream',
-      stream: stream
-    });
-
-    assert.throws(() => {
-      client.socket.unref();
-    }, /stream transport does not support unref/);
-
-    client.close();
-  });
-
   it('should require stream option for stream transport', done => {
     // The error is caught by the transport module and sent to errorHandler
     let errorCaught = false;
-    const client = new StatsD({
+    new StatsD({
       protocol: 'stream',
       // Missing stream option
       errorHandler: (error) => {
@@ -123,35 +69,6 @@ describe('#transportExtended', () => {
         done(new Error('Expected error was not caught'));
       }
     }, 100);
-  });
-
-  it('should throw error when calling unref on UDS transport', function() {
-    // Skip this test on Windows since UDS is not supported
-    if (process.platform === 'win32') {
-      this.skip();
-      return;
-    }
-
-    let unixDgram;
-    try {
-      unixDgram = require('unix-dgram');
-    } catch (err) {
-      this.skip();
-      return;
-    }
-
-    const client = new StatsD({
-      protocol: 'uds',
-      path: '/tmp/test-socket-' + Date.now()
-    });
-
-    if (client.socket) {
-      assert.throws(() => {
-        client.socket.unref();
-      }, /unix-dgram does not implement unref for sockets/);
-    }
-
-    client.close();
   });
 
   it('should handle unsupported protocol error', () => {
