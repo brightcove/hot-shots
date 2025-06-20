@@ -1,7 +1,7 @@
 CHANGELOG
 =========
 
-## 11.0.0 (2024-10-19)
+## 11.0.0 (2024-10-20)
 
 * @bdeitte Stop testing much older Node.js versions and test latest: now testing Node 16 to Node 24
 * @bdeitte Enable buffering by default (as 8192) for UDS connections
