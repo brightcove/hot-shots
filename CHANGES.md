@@ -1,7 +1,12 @@
 CHANGELOG
 =========
 
+## 11.1.0 (2024-10-22)
+
 @bdeitte Add more tests for uncovered areas
+@bdeitte When DD_AGENT_HOST is set to empty string, consider it to be undefined
+@bdeitte Set max size for maxBufferSize to 8192 when using UDS
+@bdeitte Improve memory/performance of overrideTags
 
 ## 11.0.0 (2024-10-20)
 

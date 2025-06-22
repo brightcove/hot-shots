@@ -112,6 +112,61 @@ describe('#init', () => {
     assert.strictEqual(statsd.protocol, 'udp');
   });
 
+  it('should treat empty DD_AGENT_HOST as undefined for default host behavior', () => {
+    // set DD_AGENT_HOST to empty string (problematic case from issue #260)
+    process.env.DD_AGENT_HOST = '';
+
+    statsd = createHotShotsClient({}, clientType);
+    assert.strictEqual(statsd.host, undefined);
+    assert.strictEqual(statsd.port, 8125);
+  });
+
+  it('should warn and cap maxBufferSize for UDS protocol when exceeding 8192 bytes', () => {
+    let warningCalled = false;
+    const originalWarn = console.warn;
+    console.warn = (message) => {
+      if (message.includes('maxBufferSize') && message.includes('8192') && message.includes('UDS')) {
+        warningCalled = true;
+      }
+    };
+
+    try {
+      statsd = createHotShotsClient({
+        maxBufferSize: 10000,
+        protocol: 'uds',
+        mock: true
+      }, clientType);
+
+      assert.strictEqual(warningCalled, true);
+      assert.strictEqual(statsd.maxBufferSize, 8192);
+    } finally {
+      console.warn = originalWarn;
+    }
+  });
+
+  it('should allow maxBufferSize > 8192 for non-UDS protocols', () => {
+    let warningCalled = false;
+    const originalWarn = console.warn;
+    console.warn = (message) => {
+      if (message.includes('maxBufferSize') && message.includes('8192')) {
+        warningCalled = true;
+      }
+    };
+
+    try {
+      statsd = createHotShotsClient({
+        maxBufferSize: 10000,
+        protocol: 'udp',
+        mock: true
+      }, clientType);
+
+      assert.strictEqual(warningCalled, false);
+      assert.strictEqual(statsd.maxBufferSize, 10000);
+    } finally {
+      console.warn = originalWarn;
+    }
+  });
+
   it('should set default values when not specified', () => {
     statsd = createHotShotsClient({}, clientType);
     assert.strictEqual(statsd.host, undefined);
