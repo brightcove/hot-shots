@@ -1,6 +1,8 @@
 CHANGELOG
 =========
 
+@bdeitte Add more tests for uncovered areas
+
 ## 11.0.0 (2024-10-20)
 
 * @bdeitte Stop testing much older Node.js versions and test latest: now testing Node 16 to Node 24

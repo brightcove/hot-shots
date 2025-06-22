@@ -32,15 +32,15 @@
   "scripts": {
     "coverage": "nyc --reporter=lcov --reporter=text npm test",
     "test": "mocha -R spec --timeout 5000 test/*.js",
-    "lint": "eslint lib/**/*.js test/**/*.js",
+    "lint": "eslint \"./lib/**/*.js\" \"./test/**/*.js\"",
     "pretest": "npm run lint"
   },
   "optionalDependencies": {
     "unix-dgram": "2.x"
   },
   "devDependencies": {
-    "eslint": "5.x",
-    "mocha": "9.x",
+    "eslint": "8.x",
+    "mocha": "10.x",
     "nyc": "15.x"
   },
   "license": "MIT",
