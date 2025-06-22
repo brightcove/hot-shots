@@ -70,7 +70,6 @@ describe('#timer', () => {
   });
 
   it('should record "user time" of promise', () => {
-    /* globals Promise */
     statsd = new StatsD({ mock:true });
 
     const onehundredMsFunc = () => { return delay(100); };
@@ -90,7 +89,6 @@ describe('#timer', () => {
   });
 
   it('should record "user time" of promise using a distribution', () => {
-    /* globals Promise */
     statsd = new StatsD({ mock:true });
 
     const onehundredMsFunc = () => { return delay(100); };

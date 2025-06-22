@@ -96,11 +96,9 @@ describe('#helpersExtended', () => {
 
     it('should return default route IP when /proc/net/route exists', () => {
       // Mock /proc/net/route content with default route (tab-separated)
-      const mockRouteContent = `Iface	Destination	Gateway	Flags	RefCnt	Use	Metric	Mask	MTU	Window	IRTT
-eth0	00000000	0100A8C0	0003	0	0	0	00000000	0	0	0
-eth0	0000A8C0	00000000	0001	0	0	0	0000FFFF	0	0	0`;
+      const mockRouteContent = 'Iface\tDestination\tGateway\tFlags\tRefCnt\tUse\tMetric\tMask\tMTU\tWindow\tIRTT\neth0\t00000000\t0100A8C0\t0003\t0\t0\t0\t00000000\t0\t0\t0\neth0\t0000A8C0\t00000000\t0001\t0\t0\t0\t0000FFFF\t0\t0\t0';
 
-      fs.readFileSync = (path, encoding) => {
+      fs.readFileSync = (path, encoding) => { // eslint-disable-line no-sync
         if (path === '/proc/net/route' && encoding === 'utf8') {
           return mockRouteContent;
         }
@@ -113,10 +111,9 @@ eth0	0000A8C0	00000000	0001	0	0	0	0000FFFF	0	0	0`;
 
     it('should return null when no default route found', () => {
       // Mock /proc/net/route content without default route (tab-separated)
-      const mockRouteContent = `Iface	Destination	Gateway	Flags	RefCnt	Use	Metric	Mask	MTU	Window	IRTT
-eth0	0000A8C0	00000000	0001	0	0	0	0000FFFF	0	0	0`;
+      const mockRouteContent = 'Iface\tDestination\tGateway\tFlags\tRefCnt\tUse\tMetric\tMask\tMTU\tWindow\tIRTT\neth0\t0000A8C0\t00000000\t0001\t0\t0\t0\t0000FFFF\t0\t0\t0';
 
-      fs.readFileSync = (path, encoding) => {
+      fs.readFileSync = (path, encoding) => { // eslint-disable-line no-sync
         if (path === '/proc/net/route' && encoding === 'utf8') {
           return mockRouteContent;
         }
@@ -128,7 +125,7 @@ eth0	0000A8C0	00000000	0001	0	0	0	0000FFFF	0	0	0`;
     });
 
     it('should return null and log error when file cannot be read', () => {
-      fs.readFileSync = (path, encoding) => {
+      fs.readFileSync = (path, encoding) => { // eslint-disable-line no-sync
         if (path === '/proc/net/route') {
           throw new Error('Permission denied');
         }
@@ -142,7 +139,7 @@ eth0	0000A8C0	00000000	0001	0	0	0	0000FFFF	0	0	0`;
     });
 
     it('should handle empty file', () => {
-      fs.readFileSync = (path, encoding) => {
+      fs.readFileSync = (path, encoding) => { // eslint-disable-line no-sync
         if (path === '/proc/net/route' && encoding === 'utf8') {
           return '';
         }
@@ -154,7 +151,7 @@ eth0	0000A8C0	00000000	0001	0	0	0	0000FFFF	0	0	0`;
     });
 
     it('should handle malformed route file', () => {
-      fs.readFileSync = (path, encoding) => {
+      fs.readFileSync = (path, encoding) => { // eslint-disable-line no-sync
         if (path === '/proc/net/route' && encoding === 'utf8') {
           return 'malformed content';
         }

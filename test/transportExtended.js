@@ -53,7 +53,7 @@ describe('#transportExtended', () => {
   it('should require stream option for stream transport', done => {
     // The error is caught by the transport module and sent to errorHandler
     let errorCaught = false;
-    new StatsD({
+    new StatsD({ // eslint-disable-line no-new
       protocol: 'stream',
       // Missing stream option
       errorHandler: (error) => {
